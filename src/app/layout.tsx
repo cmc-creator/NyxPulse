@@ -31,23 +31,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider
-      afterSignOutUrl="/"
-      appearance={{
-        variables: {
-          colorPrimary: "#7c3aed",
-          colorBackground: "#04040a",
-          colorText: "#f1f5f9",
-          colorTextSecondary: "#94a3b8",
-          colorInputBackground: "rgba(255,255,255,0.04)",
-          colorInputText: "#f1f5f9",
-          borderRadius: "12px",
-        },
-      }}
-    >
-      <html lang="en">
-        <body className="antialiased">{children}</body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <body className="antialiased">
+        <ClerkProvider
+          afterSignOutUrl="/"
+          appearance={{
+            variables: {
+              colorPrimary: "#7c3aed",
+              colorBackground: "#04040a",
+              colorText: "#f1f5f9",
+              colorTextSecondary: "#94a3b8",
+              colorInputBackground: "rgba(255,255,255,0.04)",
+              colorInputText: "#f1f5f9",
+              borderRadius: "12px",
+            },
+          }}
+        >
+          {children}
+        </ClerkProvider>
+      </body>
+    </html>
   );
 }
