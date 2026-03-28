@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, HeartPulse } from "lucide-react";
+import { Menu, X, Shield } from "lucide-react";
 import UserNav from "./UserNav";
 
 const navLinks = [
@@ -27,15 +27,15 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[rgba(6,10,18,0.92)] backdrop-blur-xl border-b border-[rgba(45,212,191,0.22)] shadow-[0_8px_30px_rgba(2,6,23,0.38)]"
+          ? "bg-[rgba(6,10,18,0.92)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.24)] shadow-[0_8px_30px_rgba(2,6,23,0.38)]"
           : "bg-transparent"
       }`}
     >
       <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-rose-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(45,212,191,0.35)]">
-            <HeartPulse className="w-5 h-5 text-white" strokeWidth={2.4} />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+            <Shield className="w-5 h-5 text-white" strokeWidth={2.4} />
           </div>
           <span className="font-bold text-xl font-display tracking-tight">
             <span className="text-white">Nyx</span>
@@ -52,7 +52,7 @@ export default function Navbar() {
             <li key={link.href}>
               <Link
                 href={link.href}
-                className="px-4 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-[rgba(45,212,191,0.12)] transition-all duration-200"
+                className="px-4 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-[rgba(99,102,241,0.14)] transition-all duration-200"
               >
                 {link.label}
               </Link>
@@ -77,13 +77,13 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden bg-[rgba(6,10,18,0.98)] backdrop-blur-xl border-b border-[rgba(45,212,191,0.2)] px-6 pb-6">
+        <div className="lg:hidden bg-[rgba(6,10,18,0.98)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.2)] px-6 pb-6">
           <ul className="flex flex-col gap-1 pt-2">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="block px-4 py-3 text-slate-300 hover:text-white hover:bg-[rgba(45,212,191,0.12)] rounded-xl transition-all"
+                  className="block px-4 py-3 text-slate-300 hover:text-white hover:bg-[rgba(99,102,241,0.14)] rounded-xl transition-all"
                   onClick={() => setOpen(false)}
                 >
                   {link.label}

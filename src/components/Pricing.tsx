@@ -65,7 +65,7 @@ export default function Pricing() {
       {/* Background */}
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none"
-        style={{ background: "radial-gradient(circle, rgba(6,182,212,0.06) 0%, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 72%)" }}
       />
 
       <div className="relative max-w-7xl mx-auto">
@@ -76,7 +76,7 @@ export default function Pricing() {
             <span className="gradient-text">Organization</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            From solo practitioners to enterprise health systems — we have a plan that fits.
+            From individual clinicians to enterprise systems, every tier is designed for premium execution.
           </p>
         </div>
 
@@ -86,8 +86,8 @@ export default function Pricing() {
               key={plan.name}
               className={`relative rounded-2xl p-8 border transition-all duration-300 ${
                 plan.highlight
-                  ? "bg-gradient-to-b from-[rgba(124,58,237,0.2)] to-[rgba(6,182,212,0.08)] border-violet-500/50 scale-105 shadow-[0_0_60px_rgba(124,58,237,0.2)]"
-                  : "bg-[rgba(12,12,24,0.9)] border-[rgba(124,58,237,0.15)] hover:border-[rgba(124,58,237,0.4)]"
+                  ? "bg-gradient-to-b from-[rgba(99,102,241,0.24)] to-[rgba(245,158,11,0.08)] border-indigo-400/55 scale-105 shadow-[0_0_60px_rgba(99,102,241,0.22)]"
+                  : "bg-[rgba(12,12,24,0.9)] border-[rgba(148,163,184,0.2)] hover:border-[rgba(99,102,241,0.42)]"
               }`}
             >
               {plan.badge && (
@@ -113,7 +113,7 @@ export default function Pricing() {
               <ul className="space-y-3 mb-8">
                 {plan.features.map((f) => (
                   <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
-                    <Check className="w-4 h-4 text-violet-400 flex-shrink-0 mt-0.5" />
+                    <Check className="w-4 h-4 text-amber-300 flex-shrink-0 mt-0.5" />
                     {f}
                   </li>
                 ))}

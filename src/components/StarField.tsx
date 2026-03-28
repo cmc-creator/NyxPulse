@@ -48,9 +48,9 @@ export default function StarField() {
         const alpha = s.alpha * (0.5 + 0.5 * Math.sin(t * s.speed + s.phase));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        const teal = `rgba(45, 212, 191, ${alpha * 0.85})`;
-        const rose = `rgba(251, 113, 133, ${alpha * 0.55})`;
-        ctx.fillStyle = Math.random() > 0.65 ? rose : teal;
+        const indigo = `rgba(129, 140, 248, ${alpha * 0.78})`;
+        const gold = `rgba(251, 191, 36, ${alpha * 0.52})`;
+        ctx.fillStyle = Math.random() > 0.72 ? gold : indigo;
         ctx.fill();
       }
       animId = requestAnimationFrame(render);
