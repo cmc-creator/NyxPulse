@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import {
   Award,
   BadgeCheck,
@@ -9,6 +10,7 @@ import {
   PlayCircle,
   Sparkles,
 } from "lucide-react";
+import MotionReveal from "@/components/MotionReveal";
 
 const modules = [
   { name: "Recognition and response", complete: true },
@@ -20,8 +22,9 @@ const modules = [
 export default function LearnerExperienceShowcase() {
   return (
     <section className="relative py-24 lg:py-32 px-6 overflow-hidden">
+      <div className="orbital-ring w-[380px] h-[380px] bottom-[6%] right-[10%] animate-drift-slow opacity-40" />
       <div
-        className="absolute inset-0 pointer-events-none"
+        className="absolute inset-0 pointer-events-none animate-drift-slow"
         style={{
           background:
             "radial-gradient(circle at 20% 40%, rgba(245,158,11,0.08), transparent 30%), radial-gradient(circle at 80% 60%, rgba(99,102,241,0.12), transparent 34%)",
@@ -29,8 +32,8 @@ export default function LearnerExperienceShowcase() {
       />
 
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
-        <div className="relative order-2 xl:order-1">
-          <div className="glass-card rounded-[32px] overflow-hidden border-[rgba(148,163,184,0.22)] shadow-[0_30px_120px_rgba(2,6,23,0.52)]">
+        <MotionReveal delay={0.06} y={34} className="relative order-2 xl:order-1">
+          <div className="glass-card rounded-[32px] overflow-hidden border-[rgba(148,163,184,0.22)] shadow-[0_30px_120px_rgba(2,6,23,0.52)] surface-premium">
             <div className="border-b border-white/8 px-6 py-4 bg-[rgba(255,255,255,0.02)] flex items-center justify-between">
               <div>
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Learner Experience</p>
@@ -60,7 +63,12 @@ export default function LearnerExperienceShowcase() {
 
                 <div className="space-y-3">
                   {modules.map((module) => (
-                    <div key={module.name} className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 flex items-center justify-between gap-4">
+                    <motion.div
+                      key={module.name}
+                      whileHover={{ x: 3 }}
+                      transition={{ duration: 0.18 }}
+                      className="rounded-2xl border border-white/8 bg-white/[0.03] p-4 flex items-center justify-between gap-4"
+                    >
                       <div className="flex items-center gap-3">
                         {module.complete ? (
                           <CheckCircle2 className="w-4.5 h-4.5 text-emerald-300" />
@@ -72,7 +80,7 @@ export default function LearnerExperienceShowcase() {
                       <span className="text-[10px] uppercase tracking-[0.18em] text-slate-500">
                         {module.complete ? "Complete" : "Active"}
                       </span>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </div>
@@ -134,9 +142,9 @@ export default function LearnerExperienceShowcase() {
               </div>
             </div>
           </div>
-        </div>
+        </MotionReveal>
 
-        <div className="order-1 xl:order-2">
+        <MotionReveal className="order-1 xl:order-2">
           <span className="badge badge-cyan mb-4">Learner Journey</span>
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
             Sophisticated for administrators.
@@ -152,12 +160,17 @@ export default function LearnerExperienceShowcase() {
               "Automatic certificate access when requirements are complete.",
               "A polished digital workflow that reflects the quality of the training itself.",
             ].map((item) => (
-              <div key={item} className="glass-card p-5 rounded-[22px] text-slate-200 text-sm leading-relaxed">
+              <motion.div
+                key={item}
+                whileHover={{ y: -3 }}
+                transition={{ duration: 0.2 }}
+                className="glass-card p-5 rounded-[22px] text-slate-200 text-sm leading-relaxed"
+              >
                 {item}
-              </div>
+              </motion.div>
             ))}
           </div>
-        </div>
+        </MotionReveal>
       </div>
     </section>
   );
