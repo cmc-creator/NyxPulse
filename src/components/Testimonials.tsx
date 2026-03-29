@@ -5,7 +5,7 @@ import { Quote } from "lucide-react";
 const testimonials = [
   {
     quote:
-      "NyxPulse's BLS training completely changed how our code team communicates. The team dynamics module alone was worth it — our response times dropped noticeably.",
+      "NyxPulse's BLS training completely changed how our code team communicates. The team dynamics module alone was worth it. Our response times dropped noticeably.",
     name: "Sarah M., RN, BSN",
     role: "ICU Charge Nurse",
     org: "Regional Medical Center",
@@ -14,7 +14,7 @@ const testimonials = [
   },
   {
     quote:
-      "We brought NyxPulse in for our entire ED staff for de-escalation. The instructors understood our environment. Real scenarios, no fluff — our staff left with actual tools.",
+      "We brought NyxPulse in for our entire ED staff for de-escalation. The instructors understood our environment. Real scenarios, no fluff. Our staff left with actual tools.",
     name: "Dr. James T.",
     role: "Emergency Medicine Physician",
     org: "Urban Health System",
@@ -85,7 +85,7 @@ export default function Testimonials() {
                 <div>
                   <div className="text-white font-semibold text-sm">{t.name}</div>
                   <div className="text-slate-400 text-xs">
-                    {t.role} — {t.org}
+                    {t.role} | {t.org}
                   </div>
                 </div>
               </div>

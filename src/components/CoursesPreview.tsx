@@ -25,7 +25,7 @@ export default function CoursesPreview() {
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[920px] h-[420px] pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse, rgba(14,165,164,0.09) 0%, transparent 72%)",
+          background: "radial-gradient(ellipse, rgba(99,102,241,0.12) 0%, transparent 72%)",
         }}
       />
 
@@ -34,13 +34,13 @@ export default function CoursesPreview() {
           <div>
             <span className="badge badge-cyan mb-4">Program Catalog</span>
             <h2 className="font-display text-4xl sm:text-5xl font-bold text-white">
-              Training Pathways Designed
-              <span className="gradient-text"> for Real Operations</span>
+              Signature programs built
+              <span className="gradient-text"> for serious teams</span>
             </h2>
           </div>
           <Link
             href="/courses"
-            className="flex items-center gap-2 text-teal-300 hover:text-teal-200 font-medium text-sm transition-colors whitespace-nowrap"
+            className="flex items-center gap-2 text-indigo-200 hover:text-white font-medium text-sm transition-colors whitespace-nowrap"
           >
             View all courses
             <ArrowRight className="w-4 h-4" />
@@ -50,7 +50,7 @@ export default function CoursesPreview() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
           {featured.map((course) => (
             <div key={course.slug} className="course-card group relative overflow-hidden">
-              <div className="h-1 w-full bg-gradient-to-r from-teal-400 to-rose-400" />
+              <div className="h-1 w-full bg-gradient-to-r from-indigo-400 to-amber-300" />
 
               <div className="p-7">
                 <div className="flex items-start justify-between gap-4 mb-5">
@@ -74,6 +74,10 @@ export default function CoursesPreview() {
                 </div>
 
                 <p className="text-slate-300 text-sm leading-relaxed mb-5 line-clamp-2">{course.tagline}</p>
+
+                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500 mb-5">
+                  Luxury delivery. Transparent enrollment. Real-world outcomes.
+                </p>
 
                 <div className="flex items-center gap-4 mb-6 flex-wrap">
                   <div className="flex items-center gap-1.5 text-xs text-slate-400">
@@ -102,7 +106,7 @@ export default function CoursesPreview() {
                     </span>
                   </Link>
                   <Link href="/contact" className="btn-outline text-sm py-2.5 px-5 whitespace-nowrap">
-                    Book Session
+                    Plan Private Session
                   </Link>
                 </div>
               </div>
