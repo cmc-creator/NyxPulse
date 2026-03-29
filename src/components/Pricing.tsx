@@ -67,7 +67,7 @@ export default function Pricing() {
       />
 
       <div className="relative max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.95fr] gap-10 items-start mb-14">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.95fr] gap-8 sm:gap-10 items-start mb-12 sm:mb-14">
           <div>
             <span className="badge badge-amber mb-4">Transparent Pricing</span>
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
@@ -78,12 +78,12 @@ export default function Pricing() {
               NyxPulse is designed to feel bespoke without hiding the economics. Individual seats start clearly, team pricing scales sensibly, and larger partnerships are scoped with precision.
             </p>
 
-            <div className="glass-card mt-8 p-5">
-              <div className="flex items-center gap-2 mb-3 text-white font-semibold text-sm">
+            <div className="glass-card mt-6 sm:mt-8 p-4 sm:p-5">
+              <div className="flex items-center gap-2 mb-3 text-white font-semibold text-xs sm:text-sm">
                 <Sparkles className="w-4 h-4 text-amber-300" />
                 Pricing principles
               </div>
-              <ul className="space-y-2 text-sm text-slate-300">
+              <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
                 <li>No hidden platform fees for course enrollment.</li>
                 <li>Group pricing is based on scope, format, and seat volume.</li>
                 <li>Enterprise engagements include planning and reporting support.</li>
@@ -102,8 +102,8 @@ export default function Pricing() {
                 }`}
               >
                 {plan.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span className="badge badge-violet text-xs px-3 py-1">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+                    <span className="badge badge-violet text-[10px] px-3 py-1">
                       <Zap className="w-3 h-3" />
                       {plan.badge}
                     </span>
@@ -111,19 +111,19 @@ export default function Pricing() {
                 )}
 
                 <div className="mb-6">
-                  <h3 className="text-white font-bold text-xl mb-1">{plan.name}</h3>
+                  <h3 className="text-white font-bold text-lg sm:text-xl mb-1">{plan.name}</h3>
                   <div className="flex items-baseline gap-2 mb-1">
-                    <span className="text-3xl font-display font-extrabold gradient-text">
+                    <span className="text-2xl sm:text-3xl font-display font-extrabold gradient-text">
                       {plan.price}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mb-3 uppercase tracking-[0.18em]">{plan.per}</p>
-                  <p className="text-slate-300 text-sm leading-relaxed">{plan.desc}</p>
+                  <p className="text-[10px] text-slate-500 mb-3 uppercase tracking-[0.18em]">{plan.per}</p>
+                  <p className="text-slate-300 text-xs sm:text-sm leading-relaxed">{plan.desc}</p>
                 </div>
 
                 <ul className="space-y-3 mb-8 lg:min-h-[168px]">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
+                    <li key={f} className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300">
                       <Check className="w-4 h-4 text-amber-300 flex-shrink-0 mt-0.5" />
                       {f}
                     </li>

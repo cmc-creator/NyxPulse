@@ -79,13 +79,13 @@ export default function Hero() {
             </Link>
           </MotionReveal>
 
-          <MotionReveal delay={0.26} className="flex flex-wrap items-center gap-6 mb-12">
+          <MotionReveal delay={0.26} className="flex flex-wrap items-center gap-4 sm:gap-6 mb-12">
             {[
               { Icon: ShieldCheck, text: "AHA-Aligned Curriculum" },
               { Icon: Award, text: "FEMA ICS / HICS Aligned" },
               { Icon: Zap, text: "CMS + TJC Compliance Focused" },
             ].map(({ Icon, text }) => (
-              <div key={text} className="flex items-center gap-2 text-sm text-slate-300">
+              <div key={text} className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
                 <Icon className="w-4 h-4 text-amber-300" />
                 <span>{text}</span>
               </div>
@@ -98,9 +98,9 @@ export default function Hero() {
                 key={stat.label}
                 whileHover={{ y: -6, scale: 1.01 }}
                 transition={{ duration: 0.22 }}
-                className="glass-card p-4 sm:p-5 text-center surface-premium"
+                className="glass-card p-3 sm:p-5 text-center surface-premium"
               >
-                <div className="text-lg sm:text-2xl font-bold gradient-text font-display mb-1">
+                <div className="text-base sm:text-2xl font-bold gradient-text font-display mb-1">
                   {stat.value}
                 </div>
                 <div className="text-[11px] text-slate-400 uppercase tracking-wider leading-tight">

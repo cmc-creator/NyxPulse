@@ -116,7 +116,7 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
               <div className="text-xs text-slate-400">A NyxCollective LLC Product</div>
             </div>
             <div className="flex flex-col items-center">
-              <CheckCircle className="w-8 h-8 text-violet-500 mb-1" />
+              <img src="/black shiny np.png" alt="NyxPulse" width="32" height="32" className="rounded-lg mb-1" />
               <div className="text-xs text-slate-400">Verified Completion</div>
             </div>
             <div className="text-right">
