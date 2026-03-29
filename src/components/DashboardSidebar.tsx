@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Users,
+  BarChart3,
 } from "lucide-react";
 
 const navItems = [
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/dashboard/courses", label: "My Courses", icon: BookOpen, exact: false },
   { href: "/dashboard/sessions", label: "Live Sessions", icon: Calendar, exact: false },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award, exact: false },
+  { href: "/dashboard/analytics", label: "Analytics", icon: BarChart3, exact: false },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard, exact: false },
   { href: "/dashboard/org", label: "Team Portal", icon: Users, exact: false },
 ];
