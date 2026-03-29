@@ -1,7 +1,5 @@
-"use client";
-
 import Link from "next/link";
-import { Zap, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Shield, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 
 const footerLinks = {
   Training: [
@@ -27,17 +25,15 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="relative bg-[#02020a] border-t border-[rgba(124,58,237,0.15)]">
-      {/* Top glow line */}
+    <footer className="relative bg-[#05060b] border-t border-[rgba(99,102,241,0.14)]">
       <div className="section-divider" />
 
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
-          {/* Brand column */}
           <div className="xl:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(124,58,237,0.3)]">
-                <Zap className="w-5 h-5 text-white" strokeWidth={2.5} />
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+                <Shield className="w-5 h-5 text-white" strokeWidth={2.5} />
               </div>
               <span className="font-bold text-xl font-display">
                 <span className="text-white">Nyx</span>
@@ -45,7 +41,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
-              Next-generation emergency and safety training for healthcare professionals. Live, virtual, and hybrid programs designed to save lives.
+              Luxury-grade emergency and safety training software for organizations that want credible delivery, clean operations, and measurable readiness.
             </p>
             <p className="text-xs text-slate-600 mb-5">A product of <span className="text-slate-500">NyxCollective LLC</span></p>
 
@@ -65,7 +61,6 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Social */}
             <div className="flex items-center gap-3">
               {[
                 { label: "Twitter / X", href: "#" },
@@ -76,7 +71,7 @@ export default function Footer() {
                   key={label}
                   href={href}
                   aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-[rgba(124,58,237,0.1)] border border-[rgba(124,58,237,0.2)] flex items-center justify-center text-slate-400 hover:text-violet-400 hover:border-violet-500 transition-all"
+                  className="w-9 h-9 rounded-lg bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] flex items-center justify-center text-slate-400 hover:text-amber-300 hover:border-indigo-400 transition-all"
                 >
                   <ExternalLink className="w-4 h-4" />
                 </a>
@@ -84,7 +79,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Link columns */}
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h4 className="text-white font-semibold text-sm mb-4 tracking-wider uppercase">{title}</h4>
@@ -93,7 +87,7 @@ export default function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-slate-400 text-sm hover:text-violet-400 transition-colors"
+                      className="text-slate-400 text-sm hover:text-amber-300 transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -104,13 +98,12 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="mt-16 pt-6 border-t border-[rgba(255,255,255,0.05)] flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="text-slate-600 text-xs">
             © {new Date().getFullYear()} NyxCollective LLC. All rights reserved.
           </p>
-          <p className="text-slate-700 text-xs">
-            Built with care for the people who save lives.
+          <p className="text-slate-700 text-xs uppercase tracking-[0.16em]">
+            Professional readiness, beautifully delivered.
           </p>
         </div>
       </div>

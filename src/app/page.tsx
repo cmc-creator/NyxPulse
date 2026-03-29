@@ -16,9 +16,15 @@ export default function Home() {
       <main className="relative z-10">
         <Hero />
         <div className="section-divider" />
-        <Features />
+        <div className="relative">
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.03),transparent_50%)]" />
+          <Features />
+        </div>
         <div className="section-divider" />
-        <CoursesPreview />
+        <div className="relative">
+          <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.015),transparent)]" />
+          <CoursesPreview />
+        </div>
         <div className="section-divider" />
         <Pricing />
         <div className="section-divider" />

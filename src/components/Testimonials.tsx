@@ -53,13 +53,13 @@ export default function Testimonials() {
     <section className="relative py-24 lg:py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-14">
-          <span className="badge badge-green mb-4">Impact</span>
+          <span className="badge badge-green mb-4">Trusted Outcomes</span>
           <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
-            Trusted by Healthcare{" "}
-            <span className="gradient-text">Professionals</span>
+            Proof That the Experience
+            <span className="gradient-text"> Delivers</span>
           </h2>
-          <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-            Real outcomes from real teams — because training only matters if it works.
+          <p className="text-slate-300 text-lg max-w-2xl mx-auto">
+            High-trust organizations choose NyxPulse because the platform looks polished, the instruction feels credible, and the outcomes are measurable.
           </p>
         </div>
 
@@ -67,10 +67,13 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <div
               key={t.name}
-              className="glass-card p-8 group hover:shadow-[0_0_40px_rgba(124,58,237,0.1)] transition-all duration-300"
+              className="glass-card p-8 rounded-[28px] group hover:shadow-[0_0_40px_rgba(99,102,241,0.12)] transition-all duration-300"
             >
-              <Quote className="w-8 h-8 text-violet-500/40 mb-4" />
-              <p className="text-slate-300 text-base leading-relaxed mb-6 italic">
+              <div className="flex items-center justify-between mb-6">
+                <Quote className="w-8 h-8 text-indigo-300/40" />
+                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Verified Client</div>
+              </div>
+              <p className="text-slate-200 text-base leading-relaxed mb-6 italic">
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div className="flex items-center gap-3">

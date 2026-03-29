@@ -16,7 +16,7 @@ export default function CTABanner() {
       />
 
       <div className="relative max-w-4xl mx-auto text-center">
-        <div className="glass-card p-12 lg:p-16 animate-pulse-glow">
+        <div className="glass-card p-12 lg:p-16 rounded-[32px] animate-pulse-glow border-[rgba(148,163,184,0.22)]">
           <div className="badge badge-violet mb-6 mx-auto w-fit">
             Concierge Enrollment
           </div>
@@ -25,7 +25,7 @@ export default function CTABanner() {
             <span className="gradient-text">Emergency Readiness</span>
           </h2>
           <p className="text-slate-400 text-lg max-w-xl mx-auto mb-10">
-            Whether you need a focused certification or a full enterprise rollout, our team will tailor a premium training program for your operation.
+            Whether you need a focused certification or a multi-site rollout, we help you assemble the right mix of rigor, polish, and transparent pricing.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/courses" className="btn-primary text-base px-10 py-4 w-full sm:w-auto">
