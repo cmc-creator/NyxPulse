@@ -13,14 +13,15 @@ const footerLinks = {
   ],
   Company: [
     { label: "About", href: "/about" },
+    { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
     { label: "Blog", href: "#" },
     { label: "Careers", href: "#" },
   ],
   Legal: [
-    { label: "Privacy Policy", href: "#" },
-    { label: "Terms of Service", href: "#" },
-    { label: "Cookie Policy", href: "#" },
+    { label: "Privacy Policy", href: "/privacy" },
+    { label: "Terms of Service", href: "/terms" },
+    { label: "HIPAA Compliance", href: "/hipaa" },
   ],
 };
 

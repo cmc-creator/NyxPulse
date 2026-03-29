@@ -5,6 +5,7 @@ import LearnerExperienceShowcase from "@/components/LearnerExperienceShowcase";
 import PlatformShowcase from "@/components/PlatformShowcase";
 import Features from "@/components/Features";
 import CoursesPreview from "@/components/CoursesPreview";
+import LearningPaths from "@/components/LearningPaths";
 import Pricing from "@/components/Pricing";
 import Testimonials from "@/components/Testimonials";
 import CTABanner from "@/components/CTABanner";
@@ -31,6 +32,8 @@ export default function Home() {
           <div className="absolute inset-0 pointer-events-none bg-[linear-gradient(180deg,transparent,rgba(255,255,255,0.015),transparent)]" />
           <CoursesPreview />
         </div>
+        <div className="section-divider" />
+        <LearningPaths />
         <div className="section-divider" />
         <Pricing />
         <div className="section-divider" />

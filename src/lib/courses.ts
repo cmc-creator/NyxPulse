@@ -18,6 +18,19 @@ export interface Course {
   whoFor: string[];
 }
 
+export interface LearningPath {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  badge: "violet" | "cyan" | "amber" | "green";
+  courseList: string[]; // array of course slugs
+  totalHours: number;
+  price: number;
+  savings: number; // how much they save vs. buying individually
+  competency: string; // what skill/role does this path prepare for?
+}
+
 export const courses: Course[] = [
   {
     slug: "cpr-aed",
@@ -353,10 +366,73 @@ export const courses: Course[] = [
   },
 ];
 
+export const learningPaths: LearningPath[] = [
+  {
+    id: "ed-lifeguard",
+    title: "Emergency Department Lifeguard",
+    description:
+      "Essential certifications for new ED staff. Covers life-saving resuscitation, behavioral crisis management, emergency operations, and OSHA compliance.",
+    icon: "🚨",
+    badge: "cyan",
+    courseList: ["cpr-aed", "bls", "de-escalation", "osha-safety"],
+    totalHours: 24,
+    price: 259,
+    savings: 48,
+    competency: "Emergency Department Readiness",
+  },
+  {
+    id: "facility-commander",
+    title: "Facility Emergency Commander",
+    description:
+      "Leadership-focused path for Emergency Managers, administrators, and incident commanders. Master emergency planning and ICS/HICS command systems.",
+    icon: "🎯",
+    badge: "amber",
+    courseList: ["emergency-management-healthcare", "ics-hics"],
+    totalHours: 24,
+    price: 299,
+    savings: 19,
+    competency: "Emergency Management & Command",
+  },
+  {
+    id: "clinical-ace",
+    title: "Clinical Ace Bundle",
+    description:
+      "Everything a clinical provider needs: advanced resuscitation, behavioral health crisis intervention, workplace safety, and emergency preparedness.",
+    icon: "🏥",
+    badge: "violet",
+    courseList: ["cpr-aed", "bls", "de-escalation", "emergency-management-healthcare"],
+    totalHours: 34,
+    price: 389,
+    savings: 42,
+    competency: "Comprehensive Clinical Preparedness",
+  },
+  {
+    id: "safety-master",
+    title: "Safety Master Certification",
+    description:
+      "Complete safety and emergency readiness: OSHA compliance, resuscitation, de-escalation, and full facility emergency management.",
+    icon: "🦺",
+    badge: "green",
+    courseList: ["osha-safety", "cpr-aed", "de-escalation", "emergency-management-healthcare", "ics-hics"],
+    totalHours: 42,
+    price: 559,
+    savings: 77,
+    competency: "Enterprise Safety Leadership",
+  },
+];
+
 export function getCourseBySlug(slug: string): Course | undefined {
   return courses.find((c) => c.slug === slug);
 }
 
 export function getFeaturedCourses(): Course[] {
   return courses.filter((c) => c.featured);
+}
+
+export function getLearningPathById(id: string): LearningPath | undefined {
+  return learningPaths.find((p) => p.id === id);
+}
+
+export function getAllLearningPaths(): LearningPath[] {
+  return learningPaths;
 }
