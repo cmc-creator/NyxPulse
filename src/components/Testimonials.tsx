@@ -42,10 +42,10 @@ const testimonials = [
 ];
 
 const initBg: Record<string, string> = {
-  violet: "bg-violet-600",
-  cyan: "bg-cyan-600",
-  amber: "bg-amber-600",
-  green: "bg-emerald-600",
+  violet: "bg-gradient-to-br from-indigo-500 to-indigo-300",
+  cyan: "bg-gradient-to-br from-sky-500 to-cyan-300",
+  amber: "bg-gradient-to-br from-amber-500 to-amber-300",
+  green: "bg-gradient-to-br from-emerald-500 to-teal-300",
 };
 
 export default function Testimonials() {
@@ -77,10 +77,13 @@ export default function Testimonials() {
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div className="flex items-center gap-3">
-                <div
-                  className={`w-10 h-10 rounded-full ${initBg[t.color]} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}
-                >
-                  {t.initials}
+                <div className="relative">
+                  <div className="absolute inset-0 rounded-full blur-[6px] bg-[rgba(99,102,241,0.35)]" />
+                  <div
+                    className={`relative w-10 h-10 rounded-full ${initBg[t.color]} flex items-center justify-center text-white font-bold text-sm flex-shrink-0 border border-white/20`}
+                  >
+                    {t.initials}
+                  </div>
                 </div>
                 <div>
                   <div className="text-white font-semibold text-sm">{t.name}</div>
@@ -88,6 +91,7 @@ export default function Testimonials() {
                     {t.role} | {t.org}
                   </div>
                 </div>
+                <span className="ml-auto text-[10px] uppercase tracking-[0.15em] text-slate-500">Trusted</span>
               </div>
             </div>
           ))}

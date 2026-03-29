@@ -166,16 +166,47 @@ export default function PlatformShowcase() {
                       <p className="text-white font-semibold">Program activity</p>
                       <span className="text-xs text-slate-500 uppercase tracking-[0.18em]">Last 30 days</span>
                     </div>
-                    <div className="h-44 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4 flex items-end gap-3">
-                      {[42, 58, 51, 74, 69, 83, 92].map((value, index) => (
-                        <div key={index} className="flex-1 flex flex-col items-center justify-end gap-2">
-                          <div
-                            className="w-full rounded-t-xl bg-gradient-to-t from-indigo-500 to-amber-300"
-                            style={{ height: `${value}%` }}
-                          />
-                          <span className="text-[10px] text-slate-500">W{index + 1}</span>
-                        </div>
-                      ))}
+                    <div className="h-44 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4">
+                      <svg viewBox="0 0 520 170" className="w-full h-full" aria-label="Activity trend chart" role="img">
+                        <defs>
+                          <linearGradient id="activityFill" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stopColor="rgba(129,140,248,0.5)" />
+                            <stop offset="100%" stopColor="rgba(245,158,11,0.02)" />
+                          </linearGradient>
+                          <linearGradient id="activityStroke" x1="0" y1="0" x2="1" y2="0">
+                            <stop offset="0%" stopColor="rgba(129,140,248,0.95)" />
+                            <stop offset="100%" stopColor="rgba(252,211,77,0.9)" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M20 145 L20 92 L93 78 L166 88 L239 55 L312 68 L385 34 L458 23 L458 145 Z" fill="url(#activityFill)" />
+                        <path
+                          d="M20 92 L93 78 L166 88 L239 55 L312 68 L385 34 L458 23"
+                          fill="none"
+                          stroke="url(#activityStroke)"
+                          strokeWidth="4"
+                          strokeLinecap="round"
+                        />
+                        {[
+                          [20, 92],
+                          [93, 78],
+                          [166, 88],
+                          [239, 55],
+                          [312, 68],
+                          [385, 34],
+                          [458, 23],
+                        ].map(([x, y], index) => (
+                          <circle key={index} cx={x} cy={y} r="5" fill="rgba(15,23,42,1)" stroke="rgba(251,191,36,0.95)" strokeWidth="2" />
+                        ))}
+                      </svg>
+                    </div>
+                    <div className="mt-3 flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                      <span>Jan</span>
+                      <span>Feb</span>
+                      <span>Mar</span>
+                      <span>Apr</span>
+                      <span>May</span>
+                      <span>Jun</span>
+                      <span>Jul</span>
                     </div>
                   </div>
 
@@ -199,6 +230,9 @@ export default function PlatformShowcase() {
                           <p className="text-xs text-slate-400">{item.meta}</p>
                         </motion.div>
                       ))}
+                    </div>
+                    <div className="mt-4 rounded-xl border border-white/8 bg-slate-950/50 p-3 text-xs text-slate-400">
+                      Last sync: 2 minutes ago | Source: NyxPulse Live Data Layer
                     </div>
                   </div>
                 </div>

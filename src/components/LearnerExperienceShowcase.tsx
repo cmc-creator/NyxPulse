@@ -97,7 +97,7 @@ export default function LearnerExperienceShowcase() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-white/8 bg-slate-950/40 p-4">
+                  <div className="rounded-2xl border border-white/8 bg-slate-950/40 p-4 mb-4">
                     <div className="flex items-center justify-between mb-3">
                       <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Credential details</p>
                       <BadgeCheck className="w-4 h-4 text-indigo-300" />
@@ -115,6 +115,33 @@ export default function LearnerExperienceShowcase() {
                         <span>Delivery</span>
                         <span className="text-white">Live virtual cohort</span>
                       </div>
+                    </div>
+                  </div>
+
+                  <div className="rounded-2xl border border-[rgba(148,163,184,0.2)] bg-[rgba(255,255,255,0.03)] p-4 relative overflow-hidden">
+                    <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-[radial-gradient(circle,rgba(99,102,241,0.32),transparent_68%)]" />
+                    <div className="flex items-start justify-between gap-4 mb-3">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 mb-1">Certificate preview</p>
+                        <p className="text-white font-semibold">NyxPulse BLS Completion</p>
+                      </div>
+                      <div className="w-10 h-10 rounded-xl border border-[rgba(245,158,11,0.35)] bg-[rgba(245,158,11,0.1)] flex items-center justify-center text-amber-300">
+                        <Award className="w-4.5 h-4.5" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 mb-3">
+                      <div className="rounded-lg bg-slate-950/45 border border-white/8 p-2.5">
+                        <p className="text-slate-500 mb-1">Credential ID</p>
+                        <p className="text-white">NYX-BLS-48291</p>
+                      </div>
+                      <div className="rounded-lg bg-slate-950/45 border border-white/8 p-2.5">
+                        <p className="text-slate-500 mb-1">Issue Date</p>
+                        <p className="text-white">Apr 2026</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-[10px] uppercase tracking-[0.15em] text-slate-500 border-t border-white/8 pt-2.5">
+                      <span>Digitally verifiable</span>
+                      <span>Ready for download</span>
                     </div>
                   </div>
                 </div>
