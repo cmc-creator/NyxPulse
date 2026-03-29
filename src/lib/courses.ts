@@ -33,7 +33,7 @@ export const courses: Course[] = [
     format: ["Live", "Hybrid"],
     level: "All Levels",
     certifies: "American Heart Association (AHA) aligned",
-    price: 75,
+    price: 49,
     featured: true,
     modules: [
       {
@@ -89,7 +89,7 @@ export const courses: Course[] = [
     format: ["Live", "Hybrid"],
     level: "Intermediate",
     certifies: "AHA BLS Provider aligned",
-    price: 95,
+    price: 69,
     featured: true,
     modules: [
       {
@@ -144,7 +144,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "All Levels",
     certifies: "Certificate of Completion",
-    price: 120,
+    price: 89,
     featured: true,
     modules: [
       {
@@ -200,7 +200,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "Intermediate",
     certifies: "Certificate of Completion",
-    price: 250,
+    price: 199,
     featured: true,
     modules: [
       {
@@ -259,7 +259,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "Intermediate",
     certifies: "FEMA ICS 100/200 aligned",
-    price: 150,
+    price: 119,
     featured: false,
     modules: [
       {
@@ -315,7 +315,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual"],
     level: "Beginner",
     certifies: "Certificate of Completion",
-    price: 85,
+    price: 59,
     featured: false,
     modules: [
       {

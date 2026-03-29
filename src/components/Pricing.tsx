@@ -1,59 +1,61 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Zap, ArrowRight, Sparkles } from "lucide-react";
+import { Check, Zap, ArrowRight, Sparkles, TrendingDown } from "lucide-react";
 
 const plans = [
   {
-    name: "Certification Access",
+    name: "Pay-Per-Course",
     badge: null,
-    price: "From $75",
+    price: "From $49",
     per: "per learner, per course",
-    desc: "Transparent self-serve enrollment for clinicians, staff members, and independent professionals.",
+    desc: "Individual enrollment with transparent pricing. No platform fees, no surprises.",
     cta: "Browse Courses",
     ctaHref: "/courses",
     highlight: false,
     features: [
-      "Simple per-seat pricing",
-      "Digital certificate on completion",
-      "Course materials included",
-      "Fast online registration",
+      "CPR/AED from $49 · BLS from $69",
+      "De-escalation, ICS/HICS, OSHA all included",
+      "Digital certificates instantly on completion",
+      "Lifetime access to course materials",
+      "Fast 5-minute registration",
     ],
   },
   {
-    name: "Team Cohort",
+    name: "Team Bundle",
     badge: "Best Value",
-    price: "Custom",
-    per: "priced to your scope",
-    desc: "Private on-site or virtual training for departments, clinics, schools, and community organizations.",
-    cta: "Request Proposal",
+    price: "20% Off",
+    per: "groups of 5+ learners",
+    desc: "Same premium courses with volume discounts. Perfect for departments scaling training.",
+    cta: "Calculate Team Cost",
     ctaHref: "/contact",
     highlight: true,
     features: [
-      "Volume pricing for groups of 5+",
-      "Dedicated instructor-led delivery",
-      "Live or virtual delivery",
-      "Roster & certificate management",
-      "Post-training skills assessment",
+      "20% savings on all courses at 5+ seats",
+      "30% savings at 20+ seats",
+      "Custom invoice & payment terms",
+      "Roster management & tracking",
+      "Completion certificates for your records",
+      "Post-training skills assessment included",
     ],
   },
   {
-    name: "Enterprise Partnership",
+    name: "Enterprise Annual",
     badge: null,
-    price: "Annual",
-    per: "custom annual program",
-    desc: "For health systems and multi-site operators who want a polished, repeatable training infrastructure.",
+    price: "Scale Smart",
+    per: "unlimited annual program",
+    desc: "Organizations that train 500+ staff annually. Full suite access with dedicated support.",
     cta: "Talk to Sales",
     ctaHref: "/contact",
     highlight: false,
     features: [
-      "Full curriculum access",
-      "Unlimited enrollments",
-      "LMS integration support",
+      "Unlimited enrollments across all courses",
+      "Fixed annual cost (typically 40-50% savings)",
+      "LMS integration & single sign-on",
       "Dedicated account manager",
-      "Custom course branding",
-      "Analytics dashboard",
-      "Regulatory audit reports",
+      "Custom course bundling by role",
+      "Advanced analytics & compliance reporting",
+      "Regulatory audit reports & attestations",
     ],
   },
 ];
@@ -69,24 +71,24 @@ export default function Pricing() {
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.95fr] gap-8 sm:gap-10 items-start mb-12 sm:mb-14">
           <div>
-            <span className="badge badge-amber mb-4">Transparent Pricing</span>
+            <span className="badge badge-amber mb-4">Competitive Pricing</span>
             <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
-              Premium delivery.
-              <span className="gradient-text"> Clear commercial structure.</span>
+              Premium training.
+              <span className="gradient-text"> Accessible pricing.</span>
             </h2>
             <p className="text-slate-300 text-base sm:text-lg max-w-xl">
-              NyxPulse is designed to feel bespoke without hiding the economics. Individual seats start clearly, team pricing scales sensibly, and larger partnerships are scoped with precision.
+              No hidden fees. No platform markups. Individual seats start at $49, teams get 20-30% volume discounts, and enterprises scale with fixed annual pricing.
             </p>
 
             <div className="glass-card mt-6 sm:mt-8 p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-3 text-white font-semibold text-xs sm:text-sm">
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                Pricing principles
+                <TrendingDown className="w-4 h-4 text-emerald-400" />
+                Why we're competitive
               </div>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
-                <li>No hidden platform fees for course enrollment.</li>
-                <li>Group pricing is based on scope, format, and seat volume.</li>
-                <li>Enterprise engagements include planning and reporting support.</li>
+                <li>Lowest per-seat rates in category. Starting at $49 per course.</li>
+                <li>Volume discounts built in: 20% at 5+ learners, 30% at 20+.</li>
+                <li>No enrollment fees, platform charges, or surprise costs.</li>
               </ul>
             </div>
           </div>
