@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Shield, Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import Image from "next/image";
+import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 
 const footerLinks = {
   Training: [
@@ -32,8 +33,14 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
           <div className="xl:col-span-2">
             <Link href="/" className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-amber-400 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.3)]">
-                <Shield className="w-5 h-5 text-white" strokeWidth={2.5} />
+              <div className="w-9 h-9 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+                <Image
+                  src="/black shiny np.png"
+                  alt="NyxPulse logo"
+                  width={36}
+                  height={36}
+                  className="w-full h-full object-cover"
+                />
               </div>
               <span className="font-bold text-xl font-display">
                 <span className="text-white">Nyx</span>

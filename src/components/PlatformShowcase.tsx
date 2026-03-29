@@ -29,7 +29,7 @@ const activityFeed = [
 
 export default function PlatformShowcase() {
   return (
-    <section className="relative py-24 lg:py-32 px-6 overflow-hidden">
+    <section className="relative py-20 sm:py-24 lg:py-32 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[460px] h-[460px] top-[6%] left-[8%] animate-drift-slow opacity-40" />
       <div
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[1100px] h-[520px] pointer-events-none animate-drift-slow"
@@ -41,7 +41,7 @@ export default function PlatformShowcase() {
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[0.95fr_1.45fr] gap-10 items-center">
         <MotionReveal>
           <span className="badge badge-cyan mb-4">Software Experience</span>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
+          <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
             A training platform that
             <span className="gradient-text"> feels as polished as the teams using it</span>
           </h2>
@@ -90,7 +90,7 @@ export default function PlatformShowcase() {
 
         <MotionReveal delay={0.1} y={34} className="relative">
           <div className="glass-card rounded-[32px] overflow-hidden border-[rgba(148,163,184,0.22)] shadow-[0_30px_120px_rgba(2,6,23,0.55)] surface-premium">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-white/8 bg-[rgba(255,255,255,0.02)]">
+            <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-white/8 bg-[rgba(255,255,255,0.02)]">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-rose-400/80" />
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-300/80" />
@@ -99,8 +99,8 @@ export default function PlatformShowcase() {
               <div className="text-xs uppercase tracking-[0.24em] text-slate-500">NyxPulse Command</div>
             </div>
 
-            <div className="grid grid-cols-[220px_1fr] min-h-[560px]">
-              <div className="border-r border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-5">
+            <div className="grid grid-cols-1 lg:grid-cols-[220px_1fr] lg:min-h-[560px]">
+              <div className="border-b lg:border-b-0 lg:border-r border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4 sm:p-5">
                 <div className="text-white font-semibold text-sm mb-5">Operations</div>
                 <div className="space-y-2">
                   {[
@@ -131,13 +131,13 @@ export default function PlatformShowcase() {
                 </div>
               </div>
 
-              <div className="p-6 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.04),transparent_34%)]">
+              <div className="p-4 sm:p-6 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.04),transparent_34%)]">
                 <div className="flex items-start justify-between gap-4 mb-6">
                   <div>
                     <p className="text-xs uppercase tracking-[0.18em] text-slate-500 mb-2">Readiness Dashboard</p>
                     <h3 className="text-white text-2xl font-display font-bold">Enterprise overview</h3>
                   </div>
-                  <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300">
+                  <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-2 text-sm text-slate-300">
                     <Bell className="w-4 h-4 text-amber-300" />
                     3 actions due
                   </div>
@@ -166,7 +166,7 @@ export default function PlatformShowcase() {
                       <p className="text-white font-semibold">Program activity</p>
                       <span className="text-xs text-slate-500 uppercase tracking-[0.18em]">Last 30 days</span>
                     </div>
-                    <div className="h-44 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-4">
+                    <div className="h-40 sm:h-44 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))] p-3 sm:p-4">
                       <svg viewBox="0 0 520 170" className="w-full h-full" aria-label="Activity trend chart" role="img">
                         <defs>
                           <linearGradient id="activityFill" x1="0" y1="0" x2="0" y2="1">
@@ -199,7 +199,7 @@ export default function PlatformShowcase() {
                         ))}
                       </svg>
                     </div>
-                    <div className="mt-3 flex items-center justify-between text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                    <div className="mt-3 flex items-center justify-between text-[9px] sm:text-[10px] uppercase tracking-[0.14em] text-slate-500">
                       <span>Jan</span>
                       <span>Feb</span>
                       <span>Mar</span>

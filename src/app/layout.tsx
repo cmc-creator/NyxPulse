@@ -3,6 +3,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nyxpulse.com"),
   title: "NyxPulse | Next-Generation Emergency & Safety Training",
   description:
     "NyxPulse delivers world-class CPR, BLS, De-escalation, Emergency Management, ICS/HICS, and OSHA training — live and virtual — for healthcare professionals and organizations.",
@@ -22,6 +23,12 @@ export const metadata: Metadata = {
     title: "NyxPulse | Next-Generation Emergency & Safety Training",
     description: "Train smarter. Respond faster. Save lives.",
     type: "website",
+    images: ["/black shiny np.png"],
+  },
+  icons: {
+    icon: "/black shiny np.png",
+    shortcut: "/black shiny np.png",
+    apple: "/black shiny np.png",
   },
 };
 

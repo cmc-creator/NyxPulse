@@ -60,7 +60,7 @@ const plans = [
 
 export default function Pricing() {
   return (
-    <section id="pricing" className="relative py-24 lg:py-32 px-6">
+    <section id="pricing" className="relative py-20 sm:py-24 lg:py-32 px-5 sm:px-6">
       <div
         className="absolute right-0 top-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none"
         style={{ background: "radial-gradient(circle, rgba(99,102,241,0.14) 0%, transparent 72%)" }}
@@ -70,11 +70,11 @@ export default function Pricing() {
         <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_1.95fr] gap-10 items-start mb-14">
           <div>
             <span className="badge badge-amber mb-4">Transparent Pricing</span>
-            <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4 leading-tight">
+            <h2 className="font-display text-3xl sm:text-5xl font-bold text-white mb-4 leading-tight">
               Premium delivery.
               <span className="gradient-text"> Clear commercial structure.</span>
             </h2>
-            <p className="text-slate-300 text-lg max-w-xl">
+            <p className="text-slate-300 text-base sm:text-lg max-w-xl">
               NyxPulse is designed to feel bespoke without hiding the economics. Individual seats start clearly, team pricing scales sensibly, and larger partnerships are scoped with precision.
             </p>
 
@@ -95,7 +95,7 @@ export default function Pricing() {
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative rounded-[28px] p-8 border transition-all duration-300 ${
+                className={`relative rounded-[28px] p-6 sm:p-8 border transition-all duration-300 ${
                   plan.highlight
                     ? "bg-gradient-to-b from-[rgba(99,102,241,0.24)] to-[rgba(245,158,11,0.08)] border-indigo-400/55 shadow-[0_0_60px_rgba(99,102,241,0.22)]"
                     : "bg-[rgba(12,12,24,0.9)] border-[rgba(148,163,184,0.2)] hover:border-[rgba(99,102,241,0.42)]"
@@ -121,7 +121,7 @@ export default function Pricing() {
                   <p className="text-slate-300 text-sm leading-relaxed">{plan.desc}</p>
                 </div>
 
-                <ul className="space-y-3 mb-8 min-h-[168px]">
+                <ul className="space-y-3 mb-8 lg:min-h-[168px]">
                   {plan.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-sm text-slate-300">
                       <Check className="w-4 h-4 text-amber-300 flex-shrink-0 mt-0.5" />

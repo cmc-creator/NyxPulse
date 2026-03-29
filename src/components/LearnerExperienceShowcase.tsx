@@ -21,7 +21,7 @@ const modules = [
 
 export default function LearnerExperienceShowcase() {
   return (
-    <section className="relative py-24 lg:py-32 px-6 overflow-hidden">
+    <section className="relative py-20 sm:py-24 lg:py-32 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[380px] h-[380px] bottom-[6%] right-[10%] animate-drift-slow opacity-40" />
       <div
         className="absolute inset-0 pointer-events-none animate-drift-slow"
@@ -34,16 +34,16 @@ export default function LearnerExperienceShowcase() {
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[1.2fr_0.8fr] gap-10 items-center">
         <MotionReveal delay={0.06} y={34} className="relative order-2 xl:order-1">
           <div className="glass-card rounded-[32px] overflow-hidden border-[rgba(148,163,184,0.22)] shadow-[0_30px_120px_rgba(2,6,23,0.52)] surface-premium">
-            <div className="border-b border-white/8 px-6 py-4 bg-[rgba(255,255,255,0.02)] flex items-center justify-between">
+            <div className="border-b border-white/8 px-4 sm:px-6 py-4 bg-[rgba(255,255,255,0.02)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Learner Experience</p>
-                <h3 className="text-white font-display text-2xl font-bold mt-1">Course progress and certificate flow</h3>
+                <h3 className="text-white font-display text-xl sm:text-2xl font-bold mt-1">Course progress and certificate flow</h3>
               </div>
               <div className="badge badge-amber">In Progress</div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-0">
-              <div className="p-6 border-r border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
+              <div className="p-4 sm:p-6 border-b lg:border-b-0 lg:border-r border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01))]">
                 <div className="rounded-[24px] border border-white/8 bg-slate-950/40 p-5 mb-5">
                   <div className="flex items-center justify-between mb-4">
                     <div>
@@ -85,7 +85,7 @@ export default function LearnerExperienceShowcase() {
                 </div>
               </div>
 
-              <div className="p-6 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.04),transparent_38%)]">
+              <div className="p-4 sm:p-6 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.04),transparent_38%)]">
                 <div className="rounded-[28px] border border-[rgba(245,158,11,0.16)] bg-[linear-gradient(180deg,rgba(245,158,11,0.08),rgba(255,255,255,0.02))] p-5 mb-5">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-11 h-11 rounded-2xl bg-[rgba(245,158,11,0.14)] flex items-center justify-center">
@@ -129,7 +129,7 @@ export default function LearnerExperienceShowcase() {
                         <Award className="w-4.5 h-4.5" />
                       </div>
                     </div>
-                    <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 mb-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-300 mb-3">
                       <div className="rounded-lg bg-slate-950/45 border border-white/8 p-2.5">
                         <p className="text-slate-500 mb-1">Credential ID</p>
                         <p className="text-white">NYX-BLS-48291</p>
@@ -173,11 +173,11 @@ export default function LearnerExperienceShowcase() {
 
         <MotionReveal className="order-1 xl:order-2">
           <span className="badge badge-cyan mb-4">Learner Journey</span>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
+          <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
             Sophisticated for administrators.
             <span className="gradient-text"> Effortless for learners.</span>
           </h2>
-          <p className="text-slate-300 text-lg leading-relaxed max-w-xl mb-8">
+          <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
             The platform experience is designed to feel calm, clear, and premium. Learners always know what to complete next, while leaders get clean documentation and instant visibility.
           </p>
 

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Shield } from "lucide-react";
+import Image from "next/image";
+import { Menu, X } from "lucide-react";
 import UserNav from "./UserNav";
 
 const navLinks = [
@@ -34,8 +35,15 @@ export default function Navbar() {
       <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-amber-400 flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
-            <Shield className="w-5 h-5 text-white" strokeWidth={2.4} />
+          <div className="w-9 h-9 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+            <Image
+              src="/black shiny np.png"
+              alt="NyxPulse logo"
+              width={36}
+              height={36}
+              className="w-full h-full object-cover"
+              priority
+            />
           </div>
           <span className="font-bold text-xl font-display tracking-tight">
             <span className="text-white">Nyx</span>
@@ -91,6 +99,9 @@ export default function Navbar() {
               </li>
             ))}
           </ul>
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <UserNav />
+          </div>
           <div className="flex flex-col gap-3 mt-4">
             <Link href="/courses" className="btn-outline text-sm text-center" onClick={() => setOpen(false)}>
               Browse Programs

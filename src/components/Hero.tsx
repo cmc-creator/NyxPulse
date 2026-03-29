@@ -22,7 +22,7 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-28 pb-20 px-6 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[520px] h-[520px] top-[12%] right-[8%] animate-drift-slow opacity-60" />
       <div className="orbital-ring w-[320px] h-[320px] bottom-[10%] left-[4%] animate-drift opacity-40" />
       <div
@@ -42,7 +42,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-5 gap-8 items-center">
+      <div className="relative z-10 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-5 gap-7 sm:gap-8 items-center">
         <div className="lg:col-span-3">
           <MotionReveal delay={0.02} className="inline-flex items-center gap-2 badge badge-violet mb-8">
             <Siren className="w-3.5 h-3.5" />
@@ -50,7 +50,7 @@ export default function Hero() {
           </MotionReveal>
 
           <MotionReveal delay={0.08}>
-            <h1 className="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] tracking-tight mb-6">
+            <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] tracking-tight mb-5 sm:mb-6">
             <span className="text-white">Where Preparedness</span>
             <br />
             <span className="gradient-text">Meets Excellence</span>
@@ -58,7 +58,7 @@ export default function Hero() {
           </MotionReveal>
 
           <MotionReveal delay={0.14}>
-            <p className="text-slate-300 text-lg sm:text-xl max-w-2xl leading-relaxed mb-10">
+            <p className="text-slate-300 text-base sm:text-xl max-w-2xl leading-relaxed mb-8 sm:mb-10">
             NyxPulse delivers a premium command experience for healthcare and community teams:
             rigorous certification pathways, high-fidelity scenarios, and polished operational oversight.
             </p>
@@ -92,13 +92,13 @@ export default function Hero() {
             ))}
           </MotionReveal>
 
-          <MotionReveal delay={0.32} className="grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl">
+          <MotionReveal delay={0.32} className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 max-w-4xl">
             {stats.map((stat) => (
               <motion.div
                 key={stat.label}
                 whileHover={{ y: -6, scale: 1.01 }}
                 transition={{ duration: 0.22 }}
-                className="glass-card p-5 text-center surface-premium"
+                className="glass-card p-4 sm:p-5 text-center surface-premium"
               >
                 <div className="text-lg sm:text-2xl font-bold gradient-text font-display mb-1">
                   {stat.value}
@@ -112,7 +112,7 @@ export default function Hero() {
         </div>
 
         <div className="lg:col-span-2">
-          <MotionReveal delay={0.18} y={36} className="glass-card p-6 sm:p-7 border-[rgba(99,102,241,0.35)] surface-premium animate-drift-slow">
+          <MotionReveal delay={0.18} y={36} className="glass-card p-5 sm:p-7 border-[rgba(99,102,241,0.35)] surface-premium animate-drift-slow">
             <div className="flex items-center justify-between mb-6">
               <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Readiness Snapshot</p>
               <span className="badge badge-amber">Priority</span>
