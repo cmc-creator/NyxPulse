@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import StarField from "@/components/StarField";
 import Hero from "@/components/Hero";
+import PlatformShowcase from "@/components/PlatformShowcase";
 import Features from "@/components/Features";
 import CoursesPreview from "@/components/CoursesPreview";
 import Pricing from "@/components/Pricing";
@@ -15,6 +16,8 @@ export default function Home() {
       <Navbar />
       <main className="relative z-10">
         <Hero />
+        <div className="section-divider" />
+        <PlatformShowcase />
         <div className="section-divider" />
         <div className="relative">
           <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.03),transparent_50%)]" />
