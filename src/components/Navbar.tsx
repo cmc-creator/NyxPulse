@@ -32,20 +32,20 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-16 lg:h-20">
+      <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-18 lg:h-24">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-9 h-9 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+          <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
             <Image
               src="/black shiny np.png"
               alt="NyxPulse logo"
-              width={36}
-              height={36}
+              width={48}
+              height={48}
               className="w-full h-full object-cover"
               priority
             />
           </div>
-          <span className="font-bold text-xl font-display tracking-tight">
+          <span className="font-bold text-2xl font-display tracking-tight">
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>

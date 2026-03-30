@@ -2,14 +2,14 @@
 @import "tailwindcss";
 
 :root {
-  --nyx-dark: #06070b;
-  --nyx-darker: #020309;
+  --nyx-dark: #000000;
+  --nyx-darker: #000000;
   --nyx-indigo: #6366f1;
   --nyx-indigo-light: #8b92ff;
   --nyx-platinum: #e2e8f0;
   --nyx-gold: #f59e0b;
   --nyx-amber: #f59e0b;
-  --nyx-card: rgba(12, 15, 24, 0.82);
+  --nyx-card: rgba(6, 8, 14, 0.88);
 }
 
 * {
@@ -22,10 +22,7 @@ html {
 
 body {
   background-color: var(--nyx-dark);
-  background-image:
-    radial-gradient(circle at 14% 16%, rgba(99, 102, 241, 0.2), transparent 34%),
-    radial-gradient(circle at 84% 12%, rgba(245, 158, 11, 0.15), transparent 40%),
-    radial-gradient(circle at 50% 92%, rgba(148, 163, 184, 0.08), transparent 44%);
+  background-image: none;
   color: #f1f5f9;
   font-family: 'Plus Jakarta Sans', sans-serif;
   overflow-x: hidden;
@@ -37,12 +34,32 @@ body::before {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    linear-gradient(rgba(148, 163, 184, 0.028) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.028) 1px, transparent 1px);
   background-size: 34px 34px;
   mask-image: radial-gradient(circle at center, black 22%, transparent 86%);
-  opacity: 0.24;
+  opacity: 0.16;
   z-index: 0;
+}
+
+.page-shell {
+  background: #000;
+}
+
+.page-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at top center, rgba(255, 255, 255, 0.03), transparent 28%),
+    linear-gradient(180deg, rgba(99, 102, 241, 0.05), transparent 18%);
+  opacity: 0.45;
+  z-index: 0;
+}
+
+.page-main {
+  background: transparent;
 }
 
 /* ========== SCROLLBAR ========== */

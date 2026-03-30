@@ -33,17 +33,17 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
           <div className="xl:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-5">
-              <div className="w-9 h-9 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+            <Link href="/" className="flex items-center gap-3 mb-5">
+              <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.3)]">
                 <Image
                   src="/black shiny np.png"
                   alt="NyxPulse logo"
-                  width={36}
-                  height={36}
+                  width={48}
+                  height={48}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <span className="font-bold text-xl font-display">
+              <span className="font-bold text-2xl font-display">
                 <span className="text-white">Nyx</span>
                 <span className="gradient-text">Pulse</span>
               </span>

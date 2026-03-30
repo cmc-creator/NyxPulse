@@ -38,18 +38,18 @@ export default function DashboardSidebar() {
     <>
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[rgba(2,2,10,0.95)] backdrop-blur-xl border-b border-[rgba(124,58,237,0.15)] px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)]">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="w-9 h-9 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)]">
             <Image
               src="/black shiny np.png"
               alt="NyxPulse logo"
-              width={28}
-              height={28}
+              width={36}
+              height={36}
               className="w-full h-full object-cover"
               priority
             />
           </div>
-          <span className="font-bold text-base font-display">
+          <span className="font-bold text-lg font-display">
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>
@@ -92,18 +92,18 @@ export default function DashboardSidebar() {
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-60 bg-[#02020a] border-r border-[rgba(124,58,237,0.12)] z-30">
         {/* Logo */}
         <div className="px-5 h-16 flex items-center border-b border-[rgba(124,58,237,0.1)]">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_15px_rgba(124,58,237,0.3)]">
+          <Link href="/" className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_15px_rgba(124,58,237,0.3)]">
               <Image
                 src="/black shiny np.png"
                 alt="NyxPulse logo"
-                width={32}
-                height={32}
+                width={40}
+                height={40}
                 className="w-full h-full object-cover"
                 priority
               />
             </div>
-            <span className="font-bold text-lg font-display">
+            <span className="font-bold text-xl font-display">
               <span className="text-white">Nyx</span>
               <span className="gradient-text">Pulse</span>
             </span>

@@ -49,11 +49,11 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen page-shell">
       <StarField />
       <Navbar />
 
-      <main className="relative z-10 pt-28 pb-20 px-6">
+      <main className="relative z-10 page-main pt-28 pb-20 px-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="text-center mb-14">

@@ -41,11 +41,11 @@ export default function LearningPathPage({ params }: { params: { id: string } })
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen page-shell">
       <StarField />
       <Navbar />
 
-      <main className="relative z-10 pt-28 pb-20 px-6">
+      <main className="relative z-10 page-main pt-28 pb-20 px-6">
         <div className="max-w-4xl mx-auto">
           <Link href="/" className="flex items-center gap-2 text-indigo-300 hover:text-white mb-8 transition-colors">
             <ArrowLeft className="w-4 h-4" />

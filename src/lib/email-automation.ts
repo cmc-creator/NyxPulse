@@ -1,8 +1,8 @@
 /**
- * Email Automation Service — powered by Resend
+ * Email Automation Service — powered by SMTP
  *
- * Requires: RESEND_API_KEY in environment variables
- * From address: set RESEND_FROM_EMAIL (default: onboarding@resend.dev for testing)
+ * Requires: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
+ * Sender: SMTP_FROM_EMAIL and optional SMTP_FROM_NAME
  *
  * Handles:
  * - Course completion notifications
@@ -12,16 +12,39 @@
  * - Expiration reminders
  */
 
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'NyxPulse <onboarding@resend.dev>';
+const SMTP_HOST = process.env.SMTP_HOST;
+const SMTP_PORT = Number(process.env.SMTP_PORT ?? 587);
+const SMTP_SECURE = process.env.SMTP_SECURE === 'true' || SMTP_PORT === 465;
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
+const FROM_EMAIL = process.env.SMTP_FROM_EMAIL ?? 'noreply@example.com';
+const FROM_NAME = process.env.SMTP_FROM_NAME ?? 'NyxPulse';
+
+const transporter =
+  SMTP_HOST && SMTP_USER && SMTP_PASS
+    ? nodemailer.createTransport({
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_SECURE,
+        auth: {
+          user: SMTP_USER,
+          pass: SMTP_PASS,
+        },
+      })
+    : null;
 
 interface EmailPayload {
   to: string;
   subject: string;
   html: string;
-  type: 'course-completion' | 'certificate-delivery' | 'team-invitation' | 'enrollment' | 'expiration-reminder';
+  type:
+    | 'course-completion'
+    | 'certificate-delivery'
+    | 'team-invitation'
+    | 'enrollment'
+    | 'expiration-reminder';
 }
 
 interface EmailResult {
@@ -30,7 +53,6 @@ interface EmailResult {
   error?: string;
 }
 
-// Shared base layout for all transactional emails
 function baseTemplate(title: string, body: string): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -40,7 +62,7 @@ function baseTemplate(title: string, body: string): string {
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0" style="background:#1a1040;border-radius:16px;overflow:hidden;border:1px solid rgba(139,92,246,0.3);">
         <tr><td style="background:linear-gradient(135deg,#7c3aed,#4f46e5);padding:32px 40px;text-align:center;">
-          <span style="color:#fff;font-size:28px;font-weight:700;letter-spacing:-0.5px;">⚡ NyxPulse</span>
+          <span style="color:#fff;font-size:28px;font-weight:700;letter-spacing:-0.5px;">NyxPulse</span>
         </td></tr>
         <tr><td style="padding:40px;color:#e2e8f0;">
           ${body}
@@ -66,28 +88,23 @@ function btn(text: string, href: string): string {
 
 async function sendAutomatedEmail(payload: EmailPayload): Promise<EmailResult> {
   try {
-    if (!process.env.RESEND_API_KEY) {
-      console.warn('[EMAIL] RESEND_API_KEY not set — skipping send for', payload.to);
+    if (!transporter) {
+      console.warn('[EMAIL] SMTP configuration not set — skipping send for', payload.to);
       return { success: true, messageId: `dev_${Date.now()}` };
     }
 
-    const { data, error } = await resend.emails.send({
-      from: FROM,
+    const info = await transporter.sendMail({
+      from: `${FROM_NAME} <${FROM_EMAIL}>`,
       to: payload.to,
       subject: payload.subject,
       html: payload.html,
     });
 
-    if (error) {
-      console.error('[EMAIL] Resend error:', error);
-      return { success: false, error: error.message };
-    }
-
-    return { success: true, messageId: data?.id };
-  } catch (err) {
+    return { success: true, messageId: info.messageId };
+  } catch (error) {
     return {
       success: false,
-      error: err instanceof Error ? err.message : 'Unknown error sending email',
+      error: error instanceof Error ? error.message : 'Unknown error sending email',
     };
   }
 }
@@ -99,16 +116,21 @@ export async function sendCourseCompletionEmail(
   certificateUrl: string
 ): Promise<EmailResult> {
   const html = baseTemplate('Certificate Awarded', `
-    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Congratulations, ${learnerName}! 🎉</h1>
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Congratulations, ${learnerName}!</h1>
     <p style="margin:0 0 16px;color:#a78bfa;font-size:16px;">You've successfully completed</p>
     <div style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:12px;padding:20px;margin-bottom:24px;text-align:center;">
       <span style="font-size:20px;font-weight:700;color:#fff;">${courseTitle}</span>
     </div>
-    <p style="color:#94a3b8;line-height:1.6;">Your certificate of completion has been issued and is ready to download. This certificate demonstrates your proficiency and can be shared with employers, licensing boards, or stored in your professional portfolio.</p>
+    <p style="color:#94a3b8;line-height:1.6;">Your certificate of completion has been issued and is ready to download.</p>
     ${btn('Download Certificate', certificateUrl)}
   `);
 
-  return sendAutomatedEmail({ to: email, subject: `🎉 Certificate Awarded: ${courseTitle}`, html, type: 'course-completion' });
+  return sendAutomatedEmail({
+    to: email,
+    subject: `Certificate Awarded: ${courseTitle}`,
+    html,
+    type: 'course-completion',
+  });
 }
 
 export async function sendCertificateEmail(
@@ -123,7 +145,7 @@ export async function sendCertificateEmail(
   }
 ): Promise<EmailResult> {
   const expiry = certificateData.expirationDate
-    ? `<p style="margin:12px 0 0;color:#94a3b8;font-size:14px;">⏰ Expires: <strong style="color:#fbbf24;">${certificateData.expirationDate}</strong></p>`
+    ? `<p style="margin:12px 0 0;color:#94a3b8;font-size:14px;">Expires: <strong style="color:#fbbf24;">${certificateData.expirationDate}</strong></p>`
     : '';
 
   const html = baseTemplate(`Your ${certificateData.courseTitle} Certificate`, `
@@ -138,7 +160,12 @@ export async function sendCertificateEmail(
     ${btn('Download Certificate', certificateData.downloadUrl)}
   `);
 
-  return sendAutomatedEmail({ to: email, subject: `Your ${certificateData.courseTitle} Certificate`, html, type: 'certificate-delivery' });
+  return sendAutomatedEmail({
+    to: email,
+    subject: `Your ${certificateData.courseTitle} Certificate`,
+    html,
+    type: 'certificate-delivery',
+  });
 }
 
 export async function sendTeamInvitationEmail(
@@ -158,10 +185,14 @@ export async function sendTeamInvitationEmail(
     </div>
     <p style="color:#6b7280;font-size:13px;">This invitation expires in 7 days.</p>
     ${btn('Accept Invitation', acceptUrl)}
-    <p style="margin-top:16px;color:#6b7280;font-size:12px;">If you didn't expect this invitation you can safely ignore this email.</p>
   `);
 
-  return sendAutomatedEmail({ to: email, subject: `You're invited to ${organizationName} on NyxPulse`, html, type: 'team-invitation' });
+  return sendAutomatedEmail({
+    to: email,
+    subject: `You're invited to ${organizationName} on NyxPulse`,
+    html,
+    type: 'team-invitation',
+  });
 }
 
 export async function sendEnrollmentConfirmationEmail(
@@ -171,20 +202,25 @@ export async function sendEnrollmentConfirmationEmail(
   accessUrl: string
 ): Promise<EmailResult> {
   const courseList = courses
-    .map((c) => `<li style="padding:6px 0;color:#e2e8f0;">✓ ${c}</li>`)
+    .map((course) => `<li style="padding:6px 0;color:#e2e8f0;">${course}</li>`)
     .join('');
 
   const html = baseTemplate('Your courses are ready', `
-    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Welcome, ${learnerName}! 🚀</h1>
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Welcome, ${learnerName}!</h1>
     <p style="margin:0 0 24px;color:#a78bfa;">You're now enrolled in the following course${courses.length > 1 ? 's' : ''}:</p>
-    <ul style="margin:0 0 24px;padding:0 0 0 8px;list-style:none;background:rgba(139,92,246,0.1);border-radius:12px;padding:16px 20px;border:1px solid rgba(139,92,246,0.3);">
+    <ul style="margin:0 0 24px;padding:16px 20px;list-style:none;background:rgba(139,92,246,0.1);border-radius:12px;border:1px solid rgba(139,92,246,0.3);">
       ${courseList}
     </ul>
-    <p style="color:#94a3b8;line-height:1.6;">You can access your courses anytime from your dashboard. Earn your certificates and advance your professional credentials.</p>
+    <p style="color:#94a3b8;line-height:1.6;">You can access your courses anytime from your dashboard.</p>
     ${btn('Start Learning', accessUrl)}
   `);
 
-  return sendAutomatedEmail({ to: email, subject: 'Welcome! Your courses are ready', html, type: 'enrollment' });
+  return sendAutomatedEmail({
+    to: email,
+    subject: 'Welcome! Your courses are ready',
+    html,
+    type: 'enrollment',
+  });
 }
 
 export async function sendExpirationReminderEmail(
@@ -200,21 +236,26 @@ export async function sendExpirationReminderEmail(
   const { courseTitle, expiresAt, daysUntilExpiration, renewalUrl } = certificateData;
   const urgent = daysUntilExpiration <= 7;
   const subject = urgent
-    ? `⚠️ Your ${courseTitle} certificate expires in ${daysUntilExpiration} days`
+    ? `Your ${courseTitle} certificate expires in ${daysUntilExpiration} days`
     : `Reminder: Your ${courseTitle} certificate expires soon`;
 
   const html = baseTemplate(subject, `
-    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">${urgent ? '⚠️ ' : ''}Certificate Expiring Soon</h1>
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Certificate Expiring Soon</h1>
     <p style="margin:0 0 24px;color:#a78bfa;">Hi ${learnerName}, your certification needs renewal.</p>
     <div style="background:${urgent ? 'rgba(239,68,68,0.15)' : 'rgba(251,191,36,0.1)'};border:1px solid ${urgent ? 'rgba(239,68,68,0.4)' : 'rgba(251,191,36,0.3)'};border-radius:12px;padding:20px;margin-bottom:24px;">
       <p style="margin:0;font-size:16px;color:#fff;font-weight:600;">${courseTitle}</p>
       <p style="margin:8px 0 0;color:${urgent ? '#fca5a5' : '#fcd34d'};">Expires: ${expiresAt} (${daysUntilExpiration} days remaining)</p>
     </div>
-    <p style="color:#94a3b8;line-height:1.6;">Renew your certification to stay compliant and maintain your professional credentials. Renewal is quick and keeps your training record current.</p>
+    <p style="color:#94a3b8;line-height:1.6;">Renew your certification to stay compliant and maintain your professional credentials.</p>
     ${btn('Renew Certification', renewalUrl)}
   `);
 
-  return sendAutomatedEmail({ to: email, subject, html, type: 'expiration-reminder' });
+  return sendAutomatedEmail({
+    to: email,
+    subject,
+    html,
+    type: 'expiration-reminder',
+  });
 }
 
 export async function handleEmailWebhook(
@@ -254,10 +295,8 @@ export async function handleEmailWebhook(
   }
 }
 
-export async function sendBatchEmails(
-  payloads: EmailPayload[]
-): Promise<EmailResult[]> {
-  return Promise.all(payloads.map((p) => sendAutomatedEmail(p)));
+export async function sendBatchEmails(payloads: EmailPayload[]): Promise<EmailResult[]> {
+  return Promise.all(payloads.map((payload) => sendAutomatedEmail(payload)));
 }
 
 export type { EmailPayload, EmailResult };
