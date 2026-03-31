@@ -57,6 +57,8 @@ export default function RootLayout({
       <body className="antialiased">
         <ClerkProvider
           afterSignOutUrl="/"
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
           appearance={{
             variables: {
               colorPrimary: "#7c3aed",
