@@ -1,5 +1,6 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { getCourseBySlug } from "@/lib/courses";
+import { sendCourseCompletionEmail } from "@/lib/email-automation";
 
 export async function POST(req: Request) {
   const { userId } = await auth();
@@ -20,7 +21,8 @@ export async function POST(req: Request) {
   }
 
   // Validate the course exists
-  if (!getCourseBySlug(courseSlug)) {
+  const course = getCourseBySlug(courseSlug);
+  if (!course) {
     return Response.json({ error: "Course not found" }, { status: 404 });
   }
 
@@ -43,6 +45,27 @@ export async function POST(req: Request) {
           completedCourses: [...completedSlugs, courseSlug],
         },
       });
+
+      const primaryEmail = user.emailAddresses.find(
+        (email) => email.id === user.primaryEmailAddressId
+      )?.emailAddress;
+
+      if (primaryEmail) {
+        const firstName = user.firstName ?? user.username ?? "NyxPulse Learner";
+        const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
+        const certificateUrl = `${appUrl}/dashboard?tab=certificates&course=${encodeURIComponent(courseSlug)}`;
+
+        const emailResult = await sendCourseCompletionEmail(
+          primaryEmail,
+          firstName,
+          course.title,
+          certificateUrl
+        );
+
+        if (!emailResult.success) {
+          console.error("Failed to send completion email:", emailResult.error);
+        }
+      }
     }
 
     return Response.json({ success: true });

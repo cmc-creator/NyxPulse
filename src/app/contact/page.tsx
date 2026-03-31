@@ -22,6 +22,8 @@ const formats = ["Live / On-site", "Virtual", "Hybrid", "Flexible"];
 
 export default function ContactPage() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -42,10 +44,31 @@ export default function ContactPage() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In production, send to your backend/email service
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        throw new Error(data.error ?? "Unable to send your request right now.");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Unable to send your request.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -270,10 +293,18 @@ export default function ContactPage() {
                     />
                   </div>
 
-                  <button type="submit" className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2">
-                    <span>Send Request</span>
+                  <button
+                    type="submit"
+                    disabled={submitting}
+                    className="btn-primary w-full py-4 text-base flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    <span>{submitting ? "Sending..." : "Send Request"}</span>
                     <Send className="w-4 h-4" />
                   </button>
+
+                  {submitError ? (
+                    <p className="text-center text-sm text-red-400">{submitError}</p>
+                  ) : null}
 
                   <p className="text-center text-xs text-slate-600">
                     By submitting you agree to our Privacy Policy. We never share your information.

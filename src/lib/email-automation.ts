@@ -44,7 +44,9 @@ interface EmailPayload {
     | 'certificate-delivery'
     | 'team-invitation'
     | 'enrollment'
-    | 'expiration-reminder';
+    | 'expiration-reminder'
+    | 'contact-request'
+    | 'contact-confirmation';
 }
 
 interface EmailResult {
@@ -255,6 +257,73 @@ export async function sendExpirationReminderEmail(
     subject,
     html,
     type: 'expiration-reminder',
+  });
+}
+
+export async function sendContactRequestNotification(data: {
+  name: string;
+  email: string;
+  org?: string;
+  phone?: string;
+  trainingType?: string[];
+  format?: string;
+  teamSize?: string;
+  message?: string;
+}): Promise<EmailResult> {
+  const inboxEmail = process.env.CONTACT_INBOX_EMAIL ?? 'info@nyxpulse.com';
+  const trainingSummary =
+    data.trainingType && data.trainingType.length > 0
+      ? data.trainingType.join(', ')
+      : 'Not specified';
+
+  const html = baseTemplate('New Contact Request', `
+    <h1 style="margin:0 0 12px;font-size:24px;color:#fff;">New Contact Request</h1>
+    <p style="margin:0 0 20px;color:#94a3b8;">A new lead submitted the contact form on nyxpulse.com.</p>
+    <table width="100%" cellpadding="12" style="background:rgba(139,92,246,0.1);border-radius:12px;border:1px solid rgba(139,92,246,0.3);border-collapse:separate;">
+      <tr><td style="color:#94a3b8;width:150px;">Name</td><td style="color:#fff;font-weight:600;">${data.name}</td></tr>
+      <tr><td style="color:#94a3b8;">Email</td><td style="color:#fff;">${data.email}</td></tr>
+      <tr><td style="color:#94a3b8;">Organization</td><td style="color:#fff;">${data.org || 'Not provided'}</td></tr>
+      <tr><td style="color:#94a3b8;">Phone</td><td style="color:#fff;">${data.phone || 'Not provided'}</td></tr>
+      <tr><td style="color:#94a3b8;">Training Interest</td><td style="color:#fff;">${trainingSummary}</td></tr>
+      <tr><td style="color:#94a3b8;">Preferred Format</td><td style="color:#fff;">${data.format || 'Not specified'}</td></tr>
+      <tr><td style="color:#94a3b8;">Team Size</td><td style="color:#fff;">${data.teamSize || 'Not specified'}</td></tr>
+    </table>
+    <div style="margin-top:20px;padding:16px;border:1px solid rgba(139,92,246,0.2);border-radius:12px;background:rgba(255,255,255,0.02);">
+      <p style="margin:0 0 8px;color:#94a3b8;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;">Additional Notes</p>
+      <p style="margin:0;color:#e2e8f0;white-space:pre-wrap;">${data.message || 'No additional notes provided.'}</p>
+    </div>
+  `);
+
+  return sendAutomatedEmail({
+    to: inboxEmail,
+    subject: `New Contact Request from ${data.name}`,
+    html,
+    type: 'contact-request',
+  });
+}
+
+export async function sendContactRequestConfirmation(data: {
+  name: string;
+  email: string;
+  trainingType?: string[];
+}): Promise<EmailResult> {
+  const trainingSummary =
+    data.trainingType && data.trainingType.length > 0
+      ? data.trainingType.join(', ')
+      : 'your requested training';
+
+  const html = baseTemplate('We received your request', `
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Thanks, ${data.name}!</h1>
+    <p style="margin:0 0 16px;color:#a78bfa;">We received your request and our team will reach out within one business day.</p>
+    <p style="margin:0;color:#94a3b8;line-height:1.6;">Requested focus: <strong style="color:#e2e8f0;">${trainingSummary}</strong></p>
+    ${btn('Browse Courses', 'https://nyxpulse.com/courses')}
+  `);
+
+  return sendAutomatedEmail({
+    to: data.email,
+    subject: 'NyxPulse received your training request',
+    html,
+    type: 'contact-confirmation',
   });
 }
 
