@@ -5,6 +5,9 @@ import {
 } from "@/lib/email-automation";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
+const RATE_LIMIT_MAX_REQUESTS = 3;
+const requestLog = new Map<string, number[]>();
 
 type ContactBody = {
   name?: string;
@@ -15,10 +18,47 @@ type ContactBody = {
   format?: string;
   teamSize?: string;
   message?: string;
+  website?: string;
 };
+
+function getClientIp(req: Request): string {
+  const forwardedFor = req.headers.get("x-forwarded-for");
+  if (forwardedFor) {
+    return forwardedFor.split(",")[0]?.trim() || "unknown";
+  }
+
+  return req.headers.get("x-real-ip")?.trim() || "unknown";
+}
+
+function isRateLimited(key: string): boolean {
+  const now = Date.now();
+  const timestamps = requestLog.get(key) ?? [];
+  const recentTimestamps = timestamps.filter((timestamp) => now - timestamp < RATE_LIMIT_WINDOW_MS);
+
+  if (recentTimestamps.length >= RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(key, recentTimestamps);
+    return true;
+  }
+
+  recentTimestamps.push(now);
+  requestLog.set(key, recentTimestamps);
+  return false;
+}
 
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as ContactBody;
+  const clientIp = getClientIp(req);
+
+  if (body.website?.trim()) {
+    return NextResponse.json({ success: true, confirmationSent: false });
+  }
+
+  if (isRateLimited(clientIp)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a few minutes and try again." },
+      { status: 429 }
+    );
+  }
 
   const name = body.name?.trim();
   const email = body.email?.trim().toLowerCase();

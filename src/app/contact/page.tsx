@@ -33,6 +33,7 @@ export default function ContactPage() {
     format: "",
     teamSize: "",
     message: "",
+    website: "",
   });
 
   const toggleTraining = (t: string) => {
@@ -172,6 +173,18 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="glass-card p-8 space-y-5">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-violet-600 to-cyan-500 rounded-t-2xl" />
+
+                  <div className="hidden" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      id="website"
+                      type="text"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      value={form.website}
+                      onChange={(e) => setForm({ ...form, website: e.target.value })}
+                    />
+                  </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>
