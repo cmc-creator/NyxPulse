@@ -32,24 +32,24 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-18 lg:h-24">
+      <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-20 lg:h-28">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
             <Image
               src="/black shiny np.png"
               alt="NyxPulse logo"
-              width={48}
-              height={48}
+              width={80}
+              height={80}
               className="w-full h-full object-cover"
               priority
             />
           </div>
-          <span className="font-bold text-2xl font-display tracking-tight">
+          <span className="font-bold text-[1.8rem] lg:text-[2.4rem] font-display tracking-tight leading-none">
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>
-          <span className="hidden sm:inline text-[10px] text-slate-500 font-medium tracking-wider uppercase ml-1 mt-1">
+          <span className="hidden sm:inline text-[11px] lg:text-xs text-slate-500 font-medium tracking-wider uppercase ml-1 mt-1">
             by NyxCollective
           </span>
         </Link>
