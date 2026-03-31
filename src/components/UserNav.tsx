@@ -1,10 +1,13 @@
 "use client";
 
-import { Show, UserButton, SignInButton } from "@clerk/nextjs";
+import { Show, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { LayoutDashboard, ArrowRight } from "lucide-react";
 
 export default function UserNav() {
+  const { user } = useUser();
+  const accountLabel = user?.firstName ?? user?.username ?? "Account";
+
   return (
     <div className="flex items-center gap-3">
       <Show when="signed-in">
@@ -15,7 +18,10 @@ export default function UserNav() {
           <LayoutDashboard className="w-4 h-4" />
           Dashboard
         </Link>
-        <UserButton />
+        <span className="hidden lg:inline text-sm text-slate-300">{accountLabel}</span>
+        <SignOutButton>
+          <button className="btn-outline text-sm py-2 px-4">Sign Out</button>
+        </SignOutButton>
       </Show>
       <Show when="signed-out">
         <SignInButton mode="modal">
