@@ -33,14 +33,20 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
           <div className="xl:col-span-2">
-            <Link href="/" className="inline-flex items-center mb-5">
-              <Image
-                src="/nyxpulse-logo.png"
-                alt="NyxPulse logo"
-                width={360}
-                height={360}
-                className="h-20 w-auto object-contain"
-              />
+            <Link href="/" className="flex items-center gap-4 mb-5 whitespace-nowrap">
+              <div className="w-16 h-16 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.38),0_0_34px_rgba(245,158,11,0.16)] p-1.5">
+                <Image
+                  src="/nyxpulse-logo.png"
+                  alt="NyxPulse logo"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+              <span className="font-bold text-[2.1rem] font-display leading-none whitespace-nowrap">
+                <span className="text-white">Nyx</span>
+                <span className="gradient-text">Pulse</span>
+              </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed max-w-xs mb-6">
               Luxury-grade emergency and safety training software for organizations that want credible delivery, clean operations, and measurable readiness.

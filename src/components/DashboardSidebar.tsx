@@ -38,15 +38,21 @@ export default function DashboardSidebar() {
     <>
       {/* Mobile top bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-[rgba(2,2,10,0.95)] backdrop-blur-xl border-b border-[rgba(124,58,237,0.15)] px-4 h-14 flex items-center justify-between">
-        <Link href="/" className="flex items-center">
-          <Image
-            src="/nyxpulse-logo.png"
-            alt="NyxPulse logo"
-            width={220}
-            height={220}
-            className="h-10 w-auto object-contain"
-            priority
-          />
+        <Link href="/" className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_16px_rgba(99,102,241,0.32)] p-1">
+            <Image
+              src="/nyxpulse-logo.png"
+              alt="NyxPulse logo"
+              width={48}
+              height={48}
+              className="w-full h-full object-contain"
+              priority
+            />
+          </div>
+          <span className="font-bold text-xl font-display leading-none whitespace-nowrap">
+            <span className="text-white">Nyx</span>
+            <span className="gradient-text">Pulse</span>
+          </span>
         </Link>
         <div className="flex items-center gap-3">
           <UserButton />
@@ -86,15 +92,21 @@ export default function DashboardSidebar() {
       <aside className="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 w-60 bg-[#02020a] border-r border-[rgba(124,58,237,0.12)] z-30">
         {/* Logo */}
         <div className="px-5 h-16 flex items-center border-b border-[rgba(124,58,237,0.1)]">
-          <Link href="/" className="flex items-center">
-            <Image
-              src="/nyxpulse-logo.png"
-              alt="NyxPulse logo"
-              width={240}
-              height={240}
-              className="h-12 w-auto object-contain"
-              priority
-            />
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-14 h-14 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_18px_rgba(99,102,241,0.36)] p-1">
+              <Image
+                src="/nyxpulse-logo.png"
+                alt="NyxPulse logo"
+                width={56}
+                height={56}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </div>
+            <span className="font-bold text-2xl font-display leading-none whitespace-nowrap">
+              <span className="text-white">Nyx</span>
+              <span className="gradient-text">Pulse</span>
+            </span>
           </Link>
         </div>
 
