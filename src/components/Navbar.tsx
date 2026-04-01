@@ -29,27 +29,27 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-[rgba(6,10,18,0.92)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.24)] shadow-[0_8px_30px_rgba(2,6,23,0.38)]"
-          : "bg-transparent"
+          : "bg-[linear-gradient(180deg,rgba(2,6,23,0.72),rgba(2,6,23,0.18),transparent)]"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-6 lg:px-8 flex items-center justify-between h-20 lg:h-28">
+      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-18 lg:h-22">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-110 transition-transform duration-300 shadow-[0_0_18px_rgba(99,102,241,0.35)]">
+          <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_16px_rgba(99,102,241,0.3)] p-1.5">
             <Image
               src="/black shiny np.png"
               alt="NyxPulse logo"
-              width={80}
-              height={80}
-              className="w-full h-full object-cover"
+              width={56}
+              height={56}
+              className="w-full h-full object-contain"
               priority
             />
           </div>
-          <span className="font-bold text-[1.8rem] lg:text-[2.4rem] font-display tracking-tight leading-none">
+          <span className="font-bold text-[1.45rem] lg:text-[1.8rem] font-display tracking-tight leading-none">
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>
-          <span className="hidden sm:inline text-[11px] lg:text-xs text-slate-500 font-medium tracking-wider uppercase ml-1 mt-1">
+          <span className="hidden xl:inline text-[11px] text-slate-500 font-medium tracking-wider uppercase ml-1 mt-0.5">
             by NyxCollective
           </span>
         </Link>

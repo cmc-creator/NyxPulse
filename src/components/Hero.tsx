@@ -22,7 +22,7 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-24 sm:pt-28 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-28 sm:pt-32 lg:pt-34 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[520px] h-[520px] top-[12%] right-[8%] animate-drift-slow opacity-60" />
       <div className="orbital-ring w-[320px] h-[320px] bottom-[10%] left-[4%] animate-drift opacity-40" />
       <div
@@ -50,7 +50,7 @@ export default function Hero() {
           </MotionReveal>
 
           <MotionReveal delay={0.08}>
-            <h1 className="font-display text-4xl sm:text-6xl lg:text-7xl font-extrabold leading-[0.95] tracking-tight mb-5 sm:mb-6">
+            <h1 className="font-display text-4xl sm:text-6xl lg:text-[4.5rem] font-extrabold leading-[0.95] tracking-tight mb-5 sm:mb-6 text-balance">
             <span className="text-white">Where Preparedness</span>
             <br />
             <span className="gradient-text">Meets Excellence</span>
@@ -58,7 +58,7 @@ export default function Hero() {
           </MotionReveal>
 
           <MotionReveal delay={0.14}>
-            <p className="text-slate-300 text-base sm:text-xl max-w-2xl leading-relaxed mb-8 sm:mb-10">
+            <p className="text-slate-200 text-base sm:text-xl max-w-2xl leading-relaxed mb-8 sm:mb-10">
             NyxPulse delivers a premium command experience for healthcare and community teams:
             rigorous certification pathways, high-fidelity scenarios, and polished operational oversight.
             </p>
