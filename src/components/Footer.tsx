@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
+import { Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
   Training: [
@@ -33,17 +33,17 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
           <div className="xl:col-span-2">
-            <Link href="/" className="flex items-center gap-4 mb-5">
-              <div className="w-16 h-16 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.3)]">
+            <Link href="/" className="flex items-center gap-4 mb-5 whitespace-nowrap">
+              <div className="w-16 h-16 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_20px_rgba(99,102,241,0.3)] p-1.5">
                 <Image
-                  src="/black shiny np.png"
+                  src="/nyxpulse-logo.png"
                   alt="NyxPulse logo"
                   width={64}
                   height={64}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                 />
               </div>
-              <span className="font-bold text-[2.1rem] font-display leading-none">
+              <span className="font-bold text-[2.1rem] font-display leading-none whitespace-nowrap">
                 <span className="text-white">Nyx</span>
                 <span className="gradient-text">Pulse</span>
               </span>
@@ -69,22 +69,7 @@ export default function Footer() {
               </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              {[
-                { label: "Twitter / X", href: "#" },
-                { label: "LinkedIn", href: "#" },
-                { label: "Instagram", href: "#" },
-              ].map(({ href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  aria-label={label}
-                  className="w-9 h-9 rounded-lg bg-[rgba(99,102,241,0.08)] border border-[rgba(99,102,241,0.2)] flex items-center justify-center text-slate-400 hover:text-amber-300 hover:border-indigo-400 transition-all"
-                >
-                  <ExternalLink className="w-4 h-4" />
-                </a>
-              ))}
-            </div>
+            <p className="text-xs text-slate-600">Official social channels coming soon.</p>
           </div>
 
           {Object.entries(footerLinks).map(([title, links]) => (

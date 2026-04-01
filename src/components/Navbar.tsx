@@ -32,20 +32,20 @@ export default function Navbar() {
           : "bg-[linear-gradient(180deg,rgba(2,6,23,0.72),rgba(2,6,23,0.18),transparent)]"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-18 lg:h-22">
+      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-20 lg:h-24">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_16px_rgba(99,102,241,0.3)] p-1.5">
+        <Link href="/" className="flex items-center gap-3.5 group whitespace-nowrap">
+          <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_16px_rgba(99,102,241,0.3)] p-1.5">
             <Image
-              src="/black shiny np.png"
+              src="/nyxpulse-logo.png"
               alt="NyxPulse logo"
-              width={56}
-              height={56}
+              width={64}
+              height={64}
               className="w-full h-full object-contain"
               priority
             />
           </div>
-          <span className="font-bold text-[1.45rem] lg:text-[1.8rem] font-display tracking-tight leading-none">
+          <span className="font-bold text-[1.7rem] lg:text-[2.15rem] font-display tracking-tight leading-none whitespace-nowrap">
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>

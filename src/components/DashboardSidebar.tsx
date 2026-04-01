@@ -41,7 +41,7 @@ export default function DashboardSidebar() {
         <Link href="/" className="flex items-center gap-3">
           <div className="w-12 h-12 rounded-2xl overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)]">
             <Image
-              src="/black shiny np.png"
+              src="/nyxpulse-logo.png"
               alt="NyxPulse logo"
               width={48}
               height={48}
@@ -95,7 +95,7 @@ export default function DashboardSidebar() {
           <Link href="/" className="flex items-center gap-3">
             <div className="w-14 h-14 rounded-[1.4rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] shadow-[0_0_15px_rgba(124,58,237,0.3)]">
               <Image
-                src="/black shiny np.png"
+                src="/nyxpulse-logo.png"
                 alt="NyxPulse logo"
                 width={56}
                 height={56}

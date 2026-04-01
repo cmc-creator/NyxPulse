@@ -24,12 +24,12 @@ export const metadata: Metadata = {
     title: "NyxPulse | Next-Generation Emergency & Safety Training",
     description: "Train smarter. Respond faster. Save lives.",
     type: "website",
-    images: ["/black shiny np.png"],
+    images: ["/nyxpulse-logo.png"],
   },
   icons: {
-    icon: "/black shiny np.png",
-    shortcut: "/black shiny np.png",
-    apple: "/black shiny np.png",
+    icon: "/nyxpulse-logo.png",
+    shortcut: "/nyxpulse-logo.png",
+    apple: "/nyxpulse-logo.png",
   },
 };
 
