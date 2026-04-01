@@ -310,3 +310,16 @@ body::before {
   color: #f8fafc;
   border: 1px solid rgba(148, 163, 184, 0.35);
 }
+
+/* Hide Clerk dev badge/watermark artifacts from production UI surfaces. */
+[data-clerk-dev-badge],
+[data-clerk-dev-browser],
+[id*="clerk-dev"],
+[class*="clerk-dev"],
+[aria-label*="Clerk" i][style*="position: fixed"],
+[title*="Clerk" i][style*="position: fixed"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
