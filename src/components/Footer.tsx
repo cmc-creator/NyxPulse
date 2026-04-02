@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Mail, Phone, MapPin } from "lucide-react";
 
 const footerLinks = {
@@ -32,7 +33,16 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-12">
           <div className="xl:col-span-2">
-            <Link href="/" className="inline-flex items-center mb-5">
+            <Link href="/" className="inline-flex items-center gap-4 mb-5 group">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden bg-black border border-white/10 shadow-[0_8px_22px_rgba(0,0,0,0.55)] p-1.5 group-hover:scale-105 transition-transform duration-300">
+                <Image
+                  src="/nyxpulse-logo.png"
+                  alt="NyxPulse logo"
+                  width={64}
+                  height={64}
+                  className="w-full h-full object-contain"
+                />
+              </div>
               <span className="font-bold text-[2.1rem] font-display leading-none whitespace-nowrap">
                 <span className="text-white">Nyx</span>
                 <span className="gradient-text">Pulse</span>
