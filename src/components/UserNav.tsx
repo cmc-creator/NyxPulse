@@ -29,7 +29,7 @@ export default function UserNav() {
 
   return (
     <div className="flex items-center gap-3">
-      <Link href="/sign-in" className="hidden lg:block btn-outline text-sm py-2 px-5">
+      <Link href="/sign-in" className="btn-outline text-sm py-2 px-5">
         Sign In
       </Link>
       <Link href="/sign-up" className="btn-primary text-sm py-2 px-5">
