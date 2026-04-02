@@ -22,7 +22,7 @@ const stats = [
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-28 sm:pt-32 lg:pt-34 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-20 sm:pt-24 lg:pt-52 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[520px] h-[520px] top-[12%] right-[8%] animate-drift-slow opacity-60" />
       <div className="orbital-ring w-[320px] h-[320px] bottom-[10%] left-[4%] animate-drift opacity-40" />
       <div

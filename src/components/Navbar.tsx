@@ -14,6 +14,40 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
+// Silver tracer logo card — shared between mobile and desktop
+function LogoCard({ size = 56 }: { size?: number }) {
+  const rad = size <= 56 ? "rounded-xl" : "rounded-2xl";
+  return (
+    <div
+      className={`relative group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}
+      style={{ width: size, height: size }}
+    >
+      {/* Animated silver conic ring */}
+      <div
+        className={`absolute inset-[-2px] ${rad} animate-[spin_6s_linear_infinite]`}
+        style={{
+          background:
+            "conic-gradient(from 0deg, rgba(148,163,184,0.1), rgba(226,232,240,0.9), rgba(255,255,255,0.7), rgba(148,163,184,0.1), rgba(100,116,139,0.05), rgba(226,232,240,0.9), rgba(148,163,184,0.1))",
+        }}
+      />
+      {/* Inner card: pure black blending with logo */}
+      <div
+        className={`absolute inset-[2px] ${rad} overflow-hidden bg-black shadow-[0_6px_20px_rgba(0,0,0,0.7)]`}
+        style={{ padding: 4 }}
+      >
+        <Image
+          src="/nyxpulse-logo.png"
+          alt="NyxPulse logo"
+          width={size}
+          height={size}
+          className="w-full h-full object-contain"
+          priority
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -28,75 +62,40 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-[rgba(6,10,18,0.92)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.24)] shadow-[0_8px_30px_rgba(2,6,23,0.38)]"
-          : "bg-[linear-gradient(180deg,rgba(2,6,23,0.72),rgba(2,6,23,0.18),transparent)]"
+          ? "bg-[rgba(6,10,18,0.95)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.2)] shadow-[0_8px_30px_rgba(2,6,23,0.4)]"
+          : "bg-[rgba(2,6,23,0.5)] backdrop-blur-md"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 h-44 lg:h-56 relative">
-        {/* Mobile header */}
-        <div className="lg:hidden flex items-center justify-between h-full">
-          <Link href="/" className="flex flex-col items-center justify-center gap-1 group whitespace-nowrap">
-            <div className="relative w-20 h-20 rounded-[1.2rem] group-hover:scale-105 transition-transform duration-300">
-              <div className="absolute inset-0 rounded-[1.2rem] bg-[conic-gradient(from_0deg,rgba(226,232,240,0.15),rgba(226,232,240,0.85),rgba(148,163,184,0.25),rgba(248,250,252,0.9),rgba(226,232,240,0.15))] animate-[spin_7s_linear_infinite]" />
-              <div className="relative h-full w-full rounded-[1.15rem] overflow-hidden border border-[rgba(255,255,255,0.16)] bg-[#020202] p-1">
-                <Image
-                  src="/nyxpulse-logo.png"
-                  alt="NyxPulse logo"
-                  width={96}
-                  height={96}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
-            </div>
-            <span className="font-bold text-xl font-display tracking-tight leading-none">
-              <span className="text-white">Nyx</span>
-              <span className="gradient-text">Pulse</span>
-            </span>
-          </Link>
-
-          <button
-            className="text-slate-300 hover:text-white p-2"
-            onClick={() => setOpen(!open)}
-            aria-label="Toggle menu"
-          >
-            {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+      {/* ─── Desktop header: two rows centered, auth pinned right ─── */}
+      <div className="hidden lg:block relative">
+        {/* Auth pinned to right, vertically centered over the two rows */}
+        <div className="absolute right-8 top-0 bottom-0 flex items-center gap-3 z-10">
+          <UserNav />
         </div>
 
-        {/* Desktop brand and menu */}
-        <div className="hidden lg:flex h-full flex-col items-center justify-start pt-2">
-          <Link href="/" className="flex flex-col items-center justify-center gap-2 group whitespace-nowrap">
-            <div className="relative w-40 h-40 rounded-[1.6rem] group-hover:scale-105 transition-transform duration-300">
-              <div className="absolute inset-0 rounded-[1.6rem] bg-[conic-gradient(from_0deg,rgba(226,232,240,0.15),rgba(226,232,240,0.85),rgba(148,163,184,0.25),rgba(248,250,252,0.9),rgba(226,232,240,0.15))] animate-[spin_7s_linear_infinite]" />
-              <div className="relative h-full w-full rounded-[1.55rem] overflow-hidden border border-[rgba(255,255,255,0.16)] bg-[#020202] p-1.5 shadow-[0_10px_28px_rgba(0,0,0,0.55)]">
-                <Image
-                  src="/nyxpulse-logo.png"
-                  alt="NyxPulse logo"
-                  width={192}
-                  height={192}
-                  className="w-full h-full object-contain"
-                  priority
-                />
-              </div>
-            </div>
+        {/* Row 1 + Row 2 centered */}
+        <div className="flex flex-col items-center py-3 gap-1.5">
+          {/* Brand lockup: logo + name stacked */}
+          <Link href="/" className="group flex flex-col items-center gap-2">
+            <LogoCard size={72} />
             <div className="flex flex-col items-center leading-none">
-              <span className="font-bold text-[2.15rem] font-display tracking-tight whitespace-nowrap">
+              <span className="font-bold text-2xl font-display tracking-tight">
                 <span className="text-white">Nyx</span>
                 <span className="gradient-text">Pulse</span>
               </span>
-              <span className="text-[11px] text-slate-400 font-medium tracking-wider mt-1">
-                by nyxcollective LLC
+              <span className="text-[10px] text-slate-500 tracking-widest uppercase mt-0.5">
+                by NyxCollective LLC
               </span>
             </div>
           </Link>
 
-          <ul className="flex items-center gap-1 mt-2">
+          {/* Nav links row */}
+          <ul className="flex items-center gap-0.5">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="px-4 py-2 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-[rgba(99,102,241,0.14)] transition-all duration-200"
+                  className="px-4 py-1.5 text-sm text-slate-300 hover:text-white rounded-lg hover:bg-[rgba(99,102,241,0.14)] transition-all duration-200"
                 >
                   {link.label}
                 </Link>
@@ -104,17 +103,30 @@ export default function Navbar() {
             ))}
           </ul>
         </div>
+      </div>
 
-        {/* Desktop auth / CTA */}
-        <div className="hidden lg:flex items-center gap-3 absolute right-8 top-1/2 -translate-y-1/2">
-          <UserNav />
-        </div>
-      </nav>
+      {/* ─── Mobile header: single row ─── */}
+      <div className="lg:hidden flex items-center justify-between h-16 px-5">
+        <Link href="/" className="group flex items-center gap-2.5">
+          <LogoCard size={40} />
+          <span className="font-bold text-lg font-display tracking-tight">
+            <span className="text-white">Nyx</span>
+            <span className="gradient-text">Pulse</span>
+          </span>
+        </Link>
+        <button
+          className="text-slate-300 hover:text-white p-2"
+          onClick={() => setOpen(!open)}
+          aria-label="Toggle menu"
+        >
+          {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        </button>
+      </div>
 
-      {/* Mobile menu */}
+      {/* ─── Mobile menu ─── */}
       {open && (
-        <div className="lg:hidden bg-[rgba(6,10,18,0.98)] backdrop-blur-xl border-b border-[rgba(99,102,241,0.2)] px-6 pb-6">
-          <ul className="flex flex-col gap-1 pt-2">
+        <div className="lg:hidden bg-[rgba(6,10,18,0.98)] backdrop-blur-xl border-t border-[rgba(99,102,241,0.15)] px-6 pb-6">
+          <ul className="flex flex-col gap-1 pt-3">
             {navLinks.map((link) => (
               <li key={link.href}>
                 <Link
