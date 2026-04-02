@@ -16,13 +16,13 @@ import MotionReveal from "@/components/MotionReveal";
 const stats = [
   { value: "6", label: "Elite Training Tracks" },
   { value: "365", label: "Days of Readiness Focus" },
-  { value: "AHA/FEMA/OSHA", label: "Accreditation Alignment" },
-  { value: "On-Site + Virtual", label: "Premium Delivery" },
+  { value: "Multi-Standard", label: "AHA · FEMA · OSHA Aligned" },
+  { value: "Live + Virtual", label: "Premium Delivery" },
 ];
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center pt-20 sm:pt-24 lg:pt-56 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
+    <section className="relative min-h-screen flex items-center pt-20 sm:pt-24 lg:pt-60 pb-16 sm:pb-20 px-5 sm:px-6 overflow-hidden">
       <div className="orbital-ring w-[520px] h-[520px] top-[12%] right-[8%] animate-drift-slow opacity-60" />
       <div className="orbital-ring w-[320px] h-[320px] bottom-[10%] left-[4%] animate-drift opacity-40" />
       <div
@@ -100,7 +100,7 @@ export default function Hero() {
                 transition={{ duration: 0.22 }}
                 className="glass-card p-3 sm:p-5 text-center surface-premium"
               >
-                <div className="text-base sm:text-2xl font-bold gradient-text font-display mb-1">
+                <div className="text-sm sm:text-xl font-bold gradient-text font-display mb-1 leading-tight break-words">
                   {stat.value}
                 </div>
                 <div className="text-[11px] text-slate-400 uppercase tracking-wider leading-tight">

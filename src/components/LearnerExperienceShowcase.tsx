@@ -173,7 +173,7 @@ export default function LearnerExperienceShowcase() {
 
         <MotionReveal className="order-1 xl:order-2">
           <span className="badge badge-cyan mb-4">Learner Journey</span>
-          <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
+          <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight text-balance">
             Sophisticated for administrators.
             <span className="gradient-text"> Effortless for learners.</span>
           </h2>

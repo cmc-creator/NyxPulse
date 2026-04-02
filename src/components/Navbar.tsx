@@ -82,7 +82,7 @@ export default function Navbar() {
         <div className="flex flex-col items-center py-3 gap-1.5">
           {/* Brand lockup: logo + name stacked */}
           <Link href="/" className="group flex flex-col items-center gap-2">
-            <LogoCard size={96} />
+            <LogoCard size={128} />
             <div className="flex flex-col items-center leading-none">
               <span className="font-bold text-2xl font-display tracking-tight">
                 <span className="text-white">Nyx</span>
