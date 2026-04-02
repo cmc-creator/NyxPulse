@@ -14,26 +14,31 @@ const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-// Silver tracer logo card — shared between mobile and desktop
-function LogoCard({ size = 56 }: { size?: number }) {
-  const rad = size <= 56 ? "rounded-xl" : "rounded-2xl";
+// Silver tracer logo card — single bright spot travels around the border edge
+function LogoCard({ size = 96 }: { size?: number }) {
+  const r = Math.round(size * 0.17); // border radius proportional to size
   return (
+    // overflow:hidden clips the 200% spinning conic element so only the 2px border ring shows
     <div
-      className={`relative group-hover:scale-105 transition-transform duration-300 flex-shrink-0`}
-      style={{ width: size, height: size }}
+      className="relative flex-shrink-0 overflow-hidden group-hover:scale-105 transition-transform duration-300"
+      style={{ width: size, height: size, borderRadius: r }}
     >
-      {/* Animated silver conic ring */}
+      {/* 200% circle spinning behind — only the 2px ring between this and inner card is visible */}
       <div
-        className={`absolute inset-[-2px] ${rad} animate-[spin_6s_linear_infinite]`}
+        className="absolute rounded-full pointer-events-none animate-[spin_3s_linear_infinite]"
         style={{
+          width: "200%",
+          height: "200%",
+          top: "-50%",
+          left: "-50%",
           background:
-            "conic-gradient(from 0deg, rgba(148,163,184,0.1), rgba(226,232,240,0.9), rgba(255,255,255,0.7), rgba(148,163,184,0.1), rgba(100,116,139,0.05), rgba(226,232,240,0.9), rgba(148,163,184,0.1))",
+            "conic-gradient(from 0deg, transparent 0deg, transparent 250deg, rgba(148,163,184,0.3) 268deg, rgba(210,220,232,0.85) 282deg, rgba(255,255,255,1) 290deg, rgba(210,220,232,0.85) 298deg, rgba(148,163,184,0.3) 312deg, transparent 332deg)",
         }}
       />
-      {/* Inner card: pure black blending with logo */}
+      {/* Inner black card: covers everything except the 2px tracer ring */}
       <div
-        className={`absolute inset-[2px] ${rad} overflow-hidden bg-black shadow-[0_6px_20px_rgba(0,0,0,0.7)]`}
-        style={{ padding: 4 }}
+        className="absolute overflow-hidden bg-black"
+        style={{ inset: 2, borderRadius: r - 2 }}
       >
         <Image
           src="/nyxpulse-logo.png"
@@ -77,7 +82,7 @@ export default function Navbar() {
         <div className="flex flex-col items-center py-3 gap-1.5">
           {/* Brand lockup: logo + name stacked */}
           <Link href="/" className="group flex flex-col items-center gap-2">
-            <LogoCard size={72} />
+            <LogoCard size={96} />
             <div className="flex flex-col items-center leading-none">
               <span className="font-bold text-2xl font-display tracking-tight">
                 <span className="text-white">Nyx</span>
