@@ -1,4 +1,5 @@
 import { SignIn } from "@clerk/nextjs";
+import Link from "next/link";
 
 export default function SignInPage() {
   return (
@@ -9,21 +10,15 @@ export default function SignInPage() {
           path="/sign-in"
           signUpUrl="/sign-up"
           fallbackRedirectUrl="/dashboard"
-          appearance={{
-            elements: {
-              rootBox: "w-full",
-              card: "w-full bg-transparent shadow-none border-0",
-              headerTitle: "text-white",
-              headerSubtitle: "text-slate-400",
-              socialButtonsBlockButton: "bg-slate-900/60 border border-slate-700 hover:bg-slate-800 text-white",
-              formFieldInput: "bg-slate-900/60 border border-slate-700 text-white",
-              formButtonPrimary: "bg-gradient-to-r from-indigo-500 to-amber-400 hover:opacity-90",
-              footerActionText: "text-slate-400",
-              footerActionLink: "text-indigo-300 hover:text-indigo-200",
-            },
-          }}
         />
       </div>
+      <p className="mt-4 text-center text-xs text-slate-400">
+        If the sign-in form does not load, go directly to{" "}
+        <Link href="/sign-up" className="text-indigo-300 hover:text-indigo-200">
+          account creation
+        </Link>
+        .
+      </p>
     </section>
   );
 }
