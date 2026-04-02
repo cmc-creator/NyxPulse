@@ -34,8 +34,8 @@ export default function Navbar() {
     >
       <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-44 lg:h-52">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-3.5 group whitespace-nowrap">
-          <div className="w-40 h-40 lg:w-48 lg:h-48 rounded-[1.6rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_22px_rgba(99,102,241,0.42),0_0_40px_rgba(245,158,11,0.18)] p-1.5">
+        <Link href="/" className="flex flex-col items-center justify-center gap-2 group whitespace-nowrap">
+          <div className="w-40 h-40 lg:w-48 lg:h-48 rounded-[1.6rem] overflow-hidden border border-[rgba(255,255,255,0.1)] bg-[#020202] group-hover:scale-105 transition-transform duration-300 shadow-[0_10px_28px_rgba(0,0,0,0.55)] p-1.5">
             <Image
               src="/nyxpulse-logo.png"
               alt="NyxPulse logo"
@@ -45,13 +45,15 @@ export default function Navbar() {
               priority
             />
           </div>
-          <span className="font-bold text-[2.3rem] lg:text-[3rem] font-display tracking-tight leading-none whitespace-nowrap">
-            <span className="text-white">Nyx</span>
-            <span className="gradient-text">Pulse</span>
-          </span>
-          <span className="hidden lg:inline text-[11px] text-slate-500 font-medium tracking-wider ml-1 mt-0.5">
-            NyxPulse by nyxcollective LLC
-          </span>
+          <div className="flex flex-col items-center leading-none">
+            <span className="font-bold text-[2.15rem] lg:text-[2.7rem] font-display tracking-tight whitespace-nowrap">
+              <span className="text-white">Nyx</span>
+              <span className="gradient-text">Pulse</span>
+            </span>
+            <span className="text-[11px] text-slate-400 font-medium tracking-wider mt-1">
+              by nyxcollective LLC
+            </span>
+          </div>
         </Link>
 
         {/* Desktop nav */}
