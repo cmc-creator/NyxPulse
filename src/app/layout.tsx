@@ -53,46 +53,6 @@ export default function RootLayout({
             __html: JSON.stringify(generateSoftwareApplicationSchema()),
           }}
         />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(() => {
-  const shouldRemove = (el) => {
-    if (!(el instanceof HTMLElement)) return false;
-    const style = window.getComputedStyle(el);
-    if (style.position !== "fixed") return false;
-
-    const rect = el.getBoundingClientRect();
-    if (rect.width < 12 || rect.height < 12 || rect.width > 120 || rect.height > 120) {
-      return false;
-    }
-
-    const nearBottom = Math.abs(window.innerHeight - rect.bottom) < 120;
-    const nearCenter = Math.abs(rect.left + rect.width / 2 - window.innerWidth / 2) < 220;
-    if (!nearBottom || !nearCenter) return false;
-
-    const label = ((el.getAttribute("aria-label") || "") + " " + (el.getAttribute("title") || "")).toLowerCase();
-    const hasVisualChild = !!el.querySelector("svg, img, canvas");
-    const text = (el.textContent || "").trim();
-    const isTinyFixedBadge = rect.width <= 100 && rect.height <= 100 && text.length <= 2;
-
-    return isTinyFixedBadge || hasVisualChild || label.includes("clerk") || label.includes("development");
-  };
-
-  const removeArtifacts = () => {
-    for (const el of document.querySelectorAll("body *")) {
-      if (shouldRemove(el)) {
-        el.remove();
-      }
-    }
-  };
-
-  window.addEventListener("load", removeArtifacts);
-  const observer = new MutationObserver(removeArtifacts);
-  observer.observe(document.documentElement, { childList: true, subtree: true });
-  setTimeout(() => observer.disconnect(), 30000);
-})();`,
-          }}
-        />
       </head>
       <body className="antialiased">
         <ClerkProvider

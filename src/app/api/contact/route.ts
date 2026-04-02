@@ -3,6 +3,7 @@ import {
   sendContactRequestConfirmation,
   sendContactRequestNotification,
 } from "@/lib/email-automation";
+import { storeContactLead } from "@/lib/lead-store";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
@@ -89,6 +90,17 @@ export async function POST(req: Request) {
     teamSize: body.teamSize?.trim() || undefined,
     message: body.message?.trim() || undefined,
   };
+
+  try {
+    await storeContactLead({
+      ...contactData,
+      createdAt: new Date().toISOString(),
+      sourceIp: clientIp,
+    });
+  } catch (error) {
+    // Lead capture should not block user confirmation if storage is unavailable.
+    console.error("Failed to persist contact lead:", error);
+  }
 
   const leadResult = await sendContactRequestNotification(contactData);
 

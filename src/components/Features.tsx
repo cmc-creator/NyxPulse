@@ -72,7 +72,7 @@ export default function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <span className="badge badge-violet mb-4">Operating Model</span>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4">
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 text-balance">
             A refined system for
             <span className="gradient-text"> modern readiness</span>
           </h2>

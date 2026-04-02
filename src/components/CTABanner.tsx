@@ -20,7 +20,7 @@ export default function CTABanner() {
           <div className="badge badge-violet mb-6 mx-auto w-fit">
             Concierge Enrollment
           </div>
-          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight">
+          <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-5 leading-tight text-balance">
             Elevate Your Team&apos;s{" "}
             <span className="gradient-text">Emergency Readiness</span>
           </h2>

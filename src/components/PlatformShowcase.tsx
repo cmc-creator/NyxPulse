@@ -41,7 +41,7 @@ export default function PlatformShowcase() {
       <div className="relative max-w-7xl mx-auto grid grid-cols-1 xl:grid-cols-[0.95fr_1.45fr] gap-10 items-center">
         <MotionReveal>
           <span className="badge badge-cyan mb-4">Software Experience</span>
-          <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight">
+          <h2 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-5 leading-tight text-balance">
             A training platform that
             <span className="gradient-text"> feels as polished as the teams using it</span>
           </h2>
