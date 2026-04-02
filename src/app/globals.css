@@ -323,3 +323,16 @@ body::before {
   opacity: 0 !important;
   pointer-events: none !important;
 }
+
+/* Fallback: hide tiny fixed bottom-center badge/iframe artifacts. */
+body > iframe[style*="position: fixed"][style*="bottom"],
+body > div[style*="position: fixed"][style*="bottom"] {
+  max-width: 100px !important;
+  max-height: 100px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}

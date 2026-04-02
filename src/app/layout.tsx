@@ -72,8 +72,10 @@ export default function RootLayout({
 
     const label = ((el.getAttribute("aria-label") || "") + " " + (el.getAttribute("title") || "")).toLowerCase();
     const hasVisualChild = !!el.querySelector("svg, img, canvas");
+    const text = (el.textContent || "").trim();
+    const isTinyFixedBadge = rect.width <= 100 && rect.height <= 100 && text.length <= 2;
 
-    return hasVisualChild || label.includes("clerk") || label.includes("development");
+    return isTinyFixedBadge || hasVisualChild || label.includes("clerk") || label.includes("development");
   };
 
   const removeArtifacts = () => {
