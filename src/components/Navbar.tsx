@@ -32,15 +32,15 @@ export default function Navbar() {
           : "bg-[linear-gradient(180deg,rgba(2,6,23,0.72),rgba(2,6,23,0.18),transparent)]"
       }`}
     >
-      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-24 lg:h-28">
+      <nav className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 flex items-center justify-between h-44 lg:h-52">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3.5 group whitespace-nowrap">
-          <div className="w-20 h-20 lg:w-24 lg:h-24 rounded-[1.6rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_22px_rgba(99,102,241,0.42),0_0_40px_rgba(245,158,11,0.18)] p-1.5">
+          <div className="w-40 h-40 lg:w-48 lg:h-48 rounded-[1.6rem] overflow-hidden border border-[rgba(148,163,184,0.24)] bg-[rgba(8,10,16,0.9)] group-hover:scale-105 transition-transform duration-300 shadow-[0_0_22px_rgba(99,102,241,0.42),0_0_40px_rgba(245,158,11,0.18)] p-1.5">
             <Image
               src="/nyxpulse-logo.png"
               alt="NyxPulse logo"
-              width={96}
-              height={96}
+              width={192}
+              height={192}
               className="w-full h-full object-contain"
               priority
             />
@@ -49,8 +49,8 @@ export default function Navbar() {
             <span className="text-white">Nyx</span>
             <span className="gradient-text">Pulse</span>
           </span>
-          <span className="hidden xl:inline text-[11px] text-slate-500 font-medium tracking-wider uppercase ml-1 mt-0.5">
-            by NyxCollective
+          <span className="hidden lg:inline text-[11px] text-slate-500 font-medium tracking-wider ml-1 mt-0.5">
+            NyxPulse by nyxcollective LLC
           </span>
         </Link>
 
