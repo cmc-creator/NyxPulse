@@ -13,7 +13,11 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What courses does NyxPulse offer?",
-    a: "We offer separate flat-fee trainings: CPR/AED ($85), BLS ($125), De-escalation ($195), Emergency Management ($375), ICS/HICS ($225), and OSHA Safety ($110). Each program is enrolled on its own — CPR, OSHA, and ICS/HICS are never sold as one package.",
+    a: "We offer separate flat-fee trainings. American Red Cross programs (taught by a Red Cross certified instructor): Adult & Pediatric CPR/AED ($85), First Aid ($95), and BLS ($125). NyxPulse programs: De-escalation ($195), Emergency Management ($375), ICS/HICS ($225), and OSHA Safety ($110). Each training is enrolled separately.",
+  },
+  {
+    q: "Are your CPR classes American Red Cross certified?",
+    a: "Yes — CPR/AED, First Aid, and BLS are delivered by Jeremy, an American Red Cross certified instructor. You prepare in NyxPulse, complete an instructor skills session, and receive your official Red Cross digital certificate through the Red Cross Learning Center after the course is reported. NyxPulse itself does not issue Red Cross certificates.",
   },
   {
     q: "Are NyxPulse certificates recognized by healthcare providers?",
@@ -49,7 +53,7 @@ const faqs = [
   },
   {
     q: "How are certificates issued?",
-    a: "Certificates are automatically generated and issued upon successful completion of a course (typically including a final assessment). Learners can download their certificates in PDF format, print them, or share a digital credential link.",
+    a: "For American Red Cross programs, official digital certificates are issued by the Red Cross after skills verification and course reporting in the Red Cross Learning Center. NyxPulse stores a prep-completion record only. For NyxPulse programs (such as de-escalation or OSHA), you can download a NyxPulse Certificate of Completion from your dashboard.",
   },
   {
     q: "What happens if I don't pass an assessment?",

@@ -26,7 +26,7 @@ const values = [
     bg: "bg-violet-500/10",
     border: "border-violet-500/20",
     title: "Evidence-Based",
-    desc: "Our curriculum follows the latest AHA, FEMA, OSHA, and TJC guidelines — no outdated content, no shortcuts.",
+    desc: "Life-safety programs follow American Red Cross instructor standards. Facility programs align with FEMA, OSHA, CMS, and TJC expectations — no outdated shortcuts.",
   },
   {
     icon: Globe,
@@ -80,19 +80,26 @@ export default function AboutPage() {
                     NyxPulse is the training division of <span className="text-violet-400 font-semibold">NyxCollective LLC</span> — a company dedicated to building tools, platforms, and programs that push the boundaries of what&apos;s possible in healthcare preparedness.
                   </p>
                   <p>
-                    We bring together experienced instructors, emergency management professionals, and healthcare educators to design programs that are engaging, rigorous, and immediately applicable in the real world.
+                    Our life-safety programs are taught by{" "}
+                    <span className="text-white font-semibold">Jeremy</span>, an{" "}
+                    <span className="text-cyan-300 font-semibold">
+                      American Red Cross certified instructor
+                    </span>
+                    , so CPR, AED, First Aid, and BLS learners can earn official Red Cross
+                    digital certificates through the proper skills-session pathway.
                   </p>
                   <p>
-                    From a solo nurse needing BLS recertification to a 2,000-bed hospital overhaul of its emergency operations plan — we scale to fit.
+                    From a solo nurse needing BLS recertification to a hospital emergency
+                    operations overhaul — we scale to fit.
                   </p>
                 </div>
               </div>
               <div className="space-y-4">
                 {[
-                  { label: "Training Programs", value: "6+" },
-                  { label: "Professionals Trained", value: "500+" },
-                  { label: "Organizations Served", value: "50+" },
-                  { label: "States Active", value: "Growing" },
+                  { label: "Training Programs", value: "7+" },
+                  { label: "Red Cross Instructor-Led", value: "CPR · FA · BLS" },
+                  { label: "Organizations Served", value: "Growing" },
+                  { label: "Delivery", value: "Live / Hybrid" },
                 ].map((s) => (
                   <div
                     key={s.label}

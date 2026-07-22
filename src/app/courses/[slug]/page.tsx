@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award, ShieldCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
-import { getCourseBySlug, courses } from "@/lib/courses";
+import { getCourseBySlug, courses, isAmericanRedCrossCourse } from "@/lib/courses";
 import { currentUser } from "@clerk/nextjs/server";
 import BuyButton from "@/components/BuyButton";
 
@@ -42,6 +42,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const user = await currentUser();
   const enrolledSlugs = (user?.publicMetadata?.courses as string[]) ?? [];
   const hasCourse = enrolledSlugs.includes(slug);
+  const isArc = isAmericanRedCrossCourse(course);
 
   return (
     <div className="relative min-h-screen page-shell">
@@ -90,6 +91,27 @@ export default async function CourseDetailPage({ params }: Props) {
             <p className="text-slate-400 text-base leading-relaxed mt-5 max-w-3xl">
               {course.description}
             </p>
+
+            {isArc && (
+              <div className="mt-6 rounded-2xl border border-cyan-400/25 bg-cyan-500/10 p-4 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-cyan-300 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-slate-300">
+                  <p className="text-white font-semibold mb-1">
+                    American Red Cross program · Instructor: {course.instructor?.name ?? "Certified instructor"}
+                  </p>
+                  <p className="mb-2">
+                    Skills session required. Official Red Cross digital certificates are issued through the
+                    Red Cross Learning Center after instructor verification — not by NyxPulse.
+                  </p>
+                  <Link
+                    href="/certifications/american-red-cross"
+                    className="text-cyan-300 hover:text-white transition-colors"
+                  >
+                    Read the certification pathway →
+                  </Link>
+                </div>
+              </div>
+            )}
 
             {/* Meta grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
@@ -143,11 +165,14 @@ export default async function CourseDetailPage({ params }: Props) {
                     </div>
                     <h3 className="text-white font-semibold">{mod.title}</h3>
                   </div>
+                  {mod.objective && (
+                    <p className="text-xs text-violet-300/80 mb-3">{mod.objective}</p>
+                  )}
                   <ul className="space-y-1.5">
                     {mod.topics.map((t) => (
-                      <li key={t} className="flex items-start gap-2 text-sm text-slate-400">
+                      <li key={t.title} className="flex items-start gap-2 text-sm text-slate-400">
                         <Check className="w-3.5 h-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
-                        {t}
+                        {t.title}
                       </li>
                     ))}
                   </ul>
@@ -204,13 +229,25 @@ export default async function CourseDetailPage({ params }: Props) {
                     <span className="text-white">{course.format.join(", ")}</span>
                   </div>
                   <div className="flex justify-between text-slate-400">
-                    <span>Group min.</span>
-                    <span className="text-white">1 person</span>
+                    <span>Certificate</span>
+                    <span className="text-white text-right max-w-[60%]">
+                      {isArc ? "Red Cross digital" : "NyxPulse"}
+                    </span>
                   </div>
-                  <div className="flex justify-between text-slate-400">
-                    <span>Group max.</span>
-                    <span className="text-white">Contact us</span>
-                  </div>
+                  {course.skillsSessionRequired && (
+                    <div className="flex justify-between text-slate-400">
+                      <span>Skills session</span>
+                      <span className="text-white">Required</span>
+                    </div>
+                  )}
+                  {course.certificationValidity && (
+                    <div className="flex justify-between text-slate-400">
+                      <span>Validity</span>
+                      <span className="text-white text-right max-w-[60%]">
+                        {course.certificationValidity}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

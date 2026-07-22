@@ -26,7 +26,8 @@ export default async function CertificatesPage() {
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-white">Certificates</h1>
         <p className="text-slate-400 mt-1">
-          Your earned certifications and completion records.
+          NyxPulse completion records and prep records. Official American Red Cross
+          certificates are issued by the Red Cross after skills verification.
         </p>
       </div>
 
@@ -47,8 +48,8 @@ export default async function CertificatesPage() {
             No certificates yet
           </h3>
           <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto">
-            Complete all modules in a course and claim your certificate to see it
-            here.
+            Complete all modules in a course to earn a NyxPulse completion/prep
+            record here.
           </p>
           {inProgressCourses.length > 0 ? (
             <Link

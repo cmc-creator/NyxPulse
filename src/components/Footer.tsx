@@ -5,6 +5,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 const footerLinks = {
   Training: [
     { label: "CPR / AED", href: "/courses/cpr-aed" },
+    { label: "First Aid", href: "/courses/first-aid" },
     { label: "BLS", href: "/courses/bls" },
     { label: "De-escalation", href: "/courses/de-escalation" },
     { label: "Emergency Management", href: "/courses/emergency-management-healthcare" },
@@ -15,8 +16,7 @@ const footerLinks = {
     { label: "About", href: "/about" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
+    { label: "Red Cross Pathway", href: "/certifications/american-red-cross" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },

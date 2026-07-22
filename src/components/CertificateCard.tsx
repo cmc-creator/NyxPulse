@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Printer, CheckCircle } from "lucide-react";
+import Link from "next/link";
+import { Printer, CheckCircle, ExternalLink, ShieldCheck } from "lucide-react";
 import type { Course } from "@/lib/courses";
 
 interface CertificateCardProps {
@@ -11,21 +12,28 @@ interface CertificateCardProps {
 
 export default function CertificateCard({ course, fullName }: CertificateCardProps) {
   const [printing, setPrinting] = useState(false);
+  const isArc = course.certifyingBody === "american-red-cross";
 
   const handlePrint = () => {
     setPrinting(true);
     const certEl = document.getElementById(`cert-${course.slug}`);
-    if (!certEl) { setPrinting(false); return; }
+    if (!certEl) {
+      setPrinting(false);
+      return;
+    }
 
     const win = window.open("", "_blank", "width=900,height=650");
-    if (!win) { setPrinting(false); return; }
+    if (!win) {
+      setPrinting(false);
+      return;
+    }
 
     win.document.write(`
       <!DOCTYPE html>
       <html>
       <head>
         <meta charset="UTF-8" />
-        <title>Certificate — ${course.title}</title>
+        <title>${isArc ? "Prep Completion" : "Certificate"} — ${course.title}</title>
         <style>
           @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;500;600&display=swap');
           * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -53,7 +61,10 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
       </html>
     `);
     win.document.close();
-    setTimeout(() => { win.print(); setPrinting(false); }, 500);
+    setTimeout(() => {
+      win.print();
+      setPrinting(false);
+    }, 500);
   };
 
   const today = new Date().toLocaleDateString("en-US", {
@@ -64,13 +75,42 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
 
   return (
     <div className="space-y-4">
-      {/* Screen preview */}
+      {isArc && (
+        <div className="glass-card p-4 border border-cyan-400/25 bg-cyan-500/5 flex items-start gap-3">
+          <ShieldCheck className="w-5 h-5 text-cyan-300 flex-shrink-0 mt-0.5" />
+          <div className="text-sm text-slate-300">
+            <p className="text-white font-semibold mb-1">
+              This is a NyxPulse prep completion record
+            </p>
+            <p className="mb-2">
+              It is <span className="text-white">not</span> an American Red Cross certificate.
+              After your skills session, get your official Red Cross digital certificate from the
+              Learning Center /{" "}
+              <a
+                href="https://www.redcross.org/take-a-class/digital-certificate"
+                target="_blank"
+                rel="noreferrer"
+                className="text-cyan-300 hover:text-white underline"
+              >
+                Find My Certificate
+              </a>
+              .
+            </p>
+            <Link
+              href="/certifications/american-red-cross"
+              className="inline-flex items-center gap-1 text-cyan-300 hover:text-white"
+            >
+              Certification process details <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      )}
+
       <div
         id={`cert-${course.slug}`}
         className="cert w-full bg-white text-center p-10 rounded-2xl border-4 border-violet-600 relative overflow-hidden"
         style={{ fontFamily: "serif" }}
       >
-        {/* Inner border */}
         <div className="absolute inset-3 border border-violet-200 rounded-xl pointer-events-none" />
 
         <div className="relative z-10 space-y-4">
@@ -82,7 +122,7 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
             className="text-3xl sm:text-4xl font-bold text-slate-900 leading-tight"
             style={{ fontFamily: "'Georgia', serif" }}
           >
-            Certificate of Completion
+            {isArc ? "Prep Completion Record" : "Certificate of Completion"}
           </h2>
 
           <p className="text-slate-500 text-sm font-sans">This certifies that</p>
@@ -95,7 +135,9 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
           </div>
 
           <p className="text-slate-500 text-sm font-sans">
-            has successfully completed
+            {isArc
+              ? "has completed NyxPulse preparation modules for"
+              : "has successfully completed"}
           </p>
 
           <div
@@ -109,15 +151,30 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
             {course.certifies} · {course.duration} · {course.category}
           </p>
 
-          {/* Footer */}
+          {isArc && (
+            <p className="text-slate-500 text-xs font-sans max-w-md mx-auto">
+              Official American Red Cross certification requires instructor skills verification and
+              is issued by the Red Cross Learning Center.
+            </p>
+          )}
+
           <div className="flex justify-between items-end mt-8 pt-6 border-t border-violet-100 font-sans">
             <div className="text-left">
               <div className="text-xl font-bold text-violet-600">NyxPulse</div>
               <div className="text-xs text-slate-400">A NyxCollective LLC Product</div>
             </div>
             <div className="flex flex-col items-center">
-              <img src="/nyxpulse-logo.png" alt="NyxPulse" width="32" height="32" className="rounded-lg mb-1" />
-              <div className="text-xs text-slate-400">Verified Completion</div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/nyxpulse-logo.png"
+                alt="NyxPulse"
+                width="32"
+                height="32"
+                className="rounded-lg mb-1"
+              />
+              <div className="text-xs text-slate-400">
+                {isArc ? "Prep Verified" : "Verified Completion"}
+              </div>
             </div>
             <div className="text-right">
               <div className="text-xs text-slate-400 mb-1">Date Issued</div>
@@ -127,11 +184,12 @@ export default function CertificateCard({ course, fullName }: CertificateCardPro
         </div>
       </div>
 
-      {/* Action bar */}
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2 text-sm text-slate-400">
           <CheckCircle className="w-4 h-4 text-green-400" />
-          <span>{course.shortTitle} · Completed</span>
+          <span>
+            {course.shortTitle} · {isArc ? "Prep complete" : "Completed"}
+          </span>
         </div>
         <button
           onClick={handlePrint}
