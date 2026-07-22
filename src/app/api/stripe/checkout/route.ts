@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { getStripe } from "@/lib/stripe";
-import { getCourseBySlug, getLearningPathById } from "@/lib/courses";
+import { getCourseBySlug } from "@/lib/courses";
 import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 function slugToEnvKey(slug: string) {
@@ -47,65 +47,30 @@ export async function POST(req: Request) {
   }
 
   let courseSlug: string | undefined;
-  let pathId: string | undefined;
   try {
     const body = await req.json();
     courseSlug = typeof body?.courseSlug === "string" ? body.courseSlug : undefined;
-    pathId = typeof body?.pathId === "string" ? body.pathId : undefined;
+
+    if (body?.pathId) {
+      return NextResponse.json(
+        {
+          error:
+            "Learning tracks are guidance only. Enroll in each training separately.",
+        },
+        { status: 400 }
+      );
+    }
   } catch {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  if (!courseSlug && !pathId) {
-    return NextResponse.json(
-      { error: "courseSlug or pathId is required" },
-      { status: 400 }
-    );
+  if (!courseSlug) {
+    return NextResponse.json({ error: "courseSlug is required" }, { status: 400 });
   }
 
-  if (courseSlug && pathId) {
-    return NextResponse.json(
-      { error: "Provide either courseSlug or pathId, not both" },
-      { status: 400 }
-    );
-  }
-
-  let productName: string;
-  let productDescription: string;
-  let unitAmount: number;
-  let priceEnvKey: string;
-  let metadata: Record<string, string>;
-
-  if (pathId) {
-    const path = getLearningPathById(pathId);
-    if (!path) {
-      return NextResponse.json({ error: "Learning path not found" }, { status: 400 });
-    }
-
-    productName = path.title;
-    productDescription = path.description;
-    unitAmount = path.price * 100;
-    priceEnvKey = `STRIPE_PRICE_ID_PATH_${slugToEnvKey(pathId)}`;
-    metadata = {
-      userId,
-      pathId,
-      courseSlugs: path.courseList.join(","),
-    };
-  } else {
-    const course = getCourseBySlug(courseSlug!);
-    if (!course || course.price === null) {
-      return NextResponse.json({ error: "Course not found or free" }, { status: 400 });
-    }
-
-    productName = course.title;
-    productDescription = course.tagline;
-    unitAmount = course.price * 100;
-    priceEnvKey = `STRIPE_PRICE_ID_${slugToEnvKey(courseSlug!)}`;
-    metadata = {
-      userId,
-      courseSlug: courseSlug!,
-      courseSlugs: courseSlug!,
-    };
+  const course = getCourseBySlug(courseSlug);
+  if (!course || course.price === null) {
+    return NextResponse.json({ error: "Course not found or free" }, { status: 400 });
   }
 
   const stripeKey = process.env.STRIPE_SECRET_KEY;
@@ -121,6 +86,7 @@ export async function POST(req: Request) {
     );
   }
 
+  const priceEnvKey = `STRIPE_PRICE_ID_${slugToEnvKey(courseSlug)}`;
   const coursePriceId = process.env[priceEnvKey];
   const requirePriceIds = process.env.STRIPE_REQUIRE_PRICE_IDS === "true";
 
@@ -134,9 +100,6 @@ export async function POST(req: Request) {
   try {
     const stripe = getStripe();
     const customerId = await ensureStripeCustomer(userId);
-    const cancelUrl = pathId
-      ? `${appUrl}/learning-paths/${pathId}`
-      : `${appUrl}/courses/${courseSlug}`;
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
@@ -154,18 +117,22 @@ export async function POST(req: Request) {
               price_data: {
                 currency: "usd",
                 product_data: {
-                  name: productName,
-                  description: productDescription,
+                  name: course.title,
+                  description: course.tagline,
                 },
-                unit_amount: unitAmount,
+                unit_amount: course.price * 100,
               },
               quantity: 1,
             },
           ],
-      metadata,
+      metadata: {
+        userId,
+        courseSlug,
+        courseSlugs: courseSlug,
+      },
       client_reference_id: userId,
       success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: cancelUrl,
+      cancel_url: `${appUrl}/courses/${courseSlug}`,
     });
 
     return NextResponse.json({ url: session.url });

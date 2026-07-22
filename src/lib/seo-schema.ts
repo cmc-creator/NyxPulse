@@ -232,7 +232,7 @@ export function generateSoftwareApplicationSchema(): SchemaType {
     offers: {
       "@type": "Offer",
       priceCurrency: "USD",
-      price: "49",
+      price: "85",
     },
     aggregateRating: {
       "@type": "AggregateRating",

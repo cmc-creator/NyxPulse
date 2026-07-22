@@ -99,7 +99,7 @@ export default async function CourseDetailPage({ params }: Props) {
                 { label: "Certifies", value: course.certifies },
                 {
                   label: "Price",
-                  value: course.price ? `$${course.price}/person` : "Contact us",
+                  value: course.price ? `$${course.price} flat fee` : "Contact us",
                 },
               ].map(({ label, value }) => (
                 <div

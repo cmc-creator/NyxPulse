@@ -100,7 +100,7 @@ export default function CoursesPage() {
                         <div className="flex items-center justify-between">
                           {course.price !== null ? (
                             <span className="text-xl font-bold gradient-text font-display">
-                              ${course.price}<span className="text-sm font-normal text-slate-500">/person</span>
+                              ${course.price}<span className="text-sm font-normal text-slate-500"> flat fee</span>
                             </span>
                           ) : (
                             <span className="text-slate-500 text-sm">Contact for pricing</span>

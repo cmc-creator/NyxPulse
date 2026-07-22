@@ -68,7 +68,7 @@ export default function CoursesPreview() {
                   {course.price !== null && (
                     <div className="text-right flex-shrink-0">
                       <div className="text-2xl font-bold gradient-text font-display">${course.price}</div>
-                      <div className="text-xs text-slate-400">per person</div>
+                      <div className="text-xs text-slate-400">flat fee</div>
                     </div>
                   )}
                 </div>

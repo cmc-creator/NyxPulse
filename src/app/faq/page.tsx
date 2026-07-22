@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What courses does NyxPulse offer?",
-    a: "We offer comprehensive emergency and safety training: CPR/AED ($49), BLS ($69), De-escalation ($89), Emergency Management ($199), ICS/HICS ($119), and OSHA Safety ($59). Each course includes video instruction, interactive scenarios, knowledge checks, and certificate issuance.",
+    a: "We offer separate flat-fee trainings: CPR/AED ($85), BLS ($125), De-escalation ($195), Emergency Management ($375), ICS/HICS ($225), and OSHA Safety ($110). Each program is enrolled on its own — CPR, OSHA, and ICS/HICS are never sold as one package.",
   },
   {
     q: "Are NyxPulse certificates recognized by healthcare providers?",
@@ -28,8 +28,8 @@ const faqs = [
     a: "Yes. NyxPulse is fully responsive and works on all devices. You can start a course on desktop and continue on mobile without losing progress. All videos, knowledge checks, and assessments are optimized for smaller screens.",
   },
   {
-    q: "Do you offer team discounts?",
-    a: "Absolutely. Our Team Bundle plan provides 20% discount for 5+ users, 30% off for 20+ team members. Enterprise plans with custom pricing are available for 50+ users. Contact our team at sales@nyxpulse.com for a quote.",
+    q: "Do you offer team or volume discounts?",
+    a: "We use flat fees, not per-seat pricing. Individuals enroll in a single training at the listed flat fee. Organizations that need on-site, virtual, or multi-session delivery can request a flat program quote at sales@nyxpulse.com.",
   },
   {
     q: "What payment methods do you accept?",

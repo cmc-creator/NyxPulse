@@ -60,7 +60,7 @@ export default function PlatformShowcase() {
               {
                 icon: CircleDollarSign,
                 title: "Transparent commercial model",
-                detail: "Seat-based access for individuals, scoped proposals for groups, and clean enterprise planning.",
+                detail: "Flat fees for each training, plus scoped flat-fee proposals for facility programs.",
               },
               {
                 icon: BadgeCheck,
@@ -125,9 +125,9 @@ export default function PlatformShowcase() {
                 </div>
 
                 <div className="mt-8 rounded-2xl bg-[linear-gradient(180deg,rgba(99,102,241,0.16),rgba(245,158,11,0.08))] border border-[rgba(99,102,241,0.22)] p-4">
-                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400 mb-2">Licensing</p>
-                  <p className="text-white text-2xl font-display font-bold mb-1">74 seats</p>
-                  <p className="text-sm text-slate-300">Assigned across 4 active teams</p>
+                  <p className="text-xs uppercase tracking-[0.18em] text-slate-400 mb-2">Programs</p>
+                  <p className="text-white text-2xl font-display font-bold mb-1">6 trainings</p>
+                  <p className="text-sm text-slate-300">Each sold as its own flat fee</p>
                 </div>
               </div>
 

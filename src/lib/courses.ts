@@ -18,6 +18,11 @@ export interface Course {
   whoFor: string[];
 }
 
+/**
+ * Recommended role tracks suggest related trainings.
+ * Each course is still purchased separately at its own flat fee.
+ * Tracks must stay within one training family (never mix CPR + OSHA + HICS, etc.).
+ */
 export interface LearningPath {
   id: string;
   title: string;
@@ -26,8 +31,6 @@ export interface LearningPath {
   badge: "violet" | "cyan" | "amber" | "green";
   courseList: string[]; // array of course slugs
   totalHours: number;
-  price: number;
-  savings: number; // how much they save vs. buying individually
   competency: string; // what skill/role does this path prepare for?
 }
 
@@ -46,7 +49,7 @@ export const courses: Course[] = [
     format: ["Live", "Hybrid"],
     level: "All Levels",
     certifies: "American Heart Association (AHA) aligned",
-    price: 49,
+    price: 85,
     featured: true,
     modules: [
       {
@@ -102,7 +105,7 @@ export const courses: Course[] = [
     format: ["Live", "Hybrid"],
     level: "Intermediate",
     certifies: "AHA BLS Provider aligned",
-    price: 69,
+    price: 125,
     featured: true,
     modules: [
       {
@@ -157,7 +160,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "All Levels",
     certifies: "Certificate of Completion",
-    price: 89,
+    price: 195,
     featured: true,
     modules: [
       {
@@ -213,7 +216,7 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "Intermediate",
     certifies: "Certificate of Completion",
-    price: 199,
+    price: 375,
     featured: true,
     modules: [
       {
@@ -272,8 +275,8 @@ export const courses: Course[] = [
     format: ["Live", "Virtual", "Hybrid"],
     level: "Intermediate",
     certifies: "FEMA ICS 100/200 aligned",
-    price: 119,
-    featured: false,
+    price: 225,
+    featured: true,
     modules: [
       {
         title: "ICS Fundamentals",
@@ -328,8 +331,8 @@ export const courses: Course[] = [
     format: ["Live", "Virtual"],
     level: "Beginner",
     certifies: "Certificate of Completion",
-    price: 59,
-    featured: false,
+    price: 110,
+    featured: true,
     modules: [
       {
         title: "OSHA Overview",
@@ -368,56 +371,48 @@ export const courses: Course[] = [
 
 export const learningPaths: LearningPath[] = [
   {
-    id: "ed-lifeguard",
-    title: "Emergency Department Lifeguard",
+    id: "resuscitation",
+    title: "Resuscitation Track",
     description:
-      "Essential certifications for new ED staff. Covers life-saving resuscitation, behavioral crisis management, emergency operations, and OSHA compliance.",
-    icon: "🚨",
+      "Life-saving response trainings for patient-facing staff. CPR/AED and BLS are separate certifications — enroll in the one your role requires.",
+    icon: "❤️",
     badge: "cyan",
-    courseList: ["cpr-aed", "bls", "de-escalation", "osha-safety"],
-    totalHours: 24,
-    price: 259,
-    savings: 48,
-    competency: "Emergency Department Readiness",
+    courseList: ["cpr-aed", "bls"],
+    totalHours: 10,
+    competency: "Life Safety / Resuscitation",
   },
   {
-    id: "facility-commander",
-    title: "Facility Emergency Commander",
+    id: "behavioral-crisis",
+    title: "Behavioral Crisis Track",
     description:
-      "Leadership-focused path for Emergency Managers, administrators, and incident commanders. Master emergency planning and ICS/HICS command systems.",
+      "Focused de-escalation and crisis intervention training for teams that manage agitated patients, visitors, or workplace conflict.",
+    icon: "🧠",
+    badge: "violet",
+    courseList: ["de-escalation"],
+    totalHours: 8,
+    competency: "Behavioral Safety",
+  },
+  {
+    id: "emergency-command",
+    title: "Emergency Command Track",
+    description:
+      "Facility preparedness and incident command. Emergency Management and ICS/HICS are separate programs — take one or both based on your role.",
     icon: "🎯",
     badge: "amber",
     courseList: ["emergency-management-healthcare", "ics-hics"],
     totalHours: 24,
-    price: 299,
-    savings: 19,
-    competency: "Emergency Management & Command",
+    competency: "Emergency Preparedness & Command",
   },
   {
-    id: "clinical-ace",
-    title: "Clinical Ace Bundle",
+    id: "workplace-safety",
+    title: "Workplace Safety Track",
     description:
-      "Everything a clinical provider needs: advanced resuscitation, behavioral health crisis intervention, workplace safety, and emergency preparedness.",
-    icon: "🏥",
-    badge: "violet",
-    courseList: ["cpr-aed", "bls", "de-escalation", "emergency-management-healthcare"],
-    totalHours: 34,
-    price: 389,
-    savings: 42,
-    competency: "Comprehensive Clinical Preparedness",
-  },
-  {
-    id: "safety-master",
-    title: "Safety Master Certification",
-    description:
-      "Complete safety and emergency readiness: OSHA compliance, resuscitation, de-escalation, and full facility emergency management.",
+      "OSHA fundamentals for healthcare and general industry. A standalone compliance training — not bundled with clinical or ICS programs.",
     icon: "🦺",
     badge: "green",
-    courseList: ["osha-safety", "cpr-aed", "de-escalation", "emergency-management-healthcare", "ics-hics"],
-    totalHours: 42,
-    price: 559,
-    savings: 77,
-    competency: "Enterprise Safety Leadership",
+    courseList: ["osha-safety"],
+    totalHours: 6,
+    competency: "Workplace Safety Compliance",
   },
 ];
 

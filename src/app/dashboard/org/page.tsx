@@ -71,11 +71,11 @@ export default async function OrgPage() {
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[
-              { icon: "👥", title: "5–25 Seats", desc: "Invite team members and centralize all training under one account." },
+              { icon: "👥", title: "Team Roster", desc: "Invite team members and centralize training under one organization account." },
               { icon: "📊", title: "Progress Dashboard", desc: "See who has completed what, and who still needs to finish their training." },
-              { icon: "📚", title: "Bulk Course Assignment", desc: "Assign specific courses to specific team members or everyone at once." },
+              { icon: "📚", title: "Course Assignment", desc: "Assign specific trainings to specific team members or everyone at once." },
               { icon: "🏆", title: "Team Certificates", desc: "Download completion records for your whole team for compliance reporting." },
-              { icon: "💳", title: "Central Billing", desc: "One invoice for all seats. Easy expense reporting for your organization." },
+              { icon: "💳", title: "Flat Program Billing", desc: "One quoted flat fee for the trainings you need — not per-seat pricing." },
               { icon: "🎯", title: "Priority Support", desc: "Dedicated account support and faster turnaround on custom requests." },
             ].map(({ icon, title, desc }) => (
               <div key={title} className="glass-card p-5 flex gap-4">
@@ -232,7 +232,7 @@ export default async function OrgPage() {
           <div className="glass-card p-6 border border-violet-500/15">
             <p className="text-slate-400 text-sm mb-5">
               Select courses to assign to all team members or specific individuals.
-              Contact us to bulk-purchase seats.
+              Contact us for a flat facility-program quote.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
               {courses.map((course) => (
@@ -246,7 +246,7 @@ export default async function OrgPage() {
                       {course.shortTitle}
                     </div>
                     <div className="text-slate-500 text-xs">
-                      {course.price ? `$${course.price}/seat` : "Contact us"}
+                      {course.price ? `$${course.price} flat fee` : "Contact us"}
                     </div>
                   </div>
                 </div>
@@ -256,7 +256,7 @@ export default async function OrgPage() {
               href="/contact"
               className="btn-primary inline-flex items-center gap-2 text-sm"
             >
-              Request Bulk Seats <ArrowRight className="w-4 h-4" />
+              Request Program Quote <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
         </section>
