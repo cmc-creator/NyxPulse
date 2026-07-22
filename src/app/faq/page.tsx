@@ -17,7 +17,7 @@ const faqs = [
   },
   {
     q: "Are your CPR classes American Red Cross certified?",
-    a: "Yes — CPR/AED, First Aid, and BLS are delivered by Jeremy, an American Red Cross certified instructor. You prepare in NyxPulse, complete an instructor skills session, and receive your official Red Cross digital certificate through the Red Cross Learning Center after the course is reported. NyxPulse itself does not issue Red Cross certificates.",
+    a: "CPR/AED, First Aid, and BLS are taught by Jeremy, an American Red Cross certified instructor. Completing the course in NyxPulse earns a NyxPulse Certificate of Completion. If you also need an official Red Cross digital certificate, book a skills session — Jeremy may teach that class through NyxPulse or another authorized organization, and Red Cross certificates are issued only through the Red Cross Learning Center after reporting.",
   },
   {
     q: "Are NyxPulse certificates recognized by healthcare providers?",
@@ -53,7 +53,7 @@ const faqs = [
   },
   {
     q: "How are certificates issued?",
-    a: "For American Red Cross programs, official digital certificates are issued by the Red Cross after skills verification and course reporting in the Red Cross Learning Center. NyxPulse stores a prep-completion record only. For NyxPulse programs (such as de-escalation or OSHA), you can download a NyxPulse Certificate of Completion from your dashboard.",
+    a: "NyxPulse issues its own Certificate of Completion (with certificate ID) when you finish a course in the platform — including CPR, First Aid, BLS, and facility programs. Separately, an official American Red Cross digital certificate can be earned when Jeremy teaches and reports a class under an authorized Red Cross Training Provider process.",
   },
   {
     q: "What happens if I don't pass an assessment?",

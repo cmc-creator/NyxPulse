@@ -76,5 +76,5 @@ export function getAllLearningPaths(): LearningPath[] {
 }
 
 export function isAmericanRedCrossCourse(course: Course): boolean {
-  return course.certifyingBody === "american-red-cross";
+  return Boolean(course.americanRedCrossPathway);
 }

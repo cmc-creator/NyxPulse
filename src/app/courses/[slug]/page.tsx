@@ -5,7 +5,7 @@ import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award, ShieldCheck
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
-import { getCourseBySlug, courses, isAmericanRedCrossCourse } from "@/lib/courses";
+import { getCourseBySlug, courses } from "@/lib/courses";
 import { currentUser } from "@clerk/nextjs/server";
 import BuyButton from "@/components/BuyButton";
 
@@ -42,7 +42,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const user = await currentUser();
   const enrolledSlugs = (user?.publicMetadata?.courses as string[]) ?? [];
   const hasCourse = enrolledSlugs.includes(slug);
-  const isArc = isAmericanRedCrossCourse(course);
+  const hasArcPathway = Boolean(course.americanRedCrossPathway);
 
   return (
     <div className="relative min-h-screen page-shell">
@@ -92,22 +92,25 @@ export default async function CourseDetailPage({ params }: Props) {
               {course.description}
             </p>
 
-            {isArc && (
+            {hasArcPathway && (
               <div className="mt-6 rounded-2xl border border-cyan-400/25 bg-cyan-500/10 p-4 flex items-start gap-3">
                 <ShieldCheck className="w-5 h-5 text-cyan-300 flex-shrink-0 mt-0.5" />
                 <div className="text-sm text-slate-300">
                   <p className="text-white font-semibold mb-1">
-                    American Red Cross program · Instructor: {course.instructor?.name ?? "Certified instructor"}
+                    NyxPulse certificate included · Instructor:{" "}
+                    <Link href="/instructors/jeremy" className="text-cyan-200 hover:text-white">
+                      {course.instructor?.name ?? "Jeremy"}
+                    </Link>
                   </p>
                   <p className="mb-2">
-                    Skills session required. Official Red Cross digital certificates are issued through the
-                    Red Cross Learning Center after instructor verification — not by NyxPulse.
+                    Complete the course here for your NyxPulse Certificate of Completion. Optionally book a
+                    skills session if you also need an official American Red Cross digital certificate.
                   </p>
                   <Link
                     href="/certifications/american-red-cross"
                     className="text-cyan-300 hover:text-white transition-colors"
                   >
-                    Read the certification pathway →
+                    Read the dual pathway details →
                   </Link>
                 </div>
               </div>
@@ -230,14 +233,12 @@ export default async function CourseDetailPage({ params }: Props) {
                   </div>
                   <div className="flex justify-between text-slate-400">
                     <span>Certificate</span>
-                    <span className="text-white text-right max-w-[60%]">
-                      {isArc ? "Red Cross digital" : "NyxPulse"}
-                    </span>
+                    <span className="text-white text-right max-w-[60%]">NyxPulse</span>
                   </div>
-                  {course.skillsSessionRequired && (
+                  {hasArcPathway && (
                     <div className="flex justify-between text-slate-400">
-                      <span>Skills session</span>
-                      <span className="text-white">Required</span>
+                      <span>Red Cross path</span>
+                      <span className="text-white">Optional</span>
                     </div>
                   )}
                   {course.certificationValidity && (

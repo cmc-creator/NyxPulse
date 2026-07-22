@@ -41,11 +41,14 @@ export interface Course {
   outcomes: string[];
   whoFor: string[];
   certifyingBody: CertifyingBody;
+  /** NyxPulse always issues its own completion certificate when enabled. */
+  issuesNyxpulseCertificate: boolean;
   /**
-   * Official wallet/digital cards for ARC programs are issued only through
-   * the American Red Cross Learning Center after skills verification.
+   * When true, learners can also pursue an official American Red Cross
+   * digital certificate via instructor skills session + Learning Center reporting.
+   * This is separate from the NyxPulse certificate.
    */
-  officialCertificateIssuer: "american-red-cross" | "nyxpulse";
+  americanRedCrossPathway?: boolean;
   skillsSessionRequired: boolean;
   certificationValidity?: string;
   instructor?: CourseInstructor;

@@ -17,6 +17,7 @@ const footerLinks = {
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
     { label: "Red Cross Pathway", href: "/certifications/american-red-cross" },
+    { label: "Instructor: Jeremy", href: "/instructors/jeremy" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },

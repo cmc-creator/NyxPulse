@@ -12,34 +12,34 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 import { jeremyInstructor } from "@/lib/instructors";
-import { courses, isAmericanRedCrossCourse } from "@/lib/courses";
+import { courses } from "@/lib/courses";
 
 export const metadata: Metadata = {
-  title: "American Red Cross Training | NyxPulse",
+  title: "American Red Cross Pathway | NyxPulse",
   description:
-    "How NyxPulse delivers American Red Cross CPR, AED, First Aid, and BLS training with a certified instructor and proper certification workflow.",
+    "How NyxPulse Certificates of Completion work alongside optional American Red Cross digital certificates with instructor Jeremy.",
 };
 
 const steps = [
   {
     icon: GraduationCap,
-    title: "1. Enroll & study prep modules",
-    desc: "Use NyxPulse to learn the material before class. Prep modules are study support — not a substitute for required Red Cross online coursework when your class is blended learning.",
+    title: "1. Complete NyxPulse training + earn our certificate",
+    desc: "Finish the course modules and claim your NyxPulse Certificate of Completion (with certificate ID). This is your platform credential whether or not you pursue Red Cross paperwork.",
   },
   {
     icon: ClipboardCheck,
-    title: "2. Attend instructor skills session",
-    desc: "Practice and demonstrate CPR, AED, first aid, or BLS skills with Jeremy, an American Red Cross certified instructor, using Red Cross program standards.",
+    title: "2. Optional: book a skills session",
+    desc: "If you need an official American Red Cross digital certificate, book a skills session with Jeremy. He may teach through NyxPulse or another authorized organization.",
   },
   {
     icon: BadgeCheck,
-    title: "3. Receive official Red Cross digital certificate",
-    desc: "After skills verification and course reporting in the Red Cross Learning Center, the American Red Cross issues your digital certificate by email. Employers can verify it at redcross.org.",
+    title: "3. Official Red Cross digital certificate (when applicable)",
+    desc: "When a class is taught and reported under an authorized Red Cross Training Provider agreement, the American Red Cross issues the digital certificate via the Learning Center — not NyxPulse.",
   },
 ];
 
 export default function AmericanRedCrossPage() {
-  const arcCourses = courses.filter(isAmericanRedCrossCourse);
+  const arcCourses = courses.filter((course) => course.americanRedCrossPathway);
 
   return (
     <div className="relative min-h-screen page-shell">
@@ -59,21 +59,20 @@ export default function AmericanRedCrossPage() {
           <div className="glass-card p-10 lg:p-14 mb-10">
             <div className="inline-flex items-center gap-2 badge badge-cyan mb-4">
               <ShieldCheck className="w-4 h-4" />
-              American Red Cross pathway
+              Dual certificate pathways
             </div>
             <h1 className="font-display text-4xl font-bold text-white mb-4">
-              Built for Red Cross certified instruction
+              NyxPulse certificates + optional Red Cross pathway
             </h1>
             <p className="text-slate-300 text-lg leading-relaxed mb-6">
-              NyxPulse supports instructor-led American Red Cross First Aid / CPR / AED and BLS
-              programs taught by {jeremyInstructor.name}, {jeremyInstructor.credentials[0]}.
-              We designed the platform so learners can prepare here — and still receive their
-              official Red Cross certificate the correct way.
+              NyxPulse issues its own Certificates of Completion. Separately, Jeremy
+              ({jeremyInstructor.credentials[0]}) can run skills sessions for learners who also
+              need an official American Red Cross digital certificate. He teaches through NyxPulse
+              and other organizations as scheduled.
             </p>
             <div className="rounded-2xl border border-amber-400/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-50">
-              NyxPulse does not generate American Red Cross certificates. Official digital
-              certificates come only from the American Red Cross after your instructor reports a
-              completed course in the Red Cross Learning Center.
+              NyxPulse never generates American Red Cross wallet/digital cards. Those come only from
+              the American Red Cross after an authorized class is reported in the Red Cross Learning Center.
             </div>
           </div>
 
@@ -95,21 +94,7 @@ export default function AmericanRedCrossPage() {
           </div>
 
           <div className="glass-card p-8 mb-10">
-            <h2 className="text-2xl font-bold text-white mb-4">Lead instructor</h2>
-            <p className="text-white font-semibold text-lg">{jeremyInstructor.name}</p>
-            <p className="text-slate-400 text-sm mb-4">{jeremyInstructor.title}</p>
-            <ul className="space-y-2">
-              {jeremyInstructor.credentials.map((item) => (
-                <li key={item} className="text-sm text-slate-300 flex items-start gap-2">
-                  <ShieldCheck className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="glass-card p-8 mb-10">
-            <h2 className="text-2xl font-bold text-white mb-4">Red Cross programs on NyxPulse</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Programs with Red Cross pathway</h2>
             <div className="space-y-3">
               {arcCourses.map((course) => (
                 <Link
@@ -129,21 +114,12 @@ export default function AmericanRedCrossPage() {
             </div>
           </div>
 
-          <div className="glass-card p-8 mb-10">
-            <h2 className="text-2xl font-bold text-white mb-4">Compliance checklist</h2>
-            <ul className="space-y-3 text-sm text-slate-300">
-              <li>Instructor maintains current American Red Cross instructor certification and affiliation with an approved Training Provider.</li>
-              <li>Official Red Cross course materials and skill sheets are used for certification classes (via Red Cross Learning Center access).</li>
-              <li>Course activity is reported/closed out in the Red Cross Learning Center so students receive digital certificates.</li>
-              <li>Blended classes use Red Cross online components when required; NyxPulse prep does not replace those modules.</li>
-              <li>American Red Cross logos/marks are used only under authorized Training Provider guidelines.</li>
-              <li>NyxPulse completion records are labeled as prep records, never as Red Cross certificates.</li>
-            </ul>
-          </div>
-
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/courses/cpr-aed" className="btn-primary inline-flex items-center justify-center gap-2">
-              Start with CPR/AED
+            <Link href="/dashboard/sessions" className="btn-primary inline-flex items-center justify-center gap-2">
+              Book a skills session
+            </Link>
+            <Link href="/instructors/jeremy" className="btn-outline inline-flex items-center justify-center gap-2">
+              Meet Jeremy
             </Link>
             <a
               href="https://www.redcross.org/take-a-class/digital-certificate"

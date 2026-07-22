@@ -2,10 +2,10 @@ import type { Course } from "@/lib/course-types";
 import { jeremyInstructor } from "@/lib/instructors";
 
 const arcCompliance = [
-  "Official American Red Cross digital certificates are issued only through the Red Cross Learning Center after your instructor verifies skills.",
-  "NyxPulse prep modules help you study before class. They are not a substitute for Red Cross online coursework when a blended-learning path is assigned.",
-  "Skills practice uses instructor-led manikin/AED training under Red Cross program standards (classroom or blended skills session).",
-  "American Red Cross name and marks are used only to identify authorized instructor-led training. NyxPulse does not issue Red Cross certificates from this app.",
+  "NyxPulse issues its own Certificate of Completion when you finish the course modules here.",
+  "If you also want an official American Red Cross digital certificate, attend the instructor skills session and complete Red Cross course reporting through the Learning Center.",
+  "NyxPulse study modules support learning. They do not replace required Red Cross online coursework when a blended-learning path is assigned.",
+  "Jeremy also teaches through other organizations. Red Cross certificates are only issued when a class is taught and reported under an authorized Red Cross Training Provider agreement.",
 ];
 
 export const arcLifeSafetyCourses: Course[] = [
@@ -18,17 +18,18 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "❤️",
     tagline: "Learn high-quality CPR and AED use for adults, children, and infants — with a Red Cross certified instructor.",
     description:
-      "Instructor-led American Red Cross Adult & Pediatric CPR/AED training delivered by Jeremy, an American Red Cross certified instructor. Complete NyxPulse prep modules, then attend your skills session so your official Red Cross digital certificate can be issued through the Red Cross Learning Center.",
+      "Instructor-led American Red Cross Adult & Pediatric CPR/AED training delivered by Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion in this platform. If you also want an official American Red Cross digital certificate, attend Jeremy's skills session so the class can be reported through the Red Cross Learning Center.",
     duration: "3–4 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "All Levels",
-    certifies: "American Red Cross Adult & Pediatric CPR/AED",
+    certifies: "NyxPulse Certificate · Red Cross pathway available",
     price: 85,
     featured: true,
     certifyingBody: "american-red-cross",
-    officialCertificateIssuer: "american-red-cross",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: true,
     skillsSessionRequired: true,
-    certificationValidity: "2 years (Red Cross digital certificate)",
+    certificationValidity: "NyxPulse certificate on completion · Red Cross card valid 2 years when earned",
     instructor: jeremyInstructor,
     complianceNotes: arcCompliance,
     modules: [
@@ -228,17 +229,18 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "🩹",
     tagline: "Recognize and respond to sudden illness and injury until advanced help arrives.",
     description:
-      "American Red Cross Adult & Pediatric First Aid training with Jeremy, an American Red Cross certified instructor. Build strong first-aid decision-making in NyxPulse, then complete your instructor-led skills session for official Red Cross certification through the Learning Center.",
+      "American Red Cross Adult & Pediatric First Aid training with Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion here. Optionally continue to an instructor-led skills session for official Red Cross certification through the Learning Center.",
     duration: "2–3 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "All Levels",
-    certifies: "American Red Cross Adult & Pediatric First Aid",
+    certifies: "NyxPulse Certificate · Red Cross pathway available",
     price: 95,
     featured: true,
     certifyingBody: "american-red-cross",
-    officialCertificateIssuer: "american-red-cross",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: true,
     skillsSessionRequired: true,
-    certificationValidity: "2 years (Red Cross digital certificate)",
+    certificationValidity: "NyxPulse certificate on completion · Red Cross card valid 2 years when earned",
     instructor: jeremyInstructor,
     complianceNotes: arcCompliance,
     modules: [
@@ -316,6 +318,32 @@ export const arcLifeSafetyCourses: Course[] = [
         ],
       },
       {
+        title: "Medical Emergencies Deep Dive",
+        objective: "Recognize high-risk medical presentations and act early.",
+        topics: [
+          {
+            title: "Chest pain and heart attack warning signs",
+            summary:
+              "Pressure, squeezing, pain radiating to arm/jaw/back, shortness of breath, nausea, or sudden weakness can signal a heart attack. Have the person rest, loosen clothing, and call 9-1-1 immediately. Do not drive them yourself if EMS is available.",
+          },
+          {
+            title: "FAST stroke recognition",
+            summary:
+              "Face drooping, Arm weakness, Speech difficulty, Time to call 9-1-1. Note the time symptoms started. Keep the person safe and monitor breathing until responders arrive.",
+          },
+          {
+            title: "Fainting and altered responsiveness",
+            summary:
+              "If someone feels faint, help them lie down and elevate the legs if no injury is suspected. If they become unresponsive, check breathing and begin CPR if needed. Always consider calling EMS when the cause is unclear.",
+          },
+          {
+            title: "Abuse, neglect, and safe reporting awareness",
+            summary:
+              "If you suspect abuse or neglect while providing first aid, prioritize medical care and scene safety. Follow your workplace/school reporting requirements and share concerns with EMS/authorities as appropriate.",
+          },
+        ],
+      },
+      {
         title: "Environmental Emergencies & Skills Ready",
         objective: "Handle heat, cold, and bites; prepare for skills practice.",
         topics: [
@@ -335,9 +363,14 @@ export const arcLifeSafetyCourses: Course[] = [
               "Remove stingers by scraping, wash the area, and watch for allergic reaction. For snake/animal bites, keep still, clean if possible, and seek medical care. Know local reporting rules for animal bites.",
           },
           {
-            title: "Skills session checklist",
+            title: "Building a practical first-aid kit",
             summary:
-              "You will practice putting gloves on/off, checking a person, controlling bleeding, and other first-aid skills with your instructor. Official Red Cross certification is issued after skills verification and course reporting in the Red Cross Learning Center.",
+              "Stock gloves, breathing barrier, gauze, roller bandages, adhesive dressings, trauma dressing, tape, scissors, triangular bandage, instant cold pack, and emergency blanket. Check expiration dates and restock after use.",
+          },
+          {
+            title: "Skills session + certificate pathways",
+            summary:
+              "Completing NyxPulse modules earns your NyxPulse Certificate of Completion. If you also want an official American Red Cross digital certificate, book a skills session with Jeremy so the class can be taught and reported under an authorized Red Cross Training Provider process.",
           },
         ],
       },
@@ -346,7 +379,8 @@ export const arcLifeSafetyCourses: Course[] = [
       "Perform a rapid first-aid assessment",
       "Respond to sudden illness and injury emergencies",
       "Control life-threatening bleeding",
-      "Prepare for Red Cross first-aid skills verification",
+      "Earn a NyxPulse Certificate of Completion",
+      "Optionally prepare for Red Cross first-aid skills verification",
     ],
     whoFor: [
       "Workplace responders",
@@ -365,17 +399,18 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "🫁",
     tagline: "Clinical-grade resuscitation for healthcare providers — Red Cross BLS with skills verification.",
     description:
-      "American Red Cross Basic Life Support for healthcare providers and students, taught by Jeremy (American Red Cross certified instructor). Use NyxPulse for structured prep, then complete the required skills session for your official Red Cross BLS digital certificate.",
+      "American Red Cross Basic Life Support for healthcare providers and students, taught by Jeremy (American Red Cross certified instructor). Earn a NyxPulse Certificate of Completion here. Optionally complete a skills session for an official Red Cross BLS digital certificate.",
     duration: "4–6 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "Intermediate",
-    certifies: "American Red Cross Basic Life Support (BLS)",
+    certifies: "NyxPulse Certificate · Red Cross pathway available",
     price: 125,
     featured: true,
     certifyingBody: "american-red-cross",
-    officialCertificateIssuer: "american-red-cross",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: true,
     skillsSessionRequired: true,
-    certificationValidity: "2 years (Red Cross digital certificate)",
+    certificationValidity: "NyxPulse certificate on completion · Red Cross card valid 2 years when earned",
     instructor: jeremyInstructor,
     complianceNotes: arcCompliance,
     modules: [

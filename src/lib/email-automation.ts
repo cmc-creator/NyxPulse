@@ -138,8 +138,8 @@ export async function sendCourseCompletionEmail(
     <div style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:12px;padding:20px;margin-bottom:24px;text-align:center;">
       <span style="font-size:20px;font-weight:700;color:#fff;">${courseTitle}</span>
     </div>
-    <p style="color:#94a3b8;line-height:1.6;">Your NyxPulse completion/prep record is ready. If this was an American Red Cross program, your official Red Cross digital certificate is issued separately after the instructor skills session and course reporting in the Red Cross Learning Center.</p>
-    ${btn('View Dashboard Record', certificateUrl)}
+    <p style="color:#94a3b8;line-height:1.6;">Your NyxPulse Certificate of Completion is ready to view and print. If you also want an official American Red Cross digital certificate, book a skills session so your instructor can complete the Red Cross reporting process.</p>
+    ${btn('View Certificate', certificateUrl)}
   `);
 
   return sendAutomatedEmail({

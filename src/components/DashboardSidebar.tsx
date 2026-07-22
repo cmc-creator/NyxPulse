@@ -13,12 +13,14 @@ import {
   Menu,
   X,
   Users,
+  Calendar,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/dashboard/courses", label: "My Courses", icon: BookOpen, exact: false },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award, exact: false },
+  { href: "/dashboard/sessions", label: "Skills Sessions", icon: Calendar, exact: false },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard, exact: false },
   { href: "/dashboard/org", label: "Team Portal", icon: Users, exact: false },
 ];

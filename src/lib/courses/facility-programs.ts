@@ -22,7 +22,8 @@ export const facilityPrograms: Course[] = [
     price: 195,
     featured: true,
     certifyingBody: "nyxpulse",
-    officialCertificateIssuer: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
     skillsSessionRequired: false,
     certificationValidity: "3 years (recommended renewal)",
     modules: [
@@ -82,7 +83,8 @@ export const facilityPrograms: Course[] = [
     price: 375,
     featured: true,
     certifyingBody: "nyxpulse",
-    officialCertificateIssuer: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
     skillsSessionRequired: false,
     certificationValidity: "3 years (recommended renewal)",
     modules: [
@@ -145,7 +147,8 @@ export const facilityPrograms: Course[] = [
     price: 225,
     featured: true,
     certifyingBody: "nyxpulse",
-    officialCertificateIssuer: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
     skillsSessionRequired: false,
     certificationValidity: "3 years (recommended renewal)",
     modules: [
@@ -205,7 +208,8 @@ export const facilityPrograms: Course[] = [
     price: 110,
     featured: true,
     certifyingBody: "nyxpulse",
-    officialCertificateIssuer: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
     skillsSessionRequired: false,
     certificationValidity: "Varies by employer policy",
     modules: [
