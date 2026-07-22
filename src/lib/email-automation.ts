@@ -88,9 +88,24 @@ function btn(text: string, href: string): string {
   return `<a href="${href}" style="display:inline-block;margin-top:24px;padding:14px 28px;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:600;font-size:15px;border-radius:8px;text-decoration:none;">${text}</a>`;
 }
 
+function isProductionLike() {
+  return (
+    process.env.NODE_ENV === "production" ||
+    process.env.SMTP_REQUIRED === "true" ||
+    process.env.VERCEL_ENV === "production"
+  );
+}
+
 async function sendAutomatedEmail(payload: EmailPayload): Promise<EmailResult> {
   try {
     if (!transporter) {
+      if (isProductionLike()) {
+        return {
+          success: false,
+          error: "Email service is not configured",
+        };
+      }
+
       console.warn('[EMAIL] SMTP configuration not set — skipping send for', payload.to);
       return { success: true, messageId: `dev_${Date.now()}` };
     }

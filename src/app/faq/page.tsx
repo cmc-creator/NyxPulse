@@ -41,7 +41,7 @@ const faqs = [
   },
   {
     q: "Are NyxPulse courses HIPAA compliant?",
-    a: "Yes. We are HIPAA-ready and sign Business Associate Agreements (BAAs) with healthcare organizations. All Protected Health Information is encrypted, access-controlled, audited, and stored securely. Contact hipaa@nyxpulse.com to initiate a BAA.",
+    a: "NyxPulse is HIPAA-ready for covered deployments. Self-serve accounts are designed for learner identity, enrollment, and training progress — not for storing clinical PHI by default. If your organization needs a BAA or will process PHI, contact hipaa@nyxpulse.com before go-live.",
   },
   {
     q: "Can instructors see individual learner progress?",

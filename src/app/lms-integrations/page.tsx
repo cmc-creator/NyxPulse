@@ -196,7 +196,7 @@ export default function LMSIntegrationsPage() {
           </div>
 
           <div className="glass-card p-10 lg:p-14">
-            <h2 className="text-2xl font-bold text-white mb-4">Don't see your LMS?</h2>
+            <h2 className="text-2xl font-bold text-white mb-4">Don&apos;t see your LMS?</h2>
             <p className="text-slate-400 mb-6">
               We can build integrations for other LMS platforms. Contact our integrations team to discuss your specific needs.
             </p>

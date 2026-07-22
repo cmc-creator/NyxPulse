@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import { getCourseBySlug } from "@/lib/courses";
+import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 import CoursePlayerClient from "./CoursePlayerClient";
 
 interface Props {
@@ -15,13 +16,22 @@ export default async function CoursePlayerPage({ params }: Props) {
   const course = getCourseBySlug(slug);
   if (!course) notFound();
 
-  const enrolledSlugs = (user.publicMetadata?.courses as string[]) ?? [];
+  const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
+  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
+  const enrolledSlugs = asStringArray(publicMetadata.courses);
   if (!enrolledSlugs.includes(slug)) {
     redirect(`/courses/${slug}`);
   }
 
-  const completedSlugs = (user.publicMetadata?.completedCourses as string[]) ?? [];
+  const completedSlugs = asStringArray(publicMetadata.completedCourses);
   const isCompleted = completedSlugs.includes(slug);
+  const initialCompletedTopics = asStringArray(privateMetadata.courseProgress?.[slug]);
 
-  return <CoursePlayerClient course={course} userId={user.id} isCompleted={isCompleted} />;
+  return (
+    <CoursePlayerClient
+      course={course}
+      initialCompletedTopics={initialCompletedTopics}
+      isCompleted={isCompleted}
+    />
+  );
 }

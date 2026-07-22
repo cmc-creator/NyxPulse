@@ -8,7 +8,7 @@
 export interface SchemaType {
   "@context": string;
   "@type": string | string[];
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 /**

@@ -1,14 +1,20 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getLearningPathById, getCourseBySlug } from "@/lib/courses";
-import { ArrowLeft, CheckCircle, Clock, BookOpen, TrendingDown, ShoppingCart } from "lucide-react";
+import { ArrowLeft, CheckCircle, Clock, BookOpen, TrendingDown } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
+import BuyPathButton from "@/components/BuyPathButton";
 import { notFound } from "next/navigation";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const path = getLearningPathById(params.id);
+interface Props {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { id } = await params;
+  const path = getLearningPathById(id);
   if (!path) return { title: "Not Found" };
 
   return {
@@ -17,14 +23,17 @@ export async function generateMetadata({ params }: { params: { id: string } }): 
   };
 }
 
-export default function LearningPathPage({ params }: { params: { id: string } }) {
-  const path = getLearningPathById(params.id);
+export default async function LearningPathPage({ params }: Props) {
+  const { id } = await params;
+  const path = getLearningPathById(id);
   if (!path) {
     notFound();
   }
 
-  const courses = path.courseList.map((slug) => getCourseBySlug(slug)).filter((c) => c !== undefined);
-  const individualPrice = courses.reduce((sum, c) => sum + (c?.price || 0), 0);
+  const pathCourses = path.courseList
+    .map((slug) => getCourseBySlug(slug))
+    .filter((c) => c !== undefined);
+  const individualPrice = pathCourses.reduce((sum, c) => sum + (c?.price || 0), 0);
 
   const badgeBg: Record<string, string> = {
     violet: "bg-violet-500/10 text-violet-300",
@@ -59,7 +68,13 @@ export default function LearningPathPage({ params }: { params: { id: string } })
                 <h1 className="font-display text-4xl font-bold text-white mb-2">{path.title}</h1>
                 <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-lg ${badgeBg[path.badge]} border border-[rgba(99,102,241,0.3)]`}>
                   <TrendingDown className="w-4 h-4" />
-                  <span className="font-semibold">Save ${path.savings} ({Math.round((path.savings / individualPrice) * 100)}% off)</span>
+                  <span className="font-semibold">
+                    Save ${path.savings} (
+                    {individualPrice > 0
+                      ? Math.round((path.savings / individualPrice) * 100)
+                      : 0}
+                    % off)
+                  </span>
                 </div>
               </div>
               <div className="text-right mt-2">
@@ -86,17 +101,14 @@ export default function LearningPathPage({ params }: { params: { id: string } })
               </div>
             </div>
 
-            <button className="button button-pulse w-full lg:w-auto">
-              <ShoppingCart className="w-5 h-5" />
-              Enroll in Path (${path.price})
-            </button>
+            <BuyPathButton pathId={path.id} price={path.price} />
           </div>
 
           <div className="glass-card p-10 lg:p-14 mb-10">
-            <h2 className="text-2xl font-bold text-white mb-8">What's Included</h2>
+            <h2 className="text-2xl font-bold text-white mb-8">What&apos;s Included</h2>
 
             <div className="space-y-4">
-              {courses.map((course, idx) => (
+              {pathCourses.map((course, idx) => (
                 <Link
                   key={course?.slug}
                   href={`/courses/${course?.slug}`}
@@ -107,7 +119,7 @@ export default function LearningPathPage({ params }: { params: { id: string } })
                       <div className="text-3xl flex-shrink-0 mt-1">{course?.icon}</div>
                       <div className="flex-1">
                         <div className="text-sm text-slate-500 mb-1">
-                          {idx + 1} of {courses.length}
+                          {idx + 1} of {pathCourses.length}
                         </div>
                         <h3 className="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
                           {course?.title}
@@ -147,7 +159,7 @@ export default function LearningPathPage({ params }: { params: { id: string } })
               <div>
                 <h3 className="text-white font-semibold mb-3">Who this path is for:</h3>
                 <div className="space-y-2">
-                  {courses
+                  {pathCourses
                     .flatMap((c) => c?.whoFor || [])
                     .filter((v, i, a) => a.indexOf(v) === i)
                     .map((role) => (
@@ -160,9 +172,9 @@ export default function LearningPathPage({ params }: { params: { id: string } })
               </div>
 
               <div>
-                <h3 className="text-white font-semibold mb-3">You'll earn certifications for:</h3>
+                <h3 className="text-white font-semibold mb-3">You&apos;ll earn certifications for:</h3>
                 <div className="space-y-2">
-                  {courses.map((c) => (
+                  {pathCourses.map((c) => (
                     <div key={c?.slug} className="flex items-start gap-2 text-slate-300 text-sm">
                       <CheckCircle className="w-4 h-4 text-indigo-300 flex-shrink-0 mt-0.5" />
                       {c?.certifies}

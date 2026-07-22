@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Check, Zap, ArrowRight, Sparkles, TrendingDown } from "lucide-react";
+import { Check, Zap, ArrowRight, TrendingDown } from "lucide-react";
 
 const plans = [
   {
@@ -83,7 +83,7 @@ export default function Pricing() {
             <div className="glass-card mt-6 sm:mt-8 p-4 sm:p-5">
               <div className="flex items-center gap-2 mb-3 text-white font-semibold text-xs sm:text-sm">
                 <TrendingDown className="w-4 h-4 text-emerald-400" />
-                Why we're competitive
+                Why we&apos;re competitive
               </div>
               <ul className="space-y-2 text-xs sm:text-sm text-slate-300">
                 <li>Lowest per-seat rates in category. Starting at $49 per course.</li>

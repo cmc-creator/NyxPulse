@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { stripe } from "@/lib/stripe";
-import { clerkClient } from "@clerk/nextjs/server";
+import { getStripe } from "@/lib/stripe";
+import { enrollUserInCourses, parseCourseSlugsFromMetadata } from "@/lib/enrollment";
 import type Stripe from "stripe";
 
-// Disable body parsing — we need the raw body to verify Stripe signature
 export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
@@ -21,7 +20,7 @@ export async function POST(req: Request) {
 
   let event: Stripe.Event;
   try {
-    event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+    event = getStripe().webhooks.constructEvent(body, sig, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("Stripe webhook signature verification failed:", message);
@@ -30,31 +29,28 @@ export async function POST(req: Request) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const { courseSlug, userId } = (session.metadata ?? {}) as {
-      courseSlug?: string;
-      userId?: string;
-    };
+    const userId = session.metadata?.userId ?? session.client_reference_id ?? undefined;
+    const courseSlugs = parseCourseSlugsFromMetadata(session.metadata);
+    const customerId =
+      typeof session.customer === "string"
+        ? session.customer
+        : session.customer?.id;
 
-    if (!courseSlug || !userId) {
+    if (!userId || courseSlugs.length === 0) {
       console.error("Missing metadata in checkout session:", session.id);
-      return NextResponse.json({ error: "Missing metadata" }, { status: 400 });
+      // Acknowledge to avoid infinite Stripe retries for malformed sessions.
+      return NextResponse.json({ received: true, skipped: true });
     }
 
     try {
-      const clerk = await clerkClient();
-      const user = await clerk.users.getUser(userId);
-      const existingCourses =
-        (user.publicMetadata?.courses as string[] | undefined) ?? [];
-
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: {
-          ...user.publicMetadata,
-          courses: Array.from(new Set([...existingCourses, courseSlug])),
-        },
+      await enrollUserInCourses({
+        userId,
+        courseSlugs,
+        stripeCustomerId: customerId,
       });
     } catch (err) {
-      console.error("Failed to update Clerk metadata:", err);
-      return NextResponse.json({ error: "Metadata update failed" }, { status: 500 });
+      console.error("Failed to process checkout.session.completed:", err);
+      return NextResponse.json({ error: "Enrollment update failed" }, { status: 500 });
     }
   }
 
