@@ -86,39 +86,6 @@ export default function CoursePlayerClient({
     }, 350);
   };
 
-  const persistProgress = async (topics: string[]) => {
-    setSaving(true);
-    setSaveError(null);
-    try {
-      const res = await fetch("/api/courses/progress", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          courseSlug: course.slug,
-          completedTopics: topics,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        setSaveError(data.error ?? "Could not save progress.");
-        return false;
-      }
-      return true;
-    } catch {
-      setSaveError("Network error while saving progress.");
-      return false;
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const schedulePersist = (topics: string[]) => {
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      void persistProgress(topics);
-    }, 350);
-  };
-
   const claimCertificate = async () => {
     setClaiming(true);
     setClaimError(null);
