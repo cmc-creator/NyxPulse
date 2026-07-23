@@ -4,6 +4,10 @@ import { NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/api/stripe/portal(.*)",
+  "/api/stripe/checkout(.*)",
+  "/api/stripe/session-status(.*)",
+  "/api/courses/complete(.*)",
+  "/api/courses/progress(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, request) => {

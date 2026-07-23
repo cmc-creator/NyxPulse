@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, BarChart3, DollarSign, Users, Zap, Copy, CheckCircle } from "lucide-react";
+import { ArrowLeft, DollarSign, Users, Zap, CheckCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";

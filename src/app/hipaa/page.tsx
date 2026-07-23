@@ -7,30 +7,30 @@ import StarField from "@/components/StarField";
 
 export const metadata: Metadata = {
   title: "HIPAA Compliance | NyxPulse",
-  description: "NyxPulse HIPAA compliance information and business associate agreement.",
+  description: "NyxPulse HIPAA readiness information and business associate agreement process.",
 };
 
 export default function HIPAAPage() {
   const features = [
     {
       icon: Lock,
-      title: "Data Encryption",
-      desc: "All data in transit uses TLS 1.2+. Protected health information at rest is AES-256 encrypted.",
+      title: "Transport Security",
+      desc: "Application traffic uses TLS in production via our hosting and auth providers.",
     },
     {
       icon: Eye,
       title: "Access Controls",
-      desc: "Role-based access, multi-factor authentication, and audit logging of all data access.",
+      desc: "Account authentication is handled by Clerk with signed-in access to learner dashboards.",
     },
     {
       icon: Shield,
       title: "Business Associate Agreement",
-      desc: "We sign BAAs with covered entities and business associates as required by HIPAA.",
+      desc: "We can discuss and execute a BAA for covered-entity deployments that require one.",
     },
     {
       icon: AlertCircle,
-      title: "Breach Notification",
-      desc: "Immediate notification protocol in case of unauthorized access or data breach.",
+      title: "Incident Response",
+      desc: "Security and privacy inquiries are routed to our compliance contacts for investigation.",
     },
   ];
 
@@ -48,10 +48,12 @@ export default function HIPAAPage() {
 
           <div className="glass-card p-10 lg:p-14 mb-10">
             <h1 className="font-display text-4xl font-bold text-white mb-2">HIPAA Compliance</h1>
-            <p className="text-slate-400 mb-8">NyxPulse is designed to support healthcare organizations while maintaining strict HIPAA compliance.</p>
+            <p className="text-slate-400 mb-8">
+              NyxPulse is built for healthcare training workflows. Current self-serve accounts are designed for learner identity, enrollment, and course progress — not for storing clinical PHI by default.
+            </p>
             <div className="inline-flex items-center gap-2 badge badge-violet">
               <Shield className="w-4 h-4" />
-              HIPAA-Ready Platform
+              HIPAA-ready for covered deployments
             </div>
           </div>
 
@@ -75,112 +77,54 @@ export default function HIPAAPage() {
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">Overview</h2>
                 <p>
-                  NyxPulse is built to support healthcare organizations with strict HIPAA compliance requirements. We maintain administrative, physical, and technical safeguards appropriate for handling Protected Health Information (PHI).
+                  NyxPulse supports healthcare organizations that need emergency and safety training.
+                  If your deployment will process Protected Health Information (PHI), contact us before go-live so we can review scope, execute a Business Associate Agreement when required, and confirm the appropriate safeguards for that engagement.
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Administrative Safeguards</h2>
+                <h2 className="text-2xl font-bold text-white mb-4">What the platform stores today</h2>
                 <ul className="space-y-2 list-disc list-inside">
-                  <li>Designated privacy and security officers</li>
-                  <li>Regular workforce training on HIPAA obligations</li>
-                  <li>Policies and procedures for PHI handling</li>
-                  <li>Authorization and access management</li>
-                  <li>Regular risk assessments and compliance audits</li>
+                  <li>Account identity and authentication data (via Clerk)</li>
+                  <li>Course enrollment and completion status</li>
+                  <li>Learner progress checklists for enrolled courses</li>
+                  <li>Payment metadata required for Stripe checkout and receipts</li>
+                  <li>Contact/sales inquiry details you submit voluntarily</li>
                 </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Physical Safeguards</h2>
-                <ul className="space-y-2 list-disc list-inside">
-                  <li>Secure data centers with restricted access</li>
-                  <li>Environmental controls (fire suppression, temperature monitoring)</li>
-                  <li>Surveillance and intrusion detection systems</li>
-                  <li>Workstation security and device controls</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Technical Safeguards</h2>
-                <ul className="space-y-2 list-disc list-inside">
-                  <li><strong>Encryption:</strong> AES-256 for data at rest, TLS 1.2+ for data in transit</li>
-                  <li><strong>Authentication:</strong> Multi-factor authentication, strong password policies</li>
-                  <li><strong>Audit Controls:</strong> Comprehensive logging of access, modifications, and deletions</li>
-                  <li><strong>Access Controls:</strong> Role-based permissions, principle of least privilege</li>
-                  <li><strong>Integrity Controls:</strong> Data validation and checksums</li>
-                </ul>
+                <p className="mt-4">
+                  Please do not submit clinical notes, patient identifiers, or other PHI through contact forms or course content unless we have an active BAA and a confirmed PHI-capable configuration for your organization.
+                </p>
               </section>
 
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">Business Associate Agreement (BAA)</h2>
                 <p>
-                  If you are a HIPAA-covered entity or business associate, we require execution of a Business Associate Agreement before you process any Protected Health Information through our platform. The BAA specifies:
+                  Covered entities and business associates that need a BAA should contact us before processing PHI in NyxPulse. A BAA engagement typically covers permitted uses/disclosures, security obligations, breach notification, and subcontractor requirements.
                 </p>
-                <ul className="space-y-2 list-disc list-inside mt-3">
-                  <li>Permitted uses and disclosures of PHI</li>
-                  <li>Security and privacy requirements</li>
-                  <li>Breach notification obligations</li>
-                  <li>Permitted subcontractors and their obligations</li>
-                  <li>Right to audit and inspect compliance</li>
-                </ul>
                 <p className="mt-4">
-                  To request a BAA template, contact <a href="mailto:hipaa@nyxpulse.com" className="text-indigo-300 hover:text-white">hipaa@nyxpulse.com</a>.
+                  To request a BAA discussion, email{" "}
+                  <a href="mailto:hipaa@nyxpulse.com" className="text-indigo-300 hover:text-white">
+                    hipaa@nyxpulse.com
+                  </a>
+                  .
                 </p>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Breach Notification</h2>
-                <p>
-                  In the unlikely event of a confirmed breach of unsecured PHI, we will:
-                </p>
-                <ol className="space-y-2 list-decimal list-inside mt-3">
-                  <li>Notify you without unreasonable delay (generally within 24 hours)</li>
-                  <li>Provide information about the breach, individuals affected, and mitigation steps</li>
-                  <li>Cooperate with your breach notification obligations to individuals and regulators</li>
-                  <li>Retain evidence for regulatory review</li>
-                </ol>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Subcontractors</h2>
-                <p>
-                  We may use subcontractors to process PHI. All subcontractors are contractually bound to the same privacy and security obligations as NyxPulse. Current subcontractors:
-                </p>
+                <h2 className="text-2xl font-bold text-white mb-4">Service providers</h2>
                 <ul className="space-y-2 list-disc list-inside mt-3">
-                  <li>Stripe (payment processing) — PCI-DSS compliant</li>
-                  <li>Clerk (authentication) — SOC 2 Type II certified</li>
-                  <li>Vercel (hosting) — SOC 2 Type II, ISO 27001 certified</li>
+                  <li>Stripe — payment processing</li>
+                  <li>Clerk — authentication</li>
+                  <li>Vercel — application hosting</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Compliance Audits & Assessments</h2>
-                <p>
-                  We conduct regular security audits and penetration testing. We are happy to provide:
-                </p>
-                <ul className="space-y-2 list-disc list-inside mt-3">
-                  <li>Evidence of compliance (audit reports, certifications)</li>
-                  <li>Right to conduct audits and inspections (as specified in BAA)</li>
-                  <li>Copies of security and privacy policies</li>
-                </ul>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-4">State Privacy Laws</h2>
-                <p>
-                  We also comply with state-level privacy laws including CCPA (California), CPA (Colorado), and similar regulations. We respect user rights regarding data access, deletion, and opt-out.
-                </p>
-              </section>
-
-              <section>
-                <h2 className="text-2xl font-bold text-white mb-4">Contact & Support</h2>
-                <p>
-                  For HIPAA compliance questions, audit requests, or to initiate a BAA:
-                </p>
+                <h2 className="text-2xl font-bold text-white mb-4">Contact</h2>
                 <div className="mt-4 text-sm">
                   <p><strong>NyxCollective LLC</strong></p>
-                  <p><strong>HIPAA Privacy Officer:</strong> privacy@nyxpulse.com</p>
-                  <p><strong>HIPAA Security Officer:</strong> security@nyxpulse.com</p>
+                  <p><strong>Privacy:</strong> privacy@nyxpulse.com</p>
+                  <p><strong>Security:</strong> security@nyxpulse.com</p>
                   <p>Phone: (623) 806-4918</p>
                 </div>
               </section>

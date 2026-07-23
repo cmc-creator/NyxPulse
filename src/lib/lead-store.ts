@@ -14,11 +14,15 @@ export type ContactLead = {
   sourceIp?: string;
 };
 
-const DEFAULT_STORAGE_PATH = process.env.CONTACT_LEADS_STORAGE_PATH ?? path.join(".data", "contact-leads.ndjson");
 const MAX_LEADS_RETURNED = 250;
 
 function getStoragePath() {
-  return DEFAULT_STORAGE_PATH;
+  if (process.env.CONTACT_LEADS_STORAGE_PATH) {
+    return process.env.CONTACT_LEADS_STORAGE_PATH;
+  }
+
+  // Scope to a subfolder so Turbopack NFT tracing does not pull the whole project.
+  return path.join(/* turbopackIgnore: true */ process.cwd(), ".data", "contact-leads.ndjson");
 }
 
 async function ensureStorageDir(filePath: string) {

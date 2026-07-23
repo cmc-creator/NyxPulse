@@ -1,33 +1,35 @@
 import { NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import { sendEnrollmentConfirmationEmail } from "@/lib/email-automation";
 
+/**
+ * SMTP smoke-test endpoint.
+ * Always requires x-smtp-test-token header matching SMTP_TEST_TOKEN.
+ * Disabled entirely when SMTP_TEST_TOKEN is unset (recommended for production).
+ */
 export async function POST(req: Request) {
-  const { userId } = await auth();
   const smtpTestToken = process.env.SMTP_TEST_TOKEN;
-  const requestToken = req.headers.get("x-smtp-test-token");
-
-  const body = (await req.json().catch(() => ({}))) as {
-    email?: string;
-    token?: string;
-    name?: string;
-  };
-  const fallbackToken = body.token;
-  const tokenMatches =
-    !!smtpTestToken && (requestToken === smtpTestToken || fallbackToken === smtpTestToken);
-
-  // Allow either a signed-in user OR a request with the shared SMTP test token.
-  if (!userId && !tokenMatches) {
+  if (!smtpTestToken) {
     return NextResponse.json(
-      {
-        error:
-          "Unauthorized. Sign in or provide a valid x-smtp-test-token header.",
-      },
+      { error: "SMTP test endpoint is disabled." },
+      { status: 404 }
+    );
+  }
+
+  const requestToken = req.headers.get("x-smtp-test-token");
+  if (!requestToken || requestToken !== smtpTestToken) {
+    return NextResponse.json(
+      { error: "Unauthorized. Provide a valid x-smtp-test-token header." },
       { status: 401 }
     );
   }
 
-  const user = userId ? await currentUser() : null;
+  const body = (await req.json().catch(() => ({}))) as {
+    email?: string;
+    name?: string;
+  };
+
+  const user = await currentUser().catch(() => null);
   const accountEmail = user?.emailAddresses.find(
     (email) => email.id === user.primaryEmailAddressId
   )?.emailAddress;
@@ -35,7 +37,7 @@ export async function POST(req: Request) {
 
   if (!targetEmail) {
     return NextResponse.json(
-      { error: "No target email provided. Pass { email: \"you@example.com\" }." },
+      { error: 'No target email provided. Pass { email: "you@example.com" }.' },
       { status: 400 }
     );
   }

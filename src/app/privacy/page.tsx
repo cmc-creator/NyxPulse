@@ -69,7 +69,7 @@ export default function PrivacyPage() {
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">4. HIPAA Compliance</h2>
                 <p>
-                  If you are a covered entity or business associate under HIPAA, we handle Protected Health Information (PHI) in accordance with HIPAA regulations and our Business Associate Agreement (BAA). We maintain appropriate safeguards including encryption, access controls, and audit logging.
+                  NyxPulse is designed for healthcare training workflows. Current self-serve accounts store learner identity, enrollment, progress, and payment metadata — not clinical PHI by default. If you are a covered entity or business associate and need to process PHI through NyxPulse, contact us to review scope and execute a Business Associate Agreement (BAA) before doing so.
                 </p>
               </section>
 
