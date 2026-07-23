@@ -1,5 +1,8 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { isClerkServerConfigured } from "@/lib/clerk-config";
+
+const isClerkConfigured = isClerkServerConfigured();
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
@@ -10,7 +13,7 @@ const isProtectedRoute = createRouteMatcher([
   "/api/courses/progress(.*)",
 ]);
 
-export default clerkMiddleware(async (auth, request) => {
+const clerkAuthMiddleware = clerkMiddleware(async (auth, request) => {
   if (!isProtectedRoute(request)) {
     return;
   }
@@ -28,6 +31,16 @@ export default clerkMiddleware(async (auth, request) => {
   signInUrl.searchParams.set("redirect_url", request.url);
   return NextResponse.redirect(signInUrl);
 });
+
+function passthroughMiddleware() {
+  return NextResponse.next();
+}
+
+/**
+ * If Clerk env vars are missing (common after recreating a Vercel project),
+ * do not crash every request — serve the public site and skip auth gates.
+ */
+export default isClerkConfigured ? clerkAuthMiddleware : passthroughMiddleware;
 
 export const config = {
   matcher: [

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, BookOpen, ShoppingCart } from "lucide-react";
+import { isClerkPublishableConfigured } from "@/lib/clerk-config";
 
 interface BuyButtonProps {
   courseSlug: string;
@@ -12,13 +13,14 @@ interface BuyButtonProps {
   className?: string;
 }
 
-export default function BuyButton({
+function BuyButtonUI({
   courseSlug,
   price,
   hasCourse,
   className = "",
-}: BuyButtonProps) {
-  const { isSignedIn, isLoaded } = useUser();
+  isSignedIn,
+  isLoaded,
+}: BuyButtonProps & { isSignedIn: boolean; isLoaded: boolean }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,19 +28,16 @@ export default function BuyButton({
   const handleClick = async () => {
     if (!isLoaded) return;
 
-    // Already enrolled — go to dashboard course
     if (hasCourse) {
       router.push(`/dashboard/courses/${courseSlug}`);
       return;
     }
 
-    // No price set — redirect to contact
     if (price === null) {
       router.push("/contact");
       return;
     }
 
-    // Not signed in — send to sign-up
     if (!isSignedIn) {
       router.push(`/sign-up?redirect=/courses/${courseSlug}`);
       return;
@@ -102,16 +101,33 @@ export default function BuyButton({
               {price === null
                 ? "Contact Us to Enroll"
                 : isSignedIn
-                ? `Enroll — $${price}`
-                : `Get Started — $${price}`}
+                  ? `Enroll — $${price}`
+                  : `Get Started — $${price}`}
             </span>
             <ArrowRight className="w-4 h-4" />
           </>
         )}
       </button>
-      {error && (
-        <p className="text-red-400 text-xs text-center">{error}</p>
-      )}
+      {error && <p className="text-red-400 text-xs text-center">{error}</p>}
     </div>
   );
+}
+
+function BuyButtonWithClerk(props: BuyButtonProps) {
+  const { isSignedIn, isLoaded } = useUser();
+  return (
+    <BuyButtonUI
+      {...props}
+      isSignedIn={Boolean(isSignedIn)}
+      isLoaded={isLoaded}
+    />
+  );
+}
+
+export default function BuyButton(props: BuyButtonProps) {
+  if (!isClerkPublishableConfigured()) {
+    return <BuyButtonUI {...props} isSignedIn={false} isLoaded />;
+  }
+
+  return <BuyButtonWithClerk {...props} />;
 }

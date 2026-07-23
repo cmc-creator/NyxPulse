@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
+import { isClerkPublishableConfigured } from "@/lib/clerk-config";
 import {
   LayoutDashboard,
   BookOpen,
@@ -53,7 +54,7 @@ export default function DashboardSidebar() {
           </span>
         </Link>
         <div className="flex items-center gap-3">
-          <UserButton />
+          {isClerkPublishableConfigured() ? <UserButton /> : null}
           <button onClick={() => setOpen(!open)} className="text-slate-400 p-1">
             {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -129,7 +130,7 @@ export default function DashboardSidebar() {
         {/* User */}
         <div className="p-4 border-t border-[rgba(124,58,237,0.1)]">
           <div className="flex items-center gap-3">
-            <UserButton />
+            {isClerkPublishableConfigured() ? <UserButton /> : null}
             <div className="flex-1 min-w-0">
               <div className="text-xs text-slate-500">Signed in</div>
               <Link href="/" className="text-xs text-slate-400 hover:text-violet-400 transition-colors truncate block">
