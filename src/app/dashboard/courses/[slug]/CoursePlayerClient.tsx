@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Course } from "@/lib/courses";
 import { getTopicKey } from "@/lib/course-progress";
+import { getLessonMedia } from "@/lib/courses/lesson-media";
 import {
   CheckCircle,
   Circle,
@@ -168,6 +170,9 @@ export default function CoursePlayerClient({
     );
 
   const currentTopic = course.modules[activeModule]?.topics[activeTopic];
+  const currentMedia = currentTopic
+    ? getLessonMedia(course.slug, currentTopic.title)
+    : undefined;
 
   return (
     <div className="space-y-8">
@@ -397,6 +402,23 @@ export default function CoursePlayerClient({
                     : "Mark complete"}
                 </button>
               </div>
+              {currentMedia && (
+                <figure className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
+                  <Image
+                    src={currentMedia.image}
+                    alt={currentMedia.imageAlt}
+                    width={1280}
+                    height={720}
+                    className="h-auto w-full object-cover"
+                    sizes="(max-width: 1024px) 100vw, 640px"
+                  />
+                  {currentMedia.caption && (
+                    <figcaption className="px-4 py-3 text-xs leading-relaxed text-slate-400 border-t border-white/10">
+                      {currentMedia.caption}
+                    </figcaption>
+                  )}
+                </figure>
+              )}
               <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
                 {currentTopic.summary ??
                   "Review this topic with your instructor during the skills session. Additional study notes will continue to be added here."}
