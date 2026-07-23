@@ -344,4 +344,237 @@ export const additionalPrograms: Course[] = [
       "Workplace emergency responders",
     ],
   },
+  {
+    slug: "workplace-violence-prevention",
+    title: "Workplace Violence Prevention",
+    shortTitle: "Workplace Violence",
+    category: "Behavioral Safety",
+    badge: "violet",
+    icon: "🛡️",
+    tagline: "Recognize risk early, report clearly, and protect your team.",
+    description:
+      "NyxPulse training on workplace violence prevention for healthcare and public-facing teams. Covers risk factors, warning signs, reporting, environmental controls, and post-incident support. Complements de-escalation skills training and issues a NyxPulse Certificate of Completion.",
+    duration: "4 hours",
+    format: ["Live", "Virtual", "Hybrid"],
+    level: "All Levels",
+    certifies: "NyxPulse Certificate of Completion",
+    price: 165,
+    featured: true,
+    certifyingBody: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
+    skillsSessionRequired: false,
+    certificationValidity: "2 years (recommended renewal)",
+    instructor: jeremyInstructor,
+    modules: [
+      {
+        title: "Understanding Workplace Violence",
+        objective: "Know what workplace violence looks like and why healthcare is high-risk.",
+        topics: [
+          {
+            title: "What counts as workplace violence",
+            summary:
+              "Workplace violence includes physical assault, threats, intimidation, harassment, and verbal abuse that create a reasonable fear of harm. It can come from patients, visitors, coworkers, or outsiders. Do not wait for injury before treating a threat as serious.",
+          },
+          {
+            title: "Why healthcare and public settings are high-risk",
+            summary:
+              "24/7 operations, high stress, long waits, behavioral health crises, substance use, and unrestricted public access raise risk. Home visits, parking lots, and triage areas are common exposure points. Knowing your highest-risk locations helps you prepare.",
+          },
+          {
+            title: "Types of workplace violence",
+            summary:
+              "Common categories include criminal intent (stranger crime), customer/client (patient or visitor), worker-on-worker, and personal relationship (domestic violence spilling into work). Prevention tactics differ by type — one policy does not cover every scenario.",
+          },
+          {
+            title: "Impact on staff, patients, and culture",
+            summary:
+              "Violence and near-misses drive injury, turnover, fear, and reduced care quality. A strong reporting culture and visible leadership response matter as much as any single technique.",
+          },
+        ],
+      },
+      {
+        title: "Recognition, Reporting & Prevention Controls",
+        objective: "Spot warning signs early and use organizational controls that reduce risk.",
+        topics: [
+          {
+            title: "Warning signs and escalating behavior",
+            summary:
+              "Watch for pacing, clenched fists, invading space, loud threats, fixation, sudden silence, or statements about weapons. Share observations with your team early — before a code-gray or security call is the only option.",
+          },
+          {
+            title: "Reporting near-misses and events",
+            summary:
+              "Report threats, assaults, and near-misses through your facility’s process the same day when possible. Include who, what, where, when, weapons/objects, injuries, and witnesses. Under-reporting hides patterns leadership needs to fix.",
+          },
+          {
+            title: "Environmental and administrative controls",
+            summary:
+              "Controls include visibility, lighting, panic buttons, badge access, visitor management, safe rooms, staffing patterns, and clear escalation pathways. Know what exists on your unit and what to request when gaps appear.",
+          },
+          {
+            title: "Working alone, home visits, and after-hours risk",
+            summary:
+              "Use check-in procedures, share itineraries, park under lights, keep exits clear, and know when to postpone a visit. Never feel obligated to enter an unsafe scene alone.",
+          },
+        ],
+      },
+      {
+        title: "Response, Support & Continuous Improvement",
+        objective: "Respond safely in the moment and support people after an event.",
+        topics: [
+          {
+            title: "Immediate response options",
+            summary:
+              "Create distance, call for help (security/code team/911 as appropriate), use calm communication when safe, and evacuate others if needed. Your job is to protect life — not to win an argument or restrain someone beyond your training and role.",
+          },
+          {
+            title: "Coordination with security and law enforcement",
+            summary:
+              "Know how to request security, what information they need, and when to call 9-1-1. Follow your facility’s weapons and visitor policies. Do not improvise beyond your training.",
+          },
+          {
+            title: "Post-incident care and documentation",
+            summary:
+              "Get medical evaluation for injuries, complete required reports, preserve evidence when directed, and access employee assistance / peer support. Leaders should follow up so staff are not left alone after a traumatic event.",
+          },
+          {
+            title: "Building a prevention program on your team",
+            summary:
+              "Practice drills, review incident trends, refresh de-escalation skills, and speak up about broken locks, missing panic buttons, or chronic understaffing in high-risk areas. Prevention is ongoing work, not a one-time class.",
+          },
+        ],
+      },
+    ],
+    outcomes: [
+      "Identify workplace violence types and warning signs",
+      "Report threats and near-misses clearly and promptly",
+      "Use prevention controls and post-incident support pathways",
+    ],
+    whoFor: [
+      "Healthcare & clinic staff",
+      "Front desk & triage teams",
+      "Security & public safety",
+      "Managers and unit leaders",
+    ],
+  },
+  {
+    slug: "active-shooter-preparedness",
+    title: "Active Shooter / Armed Intruder Preparedness",
+    shortTitle: "Active Shooter Prep",
+    category: "Emergency Preparedness",
+    badge: "amber",
+    icon: "🚨",
+    tagline: "Decide fast: get out, hide well, or defend as a last resort.",
+    description:
+      "Awareness training for active shooter and armed-intruder events in workplaces and healthcare settings. Covers recognition, escape/hide/defend decision-making, communication with 9-1-1, and recovery basics. Issues a NyxPulse Certificate of Completion. This is preparedness education — not firearms or tactical operator training. Always follow your facility emergency plan and law-enforcement direction.",
+    duration: "3 hours",
+    format: ["Live", "Virtual", "Hybrid"],
+    level: "All Levels",
+    certifies: "NyxPulse Certificate of Completion",
+    price: 145,
+    featured: true,
+    certifyingBody: "nyxpulse",
+    issuesNyxpulseCertificate: true,
+    americanRedCrossPathway: false,
+    skillsSessionRequired: false,
+    certificationValidity: "2 years (recommended renewal)",
+    instructor: jeremyInstructor,
+    complianceNotes: [
+      "This course provides general preparedness education aligned with widely taught public-safety concepts (escape, hide, defend as last resort).",
+      "It does not authorize use of force beyond your role, policy, and applicable law.",
+      "Follow your organization’s emergency operations plan and responding law enforcement instructions during a real event.",
+    ],
+    modules: [
+      {
+        title: "Recognize & Decide Quickly",
+        objective: "Identify an active threat and choose an initial survival action.",
+        topics: [
+          {
+            title: "What an active shooter / armed intruder event is",
+            summary:
+              "These events are fast, chaotic, and unpredictable. Your first job is to recognize gunfire, screams, or credible reports of an armed person and start protective action — not to investigate the sound alone.",
+          },
+          {
+            title: "Your facility plan and notification systems",
+            summary:
+              "Know how alerts are sent (overhead page, app, text, radio), what language your facility uses, and where unit-specific guidance lives. Practice so the first minutes are not spent searching for instructions.",
+          },
+          {
+            title: "Decision framework: escape, hide, defend",
+            summary:
+              "If you can get out safely, leave. If escape is not possible, hide in a secure location. Defend yourself only as a last resort when your life is in imminent danger. There is no single correct choice for every room or role — decide based on distance, exits, and ability to move others.",
+          },
+          {
+            title: "Healthcare-specific constraints",
+            summary:
+              "Patients may be immobile, attached to equipment, or unable to evacuate. Prioritize getting yourself and ambulatory people to safety when possible, shelter-in-place when you cannot move patients, and follow your clinical emergency plan for who stays with critical patients.",
+          },
+        ],
+      },
+      {
+        title: "Escape, Hide & Communicate",
+        objective: "Move to safety, harden a hide location, and call for help effectively.",
+        topics: [
+          {
+            title: "Escape / evacuate well",
+            summary:
+              "Leave belongings, use exits away from the threat, keep hands visible when approaching responders, and help others only if it does not trap you. Have a rally point mindset — do not return to the building until officials say it is safe.",
+          },
+          {
+            title: "Hide / secure-in-place well",
+            summary:
+              "Lock or barricade doors, turn off lights, silence phones, stay out of sight of windows, and spread out if multiple people are present. Remain quiet and wait for clear law-enforcement instructions before opening the door.",
+          },
+          {
+            title: "Calling 9-1-1 and what to report",
+            summary:
+              "Give location (address, floor, unit), what you heard/saw, description if safe to observe, number of victims if known, and your name/callback number. Stay on the line if dispatch asks — but do not expose yourself to gather details.",
+          },
+          {
+            title: "When law enforcement arrives",
+            summary:
+              "Keep hands empty and visible, follow commands immediately, expect officers to pass injured people while they stop the threat first, and do not grab or point suddenly. Direct them with short, clear location information.",
+          },
+        ],
+      },
+      {
+        title: "Last Resort, Aftermath & Team Readiness",
+        objective: "Understand last-resort defense, medical priorities, and recovery steps.",
+        topics: [
+          {
+            title: "Defend only as a last resort",
+            summary:
+              "If confronted and escape/hiding are impossible, commit to actions that disrupt the attacker long enough to create an escape — improvised objects, teamwork, and decisive movement. This is last resort only and must align with your role, policy, and law. This course does not teach firearms tactics.",
+          },
+          {
+            title: "Bleeding control and helping the injured",
+            summary:
+              "When the immediate threat is contained or you are in a safe area, life-threatening bleeding control and basic first aid may save lives. Pair this course with NyxPulse Bleeding Control and CPR trainings for hands-on skill depth.",
+          },
+          {
+            title: "After the event — accountability and support",
+            summary:
+              "Account for staff and patients, follow reunification procedures, avoid spreading unverified information, and access crisis support. Document what you observed when asked by authorized investigators.",
+          },
+          {
+            title: "Drills, walk-throughs, and continuous readiness",
+            summary:
+              "Walk your unit’s exits and safe rooms, practice notification language, and debrief drills without blame. Update plans when construction, staffing, or access patterns change.",
+          },
+        ],
+      },
+    ],
+    outcomes: [
+      "Recognize an active threat and choose escape, hide, or last-resort defense",
+      "Communicate effectively with 9-1-1 and arriving law enforcement",
+      "Apply healthcare-aware shelter/evacuation thinking and post-event support steps",
+    ],
+    whoFor: [
+      "All facility staff",
+      "Healthcare & clinic teams",
+      "Schools & public venues",
+      "Security & managers",
+    ],
+  },
 ];

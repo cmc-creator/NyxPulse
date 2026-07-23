@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What courses does NyxPulse offer?",
-    a: "We offer separate flat-fee trainings. American Red Cross programs (taught by a Red Cross certified instructor): Adult & Pediatric CPR/AED ($85), First Aid ($95), and BLS ($125). NyxPulse programs: Opioid Overdose Response ($75), Bleeding Control ($85), De-escalation ($195), Emergency Management ($375), ICS/HICS ($225), OSHA Safety ($110), and Bloodborne Pathogens ($65). Each training is enrolled separately.",
+    a: "We offer separate flat-fee trainings. American Red Cross programs (taught by a Red Cross certified instructor): Adult & Pediatric CPR/AED ($85), First Aid ($95), and BLS ($125). NyxPulse programs: Opioid Overdose Response ($75), Bleeding Control ($85), De-escalation ($195), Workplace Violence Prevention ($165), Active Shooter Preparedness ($145), Emergency Management ($375), ICS/HICS ($225), OSHA Safety ($110), and Bloodborne Pathogens ($65). Each training is enrolled separately.",
   },
   {
     q: "Are your CPR classes American Red Cross certified?",

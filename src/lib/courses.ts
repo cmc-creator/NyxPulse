@@ -44,12 +44,23 @@ export const learningPaths: LearningPath[] = [
     id: "behavioral-crisis",
     title: "Behavioral Crisis Track",
     description:
-      "Focused de-escalation and crisis intervention training for teams that manage agitated patients, visitors, or workplace conflict.",
+      "De-escalation and workplace violence prevention for teams that manage agitated patients, visitors, or workplace conflict. Each course is a separate enrollment.",
     icon: "🧠",
     badge: "violet",
-    courseList: ["de-escalation"],
-    totalHours: 8,
+    courseList: ["de-escalation", "workplace-violence-prevention"],
+    totalHours: 12,
     competency: "Behavioral Safety",
+  },
+  {
+    id: "threat-preparedness",
+    title: "Threat Preparedness Track",
+    description:
+      "Active shooter / armed-intruder preparedness for workplaces and healthcare settings. Awareness and decision-making — not firearms or tactical operator training.",
+    icon: "🚨",
+    badge: "amber",
+    courseList: ["active-shooter-preparedness"],
+    totalHours: 3,
+    competency: "Threat Preparedness",
   },
   {
     id: "emergency-command",

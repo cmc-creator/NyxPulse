@@ -10,6 +10,8 @@ const footerLinks = {
     { label: "Opioid Response", href: "/courses/opioid-overdose-response" },
     { label: "Bleeding Control", href: "/courses/hemorrhage-control" },
     { label: "De-escalation", href: "/courses/de-escalation" },
+    { label: "Workplace Violence", href: "/courses/workplace-violence-prevention" },
+    { label: "Active Shooter Prep", href: "/courses/active-shooter-preparedness" },
     { label: "Emergency Management", href: "/courses/emergency-management-healthcare" },
     { label: "ICS / HICS", href: "/courses/ics-hics" },
     { label: "OSHA Safety", href: "/courses/osha-safety" },
