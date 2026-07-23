@@ -5,6 +5,7 @@ import { ArrowLeft, CheckCircle, Clock, BookOpen } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
+import BuyPathButton from "@/components/BuyPathButton";
 import { notFound } from "next/navigation";
 
 interface Props {

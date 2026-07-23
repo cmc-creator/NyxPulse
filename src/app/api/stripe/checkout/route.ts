@@ -64,8 +64,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  if (!courseSlug) {
-    return NextResponse.json({ error: "courseSlug is required" }, { status: 400 });
+  if (courseSlug && pathId) {
+    return NextResponse.json(
+      { error: "Provide either courseSlug or pathId, not both" },
+      { status: 400 }
+    );
   }
 
   const course = getCourseBySlug(courseSlug);
