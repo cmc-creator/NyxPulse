@@ -13,6 +13,8 @@ import {
   Clock,
   Award,
   Loader2,
+  ShieldCheck,
+  ExternalLink,
 } from "lucide-react";
 
 interface CoursePlayerClientProps {
@@ -30,17 +32,13 @@ export default function CoursePlayerClient({
     () => new Set(initialCompletedTopics)
   );
   const [activeModule, setActiveModule] = useState(0);
+  const [activeTopic, setActiveTopic] = useState(0);
   const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
   const [claiming, setClaiming] = useState(false);
   const [saving, setSaving] = useState(false);
   const [claimError, setClaimError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const latestTopics = useRef<string[]>(initialCompletedTopics);
-
-  useEffect(() => {
-    latestTopics.current = Array.from(completedTopics);
-  }, [completedTopics]);
 
   useEffect(() => {
     return () => {
@@ -48,14 +46,43 @@ export default function CoursePlayerClient({
     };
   }, []);
 
-  const totalTopics = course.modules.reduce(
-    (acc, m) => acc + m.topics.length,
-    0
-  );
+  const hasArcPathway = Boolean(course.americanRedCrossPathway);
+  const totalTopics = course.modules.reduce((acc, m) => acc + m.topics.length, 0);
   const progress =
-    totalTopics > 0
-      ? Math.round((completedTopics.size / totalTopics) * 100)
-      : 0;
+    totalTopics > 0 ? Math.round((completedTopics.size / totalTopics) * 100) : 0;
+
+  const persistProgress = async (topics: string[]) => {
+    setSaving(true);
+    setSaveError(null);
+    try {
+      const res = await fetch("/api/courses/progress", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          courseSlug: course.slug,
+          completedTopics: topics,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setSaveError(data.error ?? "Could not save progress.");
+        return false;
+      }
+      return true;
+    } catch {
+      setSaveError("Network error while saving progress.");
+      return false;
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const schedulePersist = (topics: string[]) => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      void persistProgress(topics);
+    }, 350);
+  };
 
   const persistProgress = async (topics: string[]) => {
     setSaving(true);
@@ -96,7 +123,7 @@ export default function CoursePlayerClient({
 
     const saved = await persistProgress(Array.from(completedTopics));
     if (!saved) {
-      setClaimError("Save your progress before claiming a certificate.");
+      setClaimError("Save your progress before continuing.");
       setClaiming(false);
       return;
     }
@@ -132,7 +159,6 @@ export default function CoursePlayerClient({
     }
     const topics = Array.from(updated);
     setCompletedTopics(updated);
-    latestTopics.current = topics;
     schedulePersist(topics);
   };
 
@@ -140,6 +166,8 @@ export default function CoursePlayerClient({
     course.modules[moduleIdx].topics.every((_, ti) =>
       completedTopics.has(getTopicKey(moduleIdx, ti))
     );
+
+  const currentTopic = course.modules[activeModule]?.topics[activeTopic];
 
   return (
     <div className="space-y-8">
@@ -171,6 +199,39 @@ export default function CoursePlayerClient({
         </div>
       </div>
 
+      {hasArcPathway && (
+        <div className="glass-card p-5 border border-cyan-400/25 bg-cyan-500/5">
+          <div className="flex items-start gap-3">
+            <ShieldCheck className="w-5 h-5 text-cyan-300 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-slate-300 space-y-2">
+              <p className="text-white font-semibold">
+                NyxPulse certificate + optional Red Cross pathway
+              </p>
+              <p>
+                Finish these modules to earn your <span className="text-white">NyxPulse Certificate of Completion</span>.
+                If you also want an official American Red Cross digital certificate, book a skills
+                session with {course.instructor?.name ?? "Jeremy"}. He may teach through NyxPulse or
+                other authorized organizations depending on the class.
+              </p>
+              <div className="flex flex-wrap gap-4">
+                <Link
+                  href={`/dashboard/sessions?course=${encodeURIComponent(course.slug)}`}
+                  className="inline-flex items-center gap-1.5 text-cyan-300 hover:text-white transition-colors"
+                >
+                  Book skills session <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+                <Link
+                  href="/certifications/american-red-cross"
+                  className="inline-flex items-center gap-1.5 text-cyan-300 hover:text-white transition-colors"
+                >
+                  Pathway details <ExternalLink className="w-3.5 h-3.5" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="glass-card p-5">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-white">Your Progress</span>
@@ -199,13 +260,23 @@ export default function CoursePlayerClient({
         {progress === 100 && (
           <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.06)] flex flex-col sm:flex-row items-center gap-3">
             {isCompleted ? (
-              <Link
-                href="/dashboard/certificates"
-                className="btn-primary inline-flex items-center gap-2 text-sm"
-              >
-                <Award className="w-4 h-4" />
-                View Your Certificate
-              </Link>
+              <>
+                <Link
+                  href="/dashboard/certificates"
+                  className="btn-primary inline-flex items-center gap-2 text-sm"
+                >
+                  <Award className="w-4 h-4" />
+                  View NyxPulse Certificate
+                </Link>
+                {hasArcPathway && (
+                  <Link
+                    href={`/dashboard/sessions?course=${encodeURIComponent(course.slug)}`}
+                    className="btn-outline inline-flex items-center gap-2 text-sm"
+                  >
+                    Book Red Cross skills session
+                  </Link>
+                )}
+              </>
             ) : (
               <>
                 <button
@@ -216,17 +287,19 @@ export default function CoursePlayerClient({
                   {claiming ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
-                      Claiming…
+                      Issuing…
                     </>
                   ) : (
                     <>
                       <Award className="w-4 h-4" />
-                      Claim Certificate
+                      Claim NyxPulse Certificate
                     </>
                   )}
                 </button>
                 <span className="text-xs text-slate-500">
-                  You have completed all modules — claim your certificate.
+                  {hasArcPathway
+                    ? "Issues your NyxPulse certificate now. Red Cross digital cert remains optional via skills session."
+                    : "You have completed all modules — claim your NyxPulse certificate."}
                 </span>
               </>
             )}
@@ -243,7 +316,10 @@ export default function CoursePlayerClient({
           {course.modules.map((mod, mi) => (
             <button
               key={mi}
-              onClick={() => setActiveModule(mi)}
+              onClick={() => {
+                setActiveModule(mi);
+                setActiveTopic(0);
+              }}
               className={`w-full text-left px-4 py-3 rounded-xl text-sm transition-all flex items-center gap-3 ${
                 activeModule === mi
                   ? "bg-violet-600/20 text-violet-300 border border-violet-500/30"
@@ -265,64 +341,95 @@ export default function CoursePlayerClient({
           ))}
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2 space-y-4">
           <div className="glass-card p-6">
             <h2 className="text-lg font-bold text-white mb-1">
               Module {activeModule + 1}: {course.modules[activeModule].title}
             </h2>
+            {course.modules[activeModule].objective && (
+              <p className="text-sm text-violet-300/90 mb-2">
+                {course.modules[activeModule].objective}
+              </p>
+            )}
             <p className="text-sm text-slate-500 mb-6">
-              Check off topics as you work through this module. Progress is saved to your account.
+              Open a topic to study, then check it off when you understand it.
             </p>
 
             <div className="space-y-3">
               {course.modules[activeModule].topics.map((topic, ti) => {
                 const key = getTopicKey(activeModule, ti);
                 const done = completedTopics.has(key);
+                const selected = activeTopic === ti;
                 return (
-                  <button
-                    key={ti}
-                    onClick={() => toggleTopic(activeModule, ti)}
-                    disabled={isCompleted}
-                    className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-xl transition-all border disabled:cursor-default ${
-                      done
-                        ? "bg-green-500/10 border-green-500/25 text-green-300"
-                        : "border-[rgba(255,255,255,0.06)] hover:border-violet-500/30 text-slate-300 hover:text-white"
-                    }`}
-                  >
-                    {done ? (
-                      <CheckCircle className="w-5 h-5 text-green-400 mt-0.5 flex-shrink-0" />
-                    ) : (
-                      <Circle className="w-5 h-5 text-slate-600 mt-0.5 flex-shrink-0" />
-                    )}
-                    <span className={`text-sm ${done ? "line-through opacity-70" : ""}`}>
-                      {topic}
-                    </span>
-                  </button>
+                  <div key={ti} className="space-y-2">
+                    <button
+                      onClick={() => setActiveTopic(ti)}
+                      className={`w-full flex items-start gap-3 text-left px-4 py-3 rounded-xl transition-all border ${
+                        selected
+                          ? "border-violet-500/40 bg-violet-500/10 text-white"
+                          : done
+                            ? "bg-green-500/10 border-green-500/25 text-green-300"
+                            : "border-[rgba(255,255,255,0.06)] hover:border-violet-500/30 text-slate-300 hover:text-white"
+                      }`}
+                    >
+                      <span className="text-sm font-medium">{topic.title}</span>
+                    </button>
+                  </div>
                 );
               })}
             </div>
+          </div>
 
-            <div className="flex items-center justify-between mt-8 pt-5 border-t border-[rgba(255,255,255,0.06)]">
-              <button
-                onClick={() => setActiveModule((p) => Math.max(0, p - 1))}
-                disabled={activeModule === 0}
-                className="btn-outline text-sm py-2 disabled:opacity-30 disabled:cursor-not-allowed"
-              >
-                ← Previous
-              </button>
-              {activeModule < course.modules.length - 1 ? (
+          {currentTopic && (
+            <div className="glass-card p-6">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div>
+                  <h3 className="text-white font-semibold text-lg">{currentTopic.title}</h3>
+                  <p className="text-xs text-slate-500 mt-1">Study notes</p>
+                </div>
                 <button
-                  onClick={() => setActiveModule((p) => p + 1)}
-                  className="btn-primary text-sm py-2"
+                  onClick={() => toggleTopic(activeModule, activeTopic)}
+                  disabled={isCompleted}
+                  className="btn-outline text-sm py-2 disabled:opacity-40"
                 >
-                  Next Module →
+                  {completedTopics.has(getTopicKey(activeModule, activeTopic))
+                    ? "Marked complete"
+                    : "Mark complete"}
                 </button>
-              ) : (
-                <Link href="/dashboard/courses" className="btn-primary text-sm py-2">
-                  Finish &amp; Return →
-                </Link>
-              )}
+              </div>
+              <p className="text-slate-300 text-sm leading-relaxed whitespace-pre-wrap">
+                {currentTopic.summary ??
+                  "Review this topic with your instructor during the skills session. Additional study notes will continue to be added here."}
+              </p>
             </div>
+          )}
+
+          <div className="flex items-center justify-between pt-2">
+            <button
+              onClick={() => {
+                setActiveModule((p) => Math.max(0, p - 1));
+                setActiveTopic(0);
+              }}
+              disabled={activeModule === 0}
+              className="btn-outline text-sm py-2 disabled:opacity-30 disabled:cursor-not-allowed"
+            >
+              ← Previous
+            </button>
+            {activeModule < course.modules.length - 1 ? (
+              <button
+                onClick={() => {
+                  setActiveModule((p) => p + 1);
+                  setActiveTopic(0);
+                }}
+                className="btn-primary text-sm py-2"
+              >
+                Next Module →
+              </button>
+            ) : (
+              <Link href="/dashboard/courses" className="btn-primary text-sm py-2">
+                Finish &amp; Return →
+              </Link>
+            )}
           </div>
         </div>
       </div>

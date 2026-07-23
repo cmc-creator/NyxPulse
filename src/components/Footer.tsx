@@ -5,18 +5,24 @@ import { Mail, Phone, MapPin } from "lucide-react";
 const footerLinks = {
   Training: [
     { label: "CPR / AED", href: "/courses/cpr-aed" },
+    { label: "First Aid", href: "/courses/first-aid" },
     { label: "BLS", href: "/courses/bls" },
+    { label: "Opioid Response", href: "/courses/opioid-overdose-response" },
+    { label: "Bleeding Control", href: "/courses/hemorrhage-control" },
     { label: "De-escalation", href: "/courses/de-escalation" },
+    { label: "Workplace Violence", href: "/courses/workplace-violence-prevention" },
+    { label: "Active Shooter Prep", href: "/courses/active-shooter-preparedness" },
     { label: "Emergency Management", href: "/courses/emergency-management-healthcare" },
     { label: "ICS / HICS", href: "/courses/ics-hics" },
     { label: "OSHA Safety", href: "/courses/osha-safety" },
+    { label: "Bloodborne Pathogens", href: "/courses/bloodborne-pathogens" },
   ],
   Company: [
     { label: "About", href: "/about" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
-    { label: "Blog", href: "#" },
-    { label: "Careers", href: "#" },
+    { label: "Red Cross Pathway", href: "/certifications/american-red-cross" },
+    { label: "Instructor: Jeremy", href: "/instructors/jeremy" },
   ],
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },

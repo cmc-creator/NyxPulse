@@ -13,7 +13,11 @@ export const metadata: Metadata = {
 const faqs = [
   {
     q: "What courses does NyxPulse offer?",
-    a: "We offer comprehensive emergency and safety training: CPR/AED ($49), BLS ($69), De-escalation ($89), Emergency Management ($199), ICS/HICS ($119), and OSHA Safety ($59). Each course includes video instruction, interactive scenarios, knowledge checks, and certificate issuance.",
+    a: "We offer separate flat-fee trainings. American Red Cross programs (taught by a Red Cross certified instructor): Adult & Pediatric CPR/AED ($85), First Aid ($95), and BLS ($125). NyxPulse programs: Opioid Overdose Response ($75), Bleeding Control ($85), De-escalation ($195), Workplace Violence Prevention ($165), Active Shooter Preparedness ($145), Emergency Management ($375), ICS/HICS ($225), OSHA Safety ($110), and Bloodborne Pathogens ($65). Each training is enrolled separately.",
+  },
+  {
+    q: "Are your CPR classes American Red Cross certified?",
+    a: "CPR/AED, First Aid, and BLS are taught by Jeremy, an American Red Cross certified instructor. Completing the course in NyxPulse earns a NyxPulse Certificate of Completion. If you also need an official Red Cross digital certificate, book a skills session — Jeremy may teach that class through NyxPulse or another authorized organization, and Red Cross certificates are issued only through the Red Cross Learning Center after reporting.",
   },
   {
     q: "Are NyxPulse certificates recognized by healthcare providers?",
@@ -28,8 +32,8 @@ const faqs = [
     a: "Yes. NyxPulse is fully responsive and works on all devices. You can start a course on desktop and continue on mobile without losing progress. All videos, knowledge checks, and assessments are optimized for smaller screens.",
   },
   {
-    q: "Do you offer team discounts?",
-    a: "Absolutely. Our Team Bundle plan provides 20% discount for 5+ users, 30% off for 20+ team members. Enterprise plans with custom pricing are available for 50+ users. Contact our team at sales@nyxpulse.com for a quote.",
+    q: "Do you offer team or volume discounts?",
+    a: "We use flat fees, not per-seat pricing. Individuals enroll in a single training at the listed flat fee. Organizations that need on-site, virtual, or multi-session delivery can request a flat program quote at sales@nyxpulse.com.",
   },
   {
     q: "What payment methods do you accept?",
@@ -49,7 +53,7 @@ const faqs = [
   },
   {
     q: "How are certificates issued?",
-    a: "Certificates are automatically generated and issued upon successful completion of a course (typically including a final assessment). Learners can download their certificates in PDF format, print them, or share a digital credential link.",
+    a: "NyxPulse issues its own Certificate of Completion (with certificate ID) when you finish a course in the platform — including CPR, First Aid, BLS, and facility programs. Separately, an official American Red Cross digital certificate can be earned when Jeremy teaches and reports a class under an authorized Red Cross Training Provider process.",
   },
   {
     q: "What happens if I don't pass an assessment?",

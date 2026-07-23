@@ -38,12 +38,12 @@ export default async function BillingPage() {
     },
     team: {
       name: "Team",
-      description: "Shared access for teams of 5–25 with centralized billing and progress tracking.",
+      description: "Facility programs with flat quoted fees and centralized progress tracking.",
       bar: "from-cyan-600 to-cyan-400",
     },
     org: {
       name: "Organization",
-      description: "Unlimited seats, priority support, custom branding and reporting.",
+      description: "Multi-site training programs with dedicated support and custom reporting.",
       bar: "from-amber-600 to-amber-400",
     },
   };
@@ -174,7 +174,7 @@ export default async function BillingPage() {
                 Need training for your whole team?
               </h3>
               <p className="text-slate-400 text-sm">
-                Ask about our Team and Organization plans with bulk pricing, admin dashboards, and progress reporting.
+                Ask about facility programs with flat quoted fees, admin dashboards, and progress reporting.
               </p>
             </div>
             <Link

@@ -16,7 +16,7 @@ import MotionReveal from "@/components/MotionReveal";
 const stats = [
   { value: "6", label: "Elite Training Tracks" },
   { value: "365", label: "Days of Readiness Focus" },
-  { value: "Multi-Standard", label: "AHA · FEMA · OSHA Aligned" },
+  { value: "Multi-Standard", label: "Red Cross · FEMA · OSHA" },
   { value: "Live + Virtual", label: "Premium Delivery" },
 ];
 
@@ -81,8 +81,8 @@ export default function Hero() {
 
           <MotionReveal delay={0.26} className="flex flex-wrap items-center gap-4 sm:gap-6 mb-12">
             {[
-              { Icon: ShieldCheck, text: "AHA-Aligned Curriculum" },
-              { Icon: Award, text: "FEMA ICS / HICS Aligned" },
+              { Icon: ShieldCheck, text: "Red Cross Certified Instructor" },
+              { Icon: Award, text: "FEMA ICS / HICS Programs" },
               { Icon: Zap, text: "CMS + TJC Compliance Focused" },
             ].map(({ Icon, text }) => (
               <div key={text} className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">

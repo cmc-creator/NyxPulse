@@ -19,7 +19,7 @@ const features = [
     icon: Award,
     color: "amber",
     title: "Compliance without visual clutter",
-    desc: "Certificates and records align with AHA, FEMA ICS, OSHA, CMS preparedness, and TJC expectations.",
+    desc: "Life-safety programs follow American Red Cross instructor pathways; facility programs align with FEMA ICS, OSHA, CMS, and TJC expectations.",
   },
   {
     icon: Clock,

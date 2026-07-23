@@ -1,4 +1,5 @@
 import type { CourseProgressMap } from "@/lib/course-progress";
+import type { IssuedCertificate } from "@/lib/certificates";
 
 export interface PublicUserMetadata {
   courses?: string[];
@@ -17,6 +18,8 @@ export interface PublicUserMetadata {
 export interface PrivateUserMetadata {
   stripeCustomerId?: string;
   courseProgress?: CourseProgressMap;
+  /** NyxPulse-issued certificates keyed by course slug */
+  certificates?: Record<string, IssuedCertificate>;
 }
 
 export function asStringArray(value: unknown): string[] {

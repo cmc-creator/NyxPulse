@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Clock, ArrowRight, Monitor, Users } from "lucide-react";
-import { getFeaturedCourses } from "@/lib/courses";
+import { courses, getFeaturedCourses } from "@/lib/courses";
 
 const badgeClass: Record<string, string> = {
   violet: "badge-violet",
@@ -68,7 +68,7 @@ export default function CoursesPreview() {
                   {course.price !== null && (
                     <div className="text-right flex-shrink-0">
                       <div className="text-2xl font-bold gradient-text font-display">${course.price}</div>
-                      <div className="text-xs text-slate-400">per person</div>
+                      <div className="text-xs text-slate-400">flat fee</div>
                     </div>
                   )}
                 </div>
@@ -120,7 +120,7 @@ export default function CoursesPreview() {
             className="inline-flex items-center gap-2 px-10 py-3.5 rounded-full font-semibold text-white bg-gradient-to-r from-indigo-500 to-amber-400 hover:from-indigo-400 hover:to-amber-300 transition-all duration-300 shadow-[0_12px_34px_rgba(245,158,11,0.24)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.32)]"
           >
             <span className="flex items-center gap-2 whitespace-nowrap">
-              See All 6 Programs
+              See All {courses.length} Programs
               <ArrowRight className="w-4 h-4" />
             </span>
           </Link>

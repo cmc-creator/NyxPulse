@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award, ShieldCheck } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
@@ -42,6 +42,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const user = await currentUser();
   const enrolledSlugs = (user?.publicMetadata?.courses as string[]) ?? [];
   const hasCourse = enrolledSlugs.includes(slug);
+  const hasArcPathway = Boolean(course.americanRedCrossPathway);
 
   return (
     <div className="relative min-h-screen page-shell">
@@ -91,6 +92,30 @@ export default async function CourseDetailPage({ params }: Props) {
               {course.description}
             </p>
 
+            {hasArcPathway && (
+              <div className="mt-6 rounded-2xl border border-cyan-400/25 bg-cyan-500/10 p-4 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-cyan-300 flex-shrink-0 mt-0.5" />
+                <div className="text-sm text-slate-300">
+                  <p className="text-white font-semibold mb-1">
+                    NyxPulse certificate included · Instructor:{" "}
+                    <Link href="/instructors/jeremy" className="text-cyan-200 hover:text-white">
+                      {course.instructor?.name ?? "Jeremy"}
+                    </Link>
+                  </p>
+                  <p className="mb-2">
+                    Complete the course here for your NyxPulse Certificate of Completion. Optionally book a
+                    skills session if you also need an official American Red Cross digital certificate.
+                  </p>
+                  <Link
+                    href="/certifications/american-red-cross"
+                    className="text-cyan-300 hover:text-white transition-colors"
+                  >
+                    Read the dual pathway details →
+                  </Link>
+                </div>
+              </div>
+            )}
+
             {/* Meta grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-8">
               {[
@@ -99,7 +124,7 @@ export default async function CourseDetailPage({ params }: Props) {
                 { label: "Certifies", value: course.certifies },
                 {
                   label: "Price",
-                  value: course.price ? `$${course.price}/person` : "Contact us",
+                  value: course.price ? `$${course.price} flat fee` : "Contact us",
                 },
               ].map(({ label, value }) => (
                 <div
@@ -143,11 +168,14 @@ export default async function CourseDetailPage({ params }: Props) {
                     </div>
                     <h3 className="text-white font-semibold">{mod.title}</h3>
                   </div>
+                  {mod.objective && (
+                    <p className="text-xs text-violet-300/80 mb-3">{mod.objective}</p>
+                  )}
                   <ul className="space-y-1.5">
                     {mod.topics.map((t) => (
-                      <li key={t} className="flex items-start gap-2 text-sm text-slate-400">
+                      <li key={t.title} className="flex items-start gap-2 text-sm text-slate-400">
                         <Check className="w-3.5 h-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
-                        {t}
+                        {t.title}
                       </li>
                     ))}
                   </ul>
@@ -204,13 +232,23 @@ export default async function CourseDetailPage({ params }: Props) {
                     <span className="text-white">{course.format.join(", ")}</span>
                   </div>
                   <div className="flex justify-between text-slate-400">
-                    <span>Group min.</span>
-                    <span className="text-white">1 person</span>
+                    <span>Certificate</span>
+                    <span className="text-white text-right max-w-[60%]">NyxPulse</span>
                   </div>
-                  <div className="flex justify-between text-slate-400">
-                    <span>Group max.</span>
-                    <span className="text-white">Contact us</span>
-                  </div>
+                  {hasArcPathway && (
+                    <div className="flex justify-between text-slate-400">
+                      <span>Red Cross path</span>
+                      <span className="text-white">Optional</span>
+                    </div>
+                  )}
+                  {course.certificationValidity && (
+                    <div className="flex justify-between text-slate-400">
+                      <span>Validity</span>
+                      <span className="text-white text-right max-w-[60%]">
+                        {course.certificationValidity}
+                      </span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
