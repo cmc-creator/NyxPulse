@@ -29,7 +29,7 @@ const faqs = [
   },
   {
     q: "Can I take courses on my phone or tablet?",
-    a: "Yes. NyxPulse is fully responsive and works on all devices. You can start a course on desktop and continue on mobile without losing progress. All videos, knowledge checks, and assessments are optimized for smaller screens.",
+    a: "Yes. NyxPulse is fully responsive and works on all devices. You can start a course on desktop and continue on mobile without losing progress. Lessons include study notes and educational diagrams; skills practice still happens in live/hybrid sessions where required.",
   },
   {
     q: "Do you offer team or volume discounts?",
