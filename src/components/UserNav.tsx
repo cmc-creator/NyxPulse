@@ -3,8 +3,25 @@
 import { SignOutButton, useAuth, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { LayoutDashboard, ArrowRight } from "lucide-react";
+import { isClerkPublishableConfigured } from "@/lib/clerk-config";
 
-export default function UserNav() {
+function SignedOutLinks() {
+  return (
+    <div className="flex items-center gap-3">
+      <Link href="/sign-in" className="btn-outline text-sm py-2 px-5">
+        Sign In
+      </Link>
+      <Link href="/sign-up" className="btn-primary text-sm py-2 px-5">
+        <span className="flex items-center gap-1.5">
+          Get Started
+          <ArrowRight className="w-3.5 h-3.5" />
+        </span>
+      </Link>
+    </div>
+  );
+}
+
+function AuthenticatedUserNav() {
   const { userId } = useAuth();
   const { user } = useUser();
   const accountLabel = user?.firstName ?? user?.username ?? "Account";
@@ -27,17 +44,13 @@ export default function UserNav() {
     );
   }
 
-  return (
-    <div className="flex items-center gap-3">
-      <Link href="/sign-in" className="btn-outline text-sm py-2 px-5">
-        Sign In
-      </Link>
-      <Link href="/sign-up" className="btn-primary text-sm py-2 px-5">
-          <span className="flex items-center gap-1.5">
-            Get Started
-            <ArrowRight className="w-3.5 h-3.5" />
-          </span>
-      </Link>
-    </div>
-  );
+  return <SignedOutLinks />;
+}
+
+export default function UserNav() {
+  if (!isClerkPublishableConfigured()) {
+    return <SignedOutLinks />;
+  }
+
+  return <AuthenticatedUserNav />;
 }
