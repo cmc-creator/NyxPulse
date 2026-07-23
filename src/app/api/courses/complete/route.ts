@@ -3,6 +3,12 @@ import { getCourseBySlug } from "@/lib/courses";
 import { createCertificateId } from "@/lib/certificates";
 import { isCourseProgressComplete } from "@/lib/course-progress";
 import { sendCourseCompletionEmail } from "@/lib/email-automation";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import {
+  getLearnerCertificate,
+  getLearnerProgressTopics,
+  saveLearnerCertificate,
+} from "@/lib/firebase/learner-data";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 
 export async function POST(req: Request) {
@@ -46,7 +52,11 @@ export async function POST(req: Request) {
       return Response.json({ error: "Not enrolled in this course" }, { status: 403 });
     }
 
-    const progressTopics = asStringArray(privateMetadata.courseProgress?.[courseSlug]);
+    const useFirebase = isFirebaseAdminConfigured();
+    const progressTopics = useFirebase
+      ? ((await getLearnerProgressTopics(userId, courseSlug)) ?? [])
+      : asStringArray(privateMetadata.courseProgress?.[courseSlug]);
+
     if (!isCourseProgressComplete(course, progressTopics)) {
       return Response.json(
         { error: "Complete all course topics before claiming a certificate." },
@@ -55,7 +65,10 @@ export async function POST(req: Request) {
     }
 
     const completedSlugs = asStringArray(publicMetadata.completedCourses);
-    const existingCert = privateMetadata.certificates?.[courseSlug];
+    const existingCert = useFirebase
+      ? await getLearnerCertificate(userId, courseSlug)
+      : (privateMetadata.certificates?.[courseSlug] ?? null);
+
     const recipientName =
       [user.firstName, user.lastName].filter(Boolean).join(" ") ||
       user.username ||
@@ -71,19 +84,29 @@ export async function POST(req: Request) {
       } as const);
 
     if (!completedSlugs.includes(courseSlug) || !existingCert) {
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: {
-          ...publicMetadata,
-          completedCourses: Array.from(new Set([...completedSlugs, courseSlug])),
-        },
-        privateMetadata: {
-          ...privateMetadata,
-          certificates: {
-            ...(privateMetadata.certificates ?? {}),
-            [courseSlug]: certificate,
+      if (useFirebase) {
+        await saveLearnerCertificate(userId, certificate);
+        await clerk.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            ...publicMetadata,
+            completedCourses: Array.from(new Set([...completedSlugs, courseSlug])),
           },
-        },
-      });
+        });
+      } else {
+        await clerk.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            ...publicMetadata,
+            completedCourses: Array.from(new Set([...completedSlugs, courseSlug])),
+          },
+          privateMetadata: {
+            ...privateMetadata,
+            certificates: {
+              ...(privateMetadata.certificates ?? {}),
+              [courseSlug]: certificate,
+            },
+          },
+        });
+      }
 
       if (!existingCert) {
         const primaryEmail = user.emailAddresses.find(

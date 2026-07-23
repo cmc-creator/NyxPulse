@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { courses } from "@/lib/courses";
 import { getAllTopicKeys } from "@/lib/course-progress";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { listLearnerProgress } from "@/lib/firebase/learner-data";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 import { BookOpen, Calendar, Award, ArrowRight, Zap } from "lucide-react";
 
@@ -15,6 +17,9 @@ export default async function DashboardPage() {
   const enrolledSlugs = asStringArray(publicMetadata.courses);
   const completedSlugs = asStringArray(publicMetadata.completedCourses);
   const plan = publicMetadata.plan ?? "individual";
+  const firebaseProgress = isFirebaseAdminConfigured()
+    ? await listLearnerProgress(user.id)
+    : null;
 
   const enrolledCourses = courses.filter((c) => enrolledSlugs.includes(c.slug));
   const firstName = user.firstName ?? "there";
@@ -109,9 +114,9 @@ export default async function DashboardPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {enrolledCourses.map((course) => {
               const isCompleted = completedSlugs.includes(course.slug);
-              const progressTopics = asStringArray(
-                privateMetadata.courseProgress?.[course.slug]
-              );
+              const progressTopics =
+                firebaseProgress?.[course.slug] ??
+                asStringArray(privateMetadata.courseProgress?.[course.slug]);
               const total = getAllTopicKeys(course).length;
               const progress = isCompleted
                 ? 100

@@ -148,6 +148,17 @@ export default function CertificateCard({
 
           <p className="text-slate-500 text-xs font-sans">
             Certificate ID: <span className="text-slate-700 font-semibold">{certId}</span>
+            {certificate?.id && (
+              <>
+                {" · "}
+                <Link
+                  href={`/verify/${encodeURIComponent(certificate.id)}`}
+                  className="text-violet-600 underline font-sans"
+                >
+                  Verify
+                </Link>
+              </>
+            )}
           </p>
 
           <div className="flex justify-between items-end mt-8 pt-6 border-t border-violet-100 font-sans">

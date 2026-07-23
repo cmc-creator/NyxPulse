@@ -1,5 +1,6 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
+import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 
 export type ContactLead = {
   createdAt: string;
@@ -30,14 +31,36 @@ async function ensureStorageDir(filePath: string) {
   await fs.mkdir(dir, { recursive: true });
 }
 
-export async function storeContactLead(lead: ContactLead) {
+async function storeLeadInFirestore(lead: ContactLead) {
+  await getAdminDb().collection("leads").add(lead);
+}
+
+async function storeLeadInFile(lead: ContactLead) {
   const filePath = getStoragePath();
   await ensureStorageDir(filePath);
   const line = `${JSON.stringify(lead)}\n`;
   await fs.appendFile(filePath, line, "utf8");
 }
 
-export async function listStoredContactLeads() {
+export async function storeContactLead(lead: ContactLead) {
+  if (isFirebaseAdminConfigured()) {
+    await storeLeadInFirestore(lead);
+    return;
+  }
+  await storeLeadInFile(lead);
+}
+
+async function listLeadsFromFirestore() {
+  const snap = await getAdminDb()
+    .collection("leads")
+    .orderBy("createdAt", "desc")
+    .limit(MAX_LEADS_RETURNED)
+    .get();
+
+  return snap.docs.map((doc) => doc.data() as ContactLead);
+}
+
+async function listLeadsFromFile() {
   const filePath = getStoragePath();
 
   try {
@@ -60,4 +83,11 @@ export async function listStoredContactLeads() {
   } catch {
     return [];
   }
+}
+
+export async function listStoredContactLeads() {
+  if (isFirebaseAdminConfigured()) {
+    return listLeadsFromFirestore();
+  }
+  return listLeadsFromFile();
 }

@@ -1,6 +1,11 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { getCourseBySlug } from "@/lib/courses";
 import { normalizeTopicKeys, type CourseProgressMap } from "@/lib/course-progress";
+import {
+  getLearnerProgressTopics,
+  saveLearnerProgressTopics,
+} from "@/lib/firebase/learner-data";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 
 export async function POST(req: Request) {
@@ -44,21 +49,55 @@ export async function POST(req: Request) {
     }
 
     const normalized = normalizeTopicKeys(course, completedTopics);
-    const nextProgress: CourseProgressMap = {
-      ...(privateMetadata.courseProgress ?? {}),
-      [courseSlug]: normalized,
-    };
 
-    await clerk.users.updateUserMetadata(userId, {
-      privateMetadata: {
-        ...privateMetadata,
-        courseProgress: nextProgress,
-      },
-    });
+    if (isFirebaseAdminConfigured()) {
+      await saveLearnerProgressTopics(userId, courseSlug, normalized);
+    } else {
+      const nextProgress: CourseProgressMap = {
+        ...(privateMetadata.courseProgress ?? {}),
+        [courseSlug]: normalized,
+      };
+
+      await clerk.users.updateUserMetadata(userId, {
+        privateMetadata: {
+          ...privateMetadata,
+          courseProgress: nextProgress,
+        },
+      });
+    }
 
     return Response.json({ success: true, completedTopics: normalized });
   } catch (err) {
     console.error("Failed to update course progress:", err);
+    return Response.json({ error: "Server error" }, { status: 500 });
+  }
+}
+
+export async function GET(req: Request) {
+  const { userId } = await auth();
+  if (!userId) {
+    return Response.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const courseSlug = new URL(req.url).searchParams.get("courseSlug");
+  if (!courseSlug) {
+    return Response.json({ error: "Missing courseSlug" }, { status: 400 });
+  }
+
+  try {
+    if (isFirebaseAdminConfigured()) {
+      const topics = await getLearnerProgressTopics(userId, courseSlug);
+      return Response.json({ completedTopics: topics ?? [] });
+    }
+
+    const clerk = await clerkClient();
+    const user = await clerk.users.getUser(userId);
+    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
+    return Response.json({
+      completedTopics: asStringArray(privateMetadata.courseProgress?.[courseSlug]),
+    });
+  } catch (err) {
+    console.error("Failed to load course progress:", err);
     return Response.json({ error: "Server error" }, { status: 500 });
   }
 }

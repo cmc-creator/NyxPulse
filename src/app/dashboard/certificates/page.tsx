@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Award, ArrowRight } from "lucide-react";
 import { courses } from "@/lib/courses";
 import CertificateCard from "@/components/CertificateCard";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { listLearnerCertificates } from "@/lib/firebase/learner-data";
 import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 export default async function CertificatesPage() {
@@ -13,7 +15,9 @@ export default async function CertificatesPage() {
   const enrolledSlugs = (user.publicMetadata?.courses as string[]) ?? [];
   const completedSlugs = (user.publicMetadata?.completedCourses as string[]) ?? [];
   const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-  const certificates = privateMetadata.certificates ?? {};
+  const certificates = isFirebaseAdminConfigured()
+    ? await listLearnerCertificates(user.id)
+    : (privateMetadata.certificates ?? {});
 
   const completedCourses = courses.filter((c) => completedSlugs.includes(c.slug));
   const inProgressCourses = courses.filter(
