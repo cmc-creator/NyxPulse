@@ -42,11 +42,11 @@ Open [http://localhost:3000](http://localhost:3000).
 1. In Firebase Console for project `nyxpulse`, create a **Firestore** database (production mode).
 2. Deploy or paste the locked-down rules from `firestore.rules` (deny all client access; server uses Admin SDK).
 3. Project settings → Service accounts → **Generate new private key**.
-4. Put these in `.env.local` / Vercel:
-   - `FIREBASE_PROJECT_ID`
-   - `FIREBASE_CLIENT_EMAIL`
-   - `FIREBASE_PRIVATE_KEY` (keep `\n` newlines escaped as a single line on Vercel)
+4. Put credentials in `.env.local` / Vercel using either:
+   - `FIREBASE_SERVICE_ACCOUNT_JSON` = the full service-account JSON as one line, **or**
+   - `FIREBASE_PROJECT_ID` + `FIREBASE_CLIENT_EMAIL` + `FIREBASE_PRIVATE_KEY` (`\n` escaped)
 5. Optional: copy the web app config into the `NEXT_PUBLIC_FIREBASE_*` vars for Analytics later.
+6. Never commit the service-account JSON file to git.
 
 ## Stripe webhook
 
