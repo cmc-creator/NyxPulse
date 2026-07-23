@@ -1,4 +1,5 @@
 import type { Course, LearningPath } from "@/lib/course-types";
+import { additionalPrograms } from "@/lib/courses/additional-programs";
 import { arcLifeSafetyCourses } from "@/lib/courses/arc-life-safety";
 import { facilityPrograms } from "@/lib/courses/facility-programs";
 
@@ -10,19 +11,34 @@ export type {
   CertifyingBody,
 } from "@/lib/course-types";
 
-export const courses: Course[] = [...arcLifeSafetyCourses, ...facilityPrograms];
+export const courses: Course[] = [
+  ...arcLifeSafetyCourses,
+  ...facilityPrograms,
+  ...additionalPrograms,
+];
 
 export const learningPaths: LearningPath[] = [
   {
     id: "resuscitation",
     title: "Resuscitation Track",
     description:
-      "American Red Cross CPR/AED and BLS pathways taught by a Red Cross certified instructor. Each certification is earned separately after skills verification.",
+      "American Red Cross CPR/AED, First Aid, and BLS pathways taught by a Red Cross certified instructor. Each certification is enrolled and earned separately.",
     icon: "❤️",
     badge: "cyan",
     courseList: ["cpr-aed", "bls", "first-aid"],
     totalHours: 12,
     competency: "Life Safety / Red Cross Programs",
+  },
+  {
+    id: "rapid-response",
+    title: "Rapid Response Track",
+    description:
+      "Companion life-safety skills for opioid overdose response and life-threatening bleeding control. Separate flat-fee trainings that pair well with CPR/First Aid.",
+    icon: "🩹",
+    badge: "cyan",
+    courseList: ["opioid-overdose-response", "hemorrhage-control"],
+    totalHours: 5,
+    competency: "Emergency Response Skills",
   },
   {
     id: "behavioral-crisis",
@@ -50,11 +66,11 @@ export const learningPaths: LearningPath[] = [
     id: "workplace-safety",
     title: "Workplace Safety Track",
     description:
-      "OSHA fundamentals for healthcare and general industry. A standalone compliance training — not bundled with clinical or ICS programs.",
+      "OSHA fundamentals plus bloodborne pathogens awareness. Each course is a separate enrollment — not bundled with clinical or ICS programs.",
     icon: "🦺",
     badge: "green",
-    courseList: ["osha-safety"],
-    totalHours: 6,
+    courseList: ["osha-safety", "bloodborne-pathogens"],
+    totalHours: 8,
     competency: "Workplace Safety Compliance",
   },
 ];

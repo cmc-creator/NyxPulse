@@ -415,13 +415,44 @@ export const arcLifeSafetyCourses: Course[] = [
     complianceNotes: arcCompliance,
     modules: [
       {
-        title: "BLS for Healthcare Providers",
-        objective: "Deliver high-performance CPR in clinical settings.",
+        title: "BLS Foundations for Healthcare Providers",
+        objective: "Understand why high-performance BLS matters in clinical environments.",
         topics: [
+          {
+            title: "Who BLS is for — and why quality matters",
+            summary:
+              "BLS for healthcare providers is the clinical standard for CPR, AED/defibrillator use, and airway support. Survival after sudden cardiac arrest is tightly linked to compression fraction, depth, rate, and time to first shock — not only whether CPR was started.",
+          },
+          {
+            title: "Chain of survival in clinical settings",
+            summary:
+              "Early recognition, activation of the emergency response/code team, high-quality CPR, rapid defibrillation, advanced resuscitation, and post-arrest care form the chain. Delays often happen at transitions: waiting for a crash cart, unclear leadership, or pausing compressions for IV access.",
+          },
           {
             title: "High-performance CPR metrics",
             summary:
-              "Prioritize correct depth, rate 100–120, full recoil, and limited interruptions. Capnography and feedback devices (when available) help teams maintain quality.",
+              "Target rate 100–120/min, adult depth at least 2 inches (5 cm), full recoil, and the highest compression fraction reasonably possible. Avoid over-ventilation. Feedback devices (when available) help teams maintain quality during practice and real codes.",
+          },
+          {
+            title: "Personal protective equipment during resuscitation",
+            summary:
+              "Use gloves and eye protection when available. Know where airway barriers and bag-mask devices are kept on your unit so PPE never becomes the reason care is delayed.",
+          },
+        ],
+      },
+      {
+        title: "Adult BLS Sequence",
+        objective: "Perform high-quality adult BLS including AED use and coordinated roles.",
+        topics: [
+          {
+            title: "Adult assessment and activation",
+            summary:
+              "Check responsiveness, look for normal breathing, and activate the emergency response system/code team immediately. Send someone for the AED/defibrillator and crash cart. Scene safety still applies in parking lots, home visits, and public areas outside the clinical unit.",
+          },
+          {
+            title: "Adult high-quality compressions",
+            summary:
+              "Compress the center of the chest at least 2 inches at 100–120/min with full recoil and minimal interruptions. Switch compressors about every 2 minutes before fatigue drops quality. Count out loud or use a metronome/feedback device when available.",
           },
           {
             title: "Bag-mask and advanced airway awareness",
@@ -429,15 +460,36 @@ export const arcLifeSafetyCourses: Course[] = [
               "Practice effective bag-mask ventilation with a tight seal and appropriate volume. When an advanced airway is in place, follow the continuous-compression + asynchronous ventilation approach taught in your BLS skill sheets.",
           },
           {
-            title: "AED/defibrillator use in clinical environments",
+            title: "AED and defibrillator workflow",
             summary:
-              "Know how to operate the defibrillator available on your unit. Minimize pauses for rhythm checks and shock delivery. Resume compressions immediately afterward.",
+              "Apply pads quickly, clear during analysis and shock, and resume compressions immediately after a shock or no-shock decision. Know your unit’s defibrillator mode (AED vs manual under ACLS) and how to handle wet skin, medication patches, and implanted devices.",
           },
         ],
       },
       {
-        title: "Airway, Breathing & Special Situations",
-        objective: "Manage airway emergencies and special resuscitation cases.",
+        title: "Pediatric & Infant BLS",
+        objective: "Adapt BLS for children and infants with correct technique and AED considerations.",
+        topics: [
+          {
+            title: "Why pediatric arrest is different",
+            summary:
+              "Pediatric cardiac arrest is more often respiratory or circulatory in origin than primary arrhythmia. Early airway/breathing support and recognition of shock matter as much as compression technique.",
+          },
+          {
+            title: "Child and infant compressions and ventilations",
+            summary:
+              "Use age-appropriate hand/finger placement, depth, and single- vs two-rescuer compression-to-ventilation ratios as taught in current Red Cross BLS skill sheets. Practice switching between adult, child, and infant techniques without hesitation.",
+          },
+          {
+            title: "Pediatric AED considerations",
+            summary:
+              "Use pediatric pads/attenuators when available and indicated. If only adult pads are available, use them rather than withhold defibrillation — place carefully to avoid pad overlap. Know your crash cart’s pediatric drawer contents.",
+          },
+        ],
+      },
+      {
+        title: "Airway Emergencies & Special Situations",
+        objective: "Manage choking and adjust BLS for special resuscitation cases.",
         topics: [
           {
             title: "Relief of foreign-body airway obstruction",
@@ -447,33 +499,43 @@ export const arcLifeSafetyCourses: Course[] = [
           {
             title: "Opioid-associated emergency response",
             summary:
-              "Prioritize EMS activation, airway/ventilation support, CPR if pulseless, and naloxone administration when indicated and available under your protocols.",
+              "Prioritize EMS activation, airway/ventilation support, CPR if indicated, and naloxone when available under your protocols. Naloxone is not a substitute for breathing support and compressions.",
           },
           {
-            title: "Pregnancy and other special considerations",
+            title: "Cardiac arrest in pregnancy",
             summary:
-              "Use standard BLS with pregnancy-specific adaptations as taught (for example, manual uterine displacement during CPR when appropriate). Follow your instructor’s current Red Cross skill guidance.",
+              "Use standard high-quality BLS with pregnancy-specific adaptations as taught (for example, manual left uterine displacement during CPR when appropriate). Call OB and neonatal teams early per facility protocol.",
+          },
+          {
+            title: "Drowning and respiratory-arrest emphasis",
+            summary:
+              "Drowning victims often need early ventilation alongside compressions. Remove from water safely, begin care on a firm surface, and follow hypothermia considerations when relevant.",
           },
         ],
       },
       {
-        title: "Team Dynamics & Skills Session",
-        objective: "Run a coordinated code response and complete skills testing.",
+        title: "Team Dynamics, ROSC Hand-off & Skills Session",
+        objective: "Run a coordinated code response and complete dual-certification pathways.",
         topics: [
           {
             title: "Roles, closed-loop communication, and leadership",
             summary:
-              "Assign clear roles early. Use closed-loop orders and confirmations. Rotate compressors to fight fatigue. Speak up when quality drops.",
+              "Assign clear roles early: compressor, airway/ventilator, AED/defibrillator operator, recorder, and team leader. Use closed-loop orders and confirmations. Rotate compressors to fight fatigue. Speak up when quality drops.",
           },
           {
             title: "Practice-while-waiting and rapid response culture",
             summary:
-              "Know how to activate your facility’s rapid response/code team and start BLS immediately while awaiting advanced providers.",
+              "Know how to activate your facility’s rapid response/code team and start BLS immediately while awaiting advanced providers. Rehearse who brings the cart, who documents, and who clears the room.",
           },
           {
-            title: "Red Cross BLS skills verification",
+            title: "After ROSC — hand-off basics",
             summary:
-              "Your official Red Cross BLS certificate is issued through the Red Cross Learning Center after successful skills testing and course reporting by your instructor. NyxPulse tracks prep completion only.",
+              "Return of spontaneous circulation is not the end of care. Support airway and breathing, monitor vitals, and hand off downtime estimates, shocks delivered, medications given, and current status to the receiving team.",
+          },
+          {
+            title: "NyxPulse certificate and optional Red Cross BLS skills",
+            summary:
+              "Mark all modules complete to claim your NyxPulse Certificate of Completion. If you also want an official Red Cross BLS card, book Jeremy’s skills session — the Red Cross digital certificate is issued through the Learning Center after testing and course reporting.",
           },
         ],
       },
@@ -481,8 +543,8 @@ export const arcLifeSafetyCourses: Course[] = [
     outcomes: [
       "Perform BLS-level CPR and ventilation as a healthcare provider",
       "Operate effectively in a resuscitation team",
-      "Manage choking and opioid-associated emergencies at a BLS level",
-      "Complete Red Cross BLS skills verification requirements",
+      "Adapt BLS for pediatric, opioid, pregnancy, and drowning situations",
+      "Complete NyxPulse certification and optional Red Cross BLS skills verification",
     ],
     whoFor: [
       "Nurses",

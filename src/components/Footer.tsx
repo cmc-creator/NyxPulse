@@ -7,10 +7,13 @@ const footerLinks = {
     { label: "CPR / AED", href: "/courses/cpr-aed" },
     { label: "First Aid", href: "/courses/first-aid" },
     { label: "BLS", href: "/courses/bls" },
+    { label: "Opioid Response", href: "/courses/opioid-overdose-response" },
+    { label: "Bleeding Control", href: "/courses/hemorrhage-control" },
     { label: "De-escalation", href: "/courses/de-escalation" },
     { label: "Emergency Management", href: "/courses/emergency-management-healthcare" },
     { label: "ICS / HICS", href: "/courses/ics-hics" },
     { label: "OSHA Safety", href: "/courses/osha-safety" },
+    { label: "Bloodborne Pathogens", href: "/courses/bloodborne-pathogens" },
   ],
   Company: [
     { label: "About", href: "/about" },
