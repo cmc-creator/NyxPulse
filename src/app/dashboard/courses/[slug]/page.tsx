@@ -1,6 +1,8 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import { getCourseBySlug } from "@/lib/courses";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getLearnerProgressTopics } from "@/lib/firebase/learner-data";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 import CoursePlayerClient from "./CoursePlayerClient";
 
@@ -25,7 +27,11 @@ export default async function CoursePlayerPage({ params }: Props) {
 
   const completedSlugs = asStringArray(publicMetadata.completedCourses);
   const isCompleted = completedSlugs.includes(slug);
-  const initialCompletedTopics = asStringArray(privateMetadata.courseProgress?.[slug]);
+  const firebaseTopics = isFirebaseAdminConfigured()
+    ? await getLearnerProgressTopics(user.id, slug)
+    : null;
+  const initialCompletedTopics =
+    firebaseTopics ?? asStringArray(privateMetadata.courseProgress?.[slug]);
 
   return (
     <CoursePlayerClient

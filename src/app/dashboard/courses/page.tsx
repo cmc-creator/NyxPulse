@@ -5,6 +5,8 @@ import { ArrowRight, BookOpen, CheckCircle } from "lucide-react";
 import { courses } from "@/lib/courses";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 import { getAllTopicKeys } from "@/lib/course-progress";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { listLearnerProgress } from "@/lib/firebase/learner-data";
 
 export default async function MyCoursesPage() {
   const user = await currentUser();
@@ -15,6 +17,9 @@ export default async function MyCoursesPage() {
   const enrolledSlugs = asStringArray(publicMetadata.courses);
   const completedSlugs = asStringArray(publicMetadata.completedCourses);
   const enrolledCourses = courses.filter((course) => enrolledSlugs.includes(course.slug));
+  const firebaseProgress = isFirebaseAdminConfigured()
+    ? await listLearnerProgress(user.id)
+    : null;
 
   return (
     <div className="space-y-10">
@@ -40,7 +45,9 @@ export default async function MyCoursesPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {enrolledCourses.map((course) => {
             const done = completedSlugs.includes(course.slug);
-            const progressTopics = asStringArray(privateMetadata.courseProgress?.[course.slug]);
+            const progressTopics =
+              firebaseProgress?.[course.slug] ??
+              asStringArray(privateMetadata.courseProgress?.[course.slug]);
             const total = getAllTopicKeys(course).length;
             const progress =
               done ? 100 : total > 0 ? Math.round((progressTopics.length / total) * 100) : 0;
