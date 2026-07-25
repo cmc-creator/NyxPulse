@@ -1,4 +1,5 @@
 import type { IssuedCertificate } from "@/lib/certificates";
+import type { CourseChallengeResults } from "@/lib/challenges/types";
 import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 
 export type LearnerProgressDoc = {
@@ -21,6 +22,18 @@ function certificateRef(userId: string, courseSlug: string) {
 
 function certificateIndexRef(certificateId: string) {
   return getAdminDb().collection("certificateIndex").doc(certificateId);
+}
+
+function challengeResultsRef(userId: string, courseSlug: string) {
+  return getAdminDb()
+    .collection("learners")
+    .doc(userId)
+    .collection("challengeResults")
+    .doc(courseSlug);
+}
+
+function passportShareRef(token: string) {
+  return getAdminDb().collection("passportShares").doc(token);
 }
 
 export async function getLearnerProgressTopics(
@@ -129,4 +142,76 @@ export async function getCertificateById(
   const snap = await certificateIndexRef(certificateId).get();
   if (!snap.exists) return null;
   return snap.data() as IssuedCertificate & { userId?: string };
+}
+
+export async function getChallengeResults(
+  userId: string,
+  courseSlug: string
+): Promise<CourseChallengeResults | null> {
+  if (!isFirebaseAdminConfigured()) return null;
+  const snap = await challengeResultsRef(userId, courseSlug).get();
+  if (!snap.exists) return null;
+  return snap.data() as CourseChallengeResults;
+}
+
+export async function listChallengeResults(
+  userId: string
+): Promise<Record<string, CourseChallengeResults>> {
+  if (!isFirebaseAdminConfigured()) return {};
+  const snap = await getAdminDb()
+    .collection("learners")
+    .doc(userId)
+    .collection("challengeResults")
+    .get();
+  const out: Record<string, CourseChallengeResults> = {};
+  for (const doc of snap.docs) {
+    out[doc.id] = doc.data() as CourseChallengeResults;
+  }
+  return out;
+}
+
+export async function saveChallengeResults(
+  userId: string,
+  results: CourseChallengeResults
+): Promise<boolean> {
+  if (!isFirebaseAdminConfigured()) return false;
+  await challengeResultsRef(userId, results.courseSlug).set(results, { merge: true });
+  return true;
+}
+
+export type PassportShare = {
+  token: string;
+  userId: string;
+  recipientName: string;
+  createdAt: string;
+};
+
+export async function createPassportShare(
+  userId: string,
+  recipientName: string
+): Promise<PassportShare | null> {
+  if (!isFirebaseAdminConfigured()) return null;
+  const token = `NP-READY-${Date.now().toString(36).toUpperCase()}-${Math.random()
+    .toString(36)
+    .slice(2, 8)
+    .toUpperCase()}`;
+  const share: PassportShare = {
+    token,
+    userId,
+    recipientName,
+    createdAt: new Date().toISOString(),
+  };
+  await passportShareRef(token).set(share);
+  await getAdminDb().collection("learners").doc(userId).set(
+    { passportShareToken: token, passportUpdatedAt: share.createdAt },
+    { merge: true }
+  );
+  return share;
+}
+
+export async function getPassportShare(token: string): Promise<PassportShare | null> {
+  if (!isFirebaseAdminConfigured()) return null;
+  const snap = await passportShareRef(token).get();
+  if (!snap.exists) return null;
+  return snap.data() as PassportShare;
 }
