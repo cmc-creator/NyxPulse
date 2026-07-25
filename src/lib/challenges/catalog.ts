@@ -1,4 +1,13 @@
 import type { CourseChallenge } from "@/lib/challenges/types";
+import {
+  bloodborneChallenges,
+  emergencyManagementChallenges,
+  firstAidChallenges,
+  hemorrhageMastery,
+  icsChallenges,
+  opioidChallenges,
+  oshaChallenges,
+} from "@/lib/challenges/extra-catalog";
 
 const cprChallenges: CourseChallenge[] = [
   {
@@ -548,10 +557,16 @@ const hemorrhageChallenges: CourseChallenge[] = [
 const challengeCatalog: Record<string, CourseChallenge[]> = {
   "cpr-aed": cprChallenges,
   bls: cprChallenges,
+  "first-aid": firstAidChallenges,
   "active-shooter-preparedness": activeShooterChallenges,
   "de-escalation": deescalationChallenges,
   "workplace-violence-prevention": deescalationChallenges,
-  "hemorrhage-control": hemorrhageChallenges,
+  "hemorrhage-control": [...hemorrhageChallenges, hemorrhageMastery],
+  "emergency-management-healthcare": emergencyManagementChallenges,
+  "ics-hics": icsChallenges,
+  "osha-safety": oshaChallenges,
+  "bloodborne-pathogens": bloodborneChallenges,
+  "opioid-overdose-response": opioidChallenges,
 };
 
 export function getChallengesForCourse(courseSlug: string): CourseChallenge[] {

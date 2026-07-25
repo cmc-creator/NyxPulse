@@ -6,7 +6,9 @@ import { getAllTopicKeys } from "@/lib/course-progress";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { listLearnerProgress } from "@/lib/firebase/learner-data";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
-import { BookOpen, Calendar, Award, ArrowRight, Zap } from "lucide-react";
+import { BookOpen, Calendar, Award, ArrowRight, Zap, Fingerprint, Radio, Briefcase, RefreshCw } from "lucide-react";
+import { listChallengeResults, listLearnerCertificates } from "@/lib/firebase/learner-data";
+import { buildRefresherQueue } from "@/lib/refreshers";
 
 export default async function DashboardPage() {
   const user = await currentUser();
@@ -20,6 +22,16 @@ export default async function DashboardPage() {
   const firebaseProgress = isFirebaseAdminConfigured()
     ? await listLearnerProgress(user.id)
     : null;
+  const certificates = isFirebaseAdminConfigured()
+    ? await listLearnerCertificates(user.id)
+    : (privateMetadata.certificates ?? {});
+  const challengeResults = isFirebaseAdminConfigured()
+    ? await listChallengeResults(user.id)
+    : (privateMetadata.challengeResults ?? {});
+  const refresherItems = buildRefresherQueue({ certificates, challengeResults });
+  const actionableRefreshers = refresherItems.filter(
+    (item) => item.status === "due-soon" || item.status === "overdue"
+  );
 
   const enrolledCourses = courses.filter((c) => enrolledSlugs.includes(c.slug));
   const firstName = user.firstName ?? "there";
@@ -87,6 +99,66 @@ export default async function DashboardPage() {
           </div>
         ))}
       </div>
+
+      {actionableRefreshers.length > 0 && (
+        <section className="glass-card p-5 border border-amber-400/30 bg-amber-500/5">
+          <div className="flex items-center gap-2 text-amber-200 font-semibold mb-2">
+            <RefreshCw className="w-4 h-4" />
+            Refresher challenges due
+          </div>
+          <p className="text-sm text-slate-400 mb-3">
+            Re-clear Advantage Gates to keep your Skills Passport current.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {actionableRefreshers.slice(0, 4).map((item) => (
+              <Link
+                key={item.courseSlug}
+                href={`/dashboard/courses/${item.courseSlug}`}
+                className="btn-outline text-xs py-1.5"
+              >
+                {item.shortTitle}
+                {item.status === "overdue" ? " · overdue" : ` · ${item.daysRemaining}d`}
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <section>
+        <h2 className="text-xl font-bold text-white mb-5">NyxPulse Advantage</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {[
+            {
+              href: "/dashboard/passport",
+              title: "Skills Passport",
+              desc: "Employer-ready readiness score + share link",
+              icon: Fingerprint,
+            },
+            {
+              href: "/dashboard/roles",
+              title: "Role readiness",
+              desc: "Gap analysis for your workforce role",
+              icon: Briefcase,
+            },
+            {
+              href: "/dashboard/drills",
+              title: "Facility drills",
+              desc: "Timed team injects + after-action reports",
+              icon: Radio,
+            },
+          ].map(({ href, title, desc, icon: Icon }) => (
+            <Link
+              key={href}
+              href={href}
+              className="glass-card p-5 hover:border-violet-500/30 transition-all block"
+            >
+              <Icon className="w-5 h-5 text-amber-300 mb-3" />
+              <div className="text-white font-semibold">{title}</div>
+              <p className="text-xs text-slate-500 mt-1">{desc}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
 
       <section>
         <div className="flex items-center justify-between mb-5">

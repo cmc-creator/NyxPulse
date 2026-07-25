@@ -15,12 +15,18 @@ import {
   Users,
   Calendar,
   Fingerprint,
+  Radio,
+  Briefcase,
+  ClipboardCheck,
 } from "lucide-react";
 
 const navItems = [
   { href: "/dashboard", label: "Overview", icon: LayoutDashboard, exact: true },
   { href: "/dashboard/courses", label: "My Courses", icon: BookOpen, exact: false },
   { href: "/dashboard/passport", label: "Skills Passport", icon: Fingerprint, exact: false },
+  { href: "/dashboard/roles", label: "Role Readiness", icon: Briefcase, exact: false },
+  { href: "/dashboard/drills", label: "Facility Drills", icon: Radio, exact: false },
+  { href: "/dashboard/instructor", label: "Skill Sign-off", icon: ClipboardCheck, exact: false },
   { href: "/dashboard/certificates", label: "Certificates", icon: Award, exact: false },
   { href: "/dashboard/sessions", label: "Skills Sessions", icon: Calendar, exact: false },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard, exact: false },
