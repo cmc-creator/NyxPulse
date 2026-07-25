@@ -29,6 +29,24 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+## Vercel environment variables (required after creating/recreating the project)
+
+Deleting a Vercel project wipes env vars. Re-add these before the site will fully work:
+
+**Required for the site to authenticate (without these, pages used to 500):**
+- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
+- `CLERK_SECRET_KEY`
+
+**Strongly recommended:**
+- `NEXT_PUBLIC_URL` = your production URL (e.g. `https://nyx-pulse.vercel.app` or custom domain)
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `FIREBASE_SERVICE_ACCOUNT_JSON` (or the three `FIREBASE_*` vars)
+
+**Optional:** SMTP + `NEXT_PUBLIC_FIREBASE_*` web config
+
+After setting vars, redeploy. Check `GET /api/health` — it returns booleans for which secrets are present (not the secret values).
+
 ## Important product flows
 
 - **Purchase:** signed-in user → Stripe Checkout → webhook/session reconcile → Clerk `publicMetadata.courses`

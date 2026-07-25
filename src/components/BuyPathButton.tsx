@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, ShoppingCart } from "lucide-react";
+import { isClerkPublishableConfigured } from "@/lib/clerk-config";
 
 interface BuyPathButtonProps {
   pathId: string;
@@ -11,12 +12,13 @@ interface BuyPathButtonProps {
   className?: string;
 }
 
-export default function BuyPathButton({
+function BuyPathButtonUI({
   pathId,
   price,
   className = "",
-}: BuyPathButtonProps) {
-  const { isSignedIn, isLoaded } = useUser();
+  isSignedIn,
+  isLoaded,
+}: BuyPathButtonProps & { isSignedIn: boolean; isLoaded: boolean }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -78,4 +80,23 @@ export default function BuyPathButton({
       {error && <p className="text-red-400 text-xs">{error}</p>}
     </div>
   );
+}
+
+function BuyPathButtonWithClerk(props: BuyPathButtonProps) {
+  const { isSignedIn, isLoaded } = useUser();
+  return (
+    <BuyPathButtonUI
+      {...props}
+      isSignedIn={Boolean(isSignedIn)}
+      isLoaded={isLoaded}
+    />
+  );
+}
+
+export default function BuyPathButton(props: BuyPathButtonProps) {
+  if (!isClerkPublishableConfigured()) {
+    return <BuyPathButtonUI {...props} isSignedIn={false} isLoaded />;
+  }
+
+  return <BuyPathButtonWithClerk {...props} />;
 }
