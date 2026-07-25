@@ -1,5 +1,6 @@
 import type { CourseProgressMap } from "@/lib/course-progress";
 import type { IssuedCertificate } from "@/lib/certificates";
+import type { CourseChallengeResults } from "@/lib/challenges/types";
 
 export interface PublicUserMetadata {
   courses?: string[];
@@ -20,6 +21,8 @@ export interface PrivateUserMetadata {
   courseProgress?: CourseProgressMap;
   /** NyxPulse-issued certificates keyed by course slug */
   certificates?: Record<string, IssuedCertificate>;
+  /** Mastery/scenario gate results keyed by course slug */
+  challengeResults?: Record<string, CourseChallengeResults>;
 }
 
 export function asStringArray(value: unknown): string[] {

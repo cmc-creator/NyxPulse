@@ -1,43 +1,43 @@
 "use client";
 
-import { Monitor, Users, Award, Clock, Layers, Headphones } from "lucide-react";
+import { Swords, Fingerprint, Award, ShieldCheck, Layers, Radio } from "lucide-react";
 
 const features = [
   {
-    icon: Monitor,
-    color: "violet",
-    title: "Premium multi-format delivery",
-    desc: "Offer on-site, virtual, or hybrid programs with the same polished experience across every format.",
+    icon: Swords,
+    color: "amber",
+    title: "Advantage Gates",
+    desc: "Branching emergency scenarios and mastery quizzes. Certificates unlock only after judgment-ready scores — not checkbox theater.",
   },
   {
-    icon: Users,
+    icon: Fingerprint,
+    color: "violet",
+    title: "Skills Passport",
+    desc: "One employer-shareable readiness profile with gate scores, certificates, and Red Cross pathway status.",
+  },
+  {
+    icon: ShieldCheck,
     color: "cyan",
-    title: "Scenario-driven team performance",
-    desc: "Role-based simulations sharpen communication, command flow, and response behavior under pressure.",
+    title: "Dual-certificate honesty",
+    desc: "NyxPulse issues its own Certificate of Completion. Optional American Red Cross cards stay on the real instructor pathway — never faked in-app.",
+  },
+  {
+    icon: Radio,
+    color: "green",
+    title: "Healthcare-real scenarios",
+    desc: "Active threat, triage agitation, lobby collapse, and bleeding control trees built for clinics and hospitals — not generic office slides.",
   },
   {
     icon: Award,
     color: "amber",
-    title: "Compliance without visual clutter",
-    desc: "Life-safety programs follow American Red Cross instructor pathways; facility programs align with FEMA ICS, OSHA, CMS, and TJC expectations.",
-  },
-  {
-    icon: Clock,
-    color: "green",
-    title: "Shift-aware scheduling",
-    desc: "Morning, evening, and weekend cohorts fit twenty-four hour operations and distributed teams.",
+    title: "Public verification",
+    desc: "Certificate IDs and passport share links employers can open without logging into NyxPulse.",
   },
   {
     icon: Layers,
     color: "violet",
-    title: "Modular program design",
-    desc: "Launch a single course or build tailored pathways for frontline staff, supervisors, and leadership groups.",
-  },
-  {
-    icon: Headphones,
-    color: "cyan",
-    title: "Measured reinforcement",
-    desc: "Follow-up assets and instructor support keep skill retention and readiness moving in the right direction.",
+    title: "Flat-fee, unbundled programs",
+    desc: "CPR, OSHA, ICS/HICS, and threat prep stay separate enrollments. No seat-license maze. No junk bundles.",
   },
 ];
 
@@ -71,34 +71,32 @@ export default function Features() {
     <section id="features" className="relative py-24 lg:py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
-          <span className="badge badge-violet mb-4">Operating Model</span>
+          <span className="badge badge-amber mb-4">NyxPulse Advantage</span>
           <h2 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 text-balance">
-            A refined system for
-            <span className="gradient-text"> modern readiness</span>
+            Training that proves
+            <span className="gradient-text"> judgment under pressure</span>
           </h2>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            NyxPulse blends operational rigor, strong visual design, and practical instruction so teams respond faster, communicate clearly, and document readiness with confidence.
+            Most platforms track completion. NyxPulse scores decisions, gates certificates on mastery,
+            and gives employers a passport they can trust.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {features.map((f) => {
-            const Icon = f.icon;
-            return (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {features.map(({ icon: Icon, color, title, desc }) => (
+            <div
+              key={title}
+              className={`group relative overflow-hidden rounded-[28px] border bg-gradient-to-br p-7 transition-all duration-300 ${colorMap[color]}`}
+            >
               <div
-                key={f.title}
-                className={`group relative p-7 rounded-2xl bg-gradient-to-br border transition-all duration-300 ${colorMap[f.color]}`}
+                className={`w-12 h-12 rounded-2xl ${iconBgMap[color]} flex items-center justify-center mb-5`}
               >
-                <div
-                  className={`w-12 h-12 rounded-xl ${iconBgMap[f.color]} flex items-center justify-center mb-5`}
-                >
-                  <Icon className={`w-6 h-6 ${iconColorMap[f.color]}`} />
-                </div>
-                <h3 className="text-white font-semibold text-lg mb-2">{f.title}</h3>
-                <p className="text-slate-300/90 text-sm leading-relaxed">{f.desc}</p>
+                <Icon className={`w-6 h-6 ${iconColorMap[color]}`} />
               </div>
-            );
-          })}
+              <h3 className="text-white font-bold text-xl mb-3">{title}</h3>
+              <p className="text-slate-300 text-sm leading-relaxed">{desc}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>

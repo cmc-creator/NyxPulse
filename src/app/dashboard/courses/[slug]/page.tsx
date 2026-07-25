@@ -1,8 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
+import { getChallengesForCourse } from "@/lib/challenges/catalog";
 import { getCourseBySlug } from "@/lib/courses";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
-import { getLearnerProgressTopics } from "@/lib/firebase/learner-data";
+import {
+  getChallengeResults,
+  getLearnerProgressTopics,
+} from "@/lib/firebase/learner-data";
 import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
 import CoursePlayerClient from "./CoursePlayerClient";
 
@@ -33,11 +37,18 @@ export default async function CoursePlayerPage({ params }: Props) {
   const initialCompletedTopics =
     firebaseTopics ?? asStringArray(privateMetadata.courseProgress?.[slug]);
 
+  const challenges = getChallengesForCourse(slug);
+  const challengeResults = isFirebaseAdminConfigured()
+    ? await getChallengeResults(user.id, slug)
+    : (privateMetadata.challengeResults?.[slug] ?? null);
+
   return (
     <CoursePlayerClient
       course={course}
       initialCompletedTopics={initialCompletedTopics}
       isCompleted={isCompleted}
+      challenges={challenges}
+      initialChallengeResults={challengeResults?.results ?? {}}
     />
   );
 }

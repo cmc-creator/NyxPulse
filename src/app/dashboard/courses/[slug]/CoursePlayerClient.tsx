@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Course } from "@/lib/courses";
 import { getTopicKey } from "@/lib/course-progress";
 import { getLessonMedia } from "@/lib/courses/lesson-media";
+import type { ChallengeAttemptResult, CourseChallenge } from "@/lib/challenges/types";
+import ChallengePanel from "@/components/ChallengePanel";
 import {
   CheckCircle,
   Circle,
@@ -23,16 +25,21 @@ interface CoursePlayerClientProps {
   course: Course;
   initialCompletedTopics: string[];
   isCompleted: boolean;
+  challenges?: CourseChallenge[];
+  initialChallengeResults?: Record<string, ChallengeAttemptResult>;
 }
 
 export default function CoursePlayerClient({
   course,
   initialCompletedTopics,
   isCompleted: initialIsCompleted,
+  challenges = [],
+  initialChallengeResults = {},
 }: CoursePlayerClientProps) {
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(
     () => new Set(initialCompletedTopics)
   );
+  const [challengeResults, setChallengeResults] = useState(initialChallengeResults);
   const [activeModule, setActiveModule] = useState(0);
   const [activeTopic, setActiveTopic] = useState(0);
   const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
@@ -52,6 +59,10 @@ export default function CoursePlayerClient({
   const totalTopics = course.modules.reduce((acc, m) => acc + m.topics.length, 0);
   const progress =
     totalTopics > 0 ? Math.round((completedTopics.size / totalTopics) * 100) : 0;
+  const challengesPassed =
+    challenges.length === 0 ||
+    challenges.every((challenge) => challengeResults[challenge.id]?.passed);
+  const readyToClaim = progress === 100 && challengesPassed;
 
   const persistProgress = async (topics: string[]) => {
     setSaving(true);
@@ -220,7 +231,7 @@ export default function CoursePlayerClient({
             {completedTopics.size} / {totalTopics} topics completed
             {saving ? " · Saving…" : ""}
           </span>
-          {progress === 100 && (
+          {readyToClaim && (
             <span className="text-green-400 font-semibold flex items-center gap-1">
               <Award className="w-3.5 h-3.5" />
               Ready to claim
@@ -228,8 +239,13 @@ export default function CoursePlayerClient({
           )}
         </div>
         {saveError && <p className="text-red-400 text-xs mt-2">{saveError}</p>}
+        {progress === 100 && !challengesPassed && (
+          <p className="text-amber-200/90 text-xs mt-2">
+            Modules complete — clear Advantage Gates below before claiming your certificate.
+          </p>
+        )}
 
-        {progress === 100 && (
+        {readyToClaim && (
           <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.06)] flex flex-col sm:flex-row items-center gap-3">
             {isCompleted ? (
               <>
@@ -271,7 +287,7 @@ export default function CoursePlayerClient({
                 <span className="text-xs text-slate-500">
                   {hasArcPathway
                     ? "Issues your NyxPulse certificate now. Red Cross digital cert remains optional via skills session."
-                    : "You have completed all modules — claim your NyxPulse certificate."}
+                    : "Modules + Advantage Gates cleared — claim your NyxPulse certificate."}
                 </span>
               </>
             )}
@@ -279,6 +295,16 @@ export default function CoursePlayerClient({
           </div>
         )}
       </div>
+
+      {challenges.length > 0 && (
+        <ChallengePanel
+          courseSlug={course.slug}
+          challenges={challenges}
+          initialResults={challengeResults}
+          disabled={isCompleted}
+          onResultsChange={setChallengeResults}
+        />
+      )}
 
       <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-1 space-y-2">

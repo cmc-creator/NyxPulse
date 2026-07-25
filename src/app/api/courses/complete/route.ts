@@ -1,10 +1,12 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { getCourseBySlug } from "@/lib/courses";
 import { createCertificateId } from "@/lib/certificates";
+import { hasPassedAllChallenges } from "@/lib/challenges/scoring";
 import { isCourseProgressComplete } from "@/lib/course-progress";
 import { sendCourseCompletionEmail } from "@/lib/email-automation";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import {
+  getChallengeResults,
   getLearnerCertificate,
   getLearnerProgressTopics,
   saveLearnerCertificate,
@@ -60,6 +62,20 @@ export async function POST(req: Request) {
     if (!isCourseProgressComplete(course, progressTopics)) {
       return Response.json(
         { error: "Complete all course topics before claiming a certificate." },
+        { status: 400 }
+      );
+    }
+
+    const challengeResults = useFirebase
+      ? await getChallengeResults(userId, courseSlug)
+      : (privateMetadata.challengeResults?.[courseSlug] ?? null);
+
+    if (!hasPassedAllChallenges(courseSlug, challengeResults)) {
+      return Response.json(
+        {
+          error:
+            "Clear all NyxPulse Advantage Gates (scenarios + mastery quiz) before claiming your certificate.",
+        },
         { status: 400 }
       );
     }
