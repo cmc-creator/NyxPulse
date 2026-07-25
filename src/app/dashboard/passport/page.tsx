@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Fingerprint, Copy, CheckCircle2, ExternalLink, Swords } from "lucide-react";
+import { Fingerprint, Copy, CheckCircle2, ExternalLink, Swords, RefreshCw } from "lucide-react";
 
 type PassportPayload = {
   recipientName: string;
@@ -19,6 +19,20 @@ type PassportPayload = {
     averageGateScore: number | null;
     americanRedCrossPathway: boolean;
     skillsSessionRecommended: boolean;
+  }>;
+  refreshers?: Array<{
+    courseSlug: string;
+    shortTitle: string;
+    icon: string;
+    daysRemaining: number;
+    status: "ok" | "due-soon" | "overdue" | "completed-recently";
+    dueAt: string;
+  }>;
+  skillSignoffs?: Array<{
+    courseSlug: string;
+    signedAt: string;
+    instructorName: string;
+    skillCount: number;
   }>;
 };
 
@@ -126,6 +140,47 @@ export default function PassportPage() {
         </p>
       )}
       {error && <p className="text-red-400 text-sm">{error}</p>}
+
+      {data.refreshers && data.refreshers.some((r) => r.status === "due-soon" || r.status === "overdue") && (
+        <div className="glass-card p-5 border border-amber-400/30 bg-amber-500/5 space-y-3">
+          <div className="flex items-center gap-2 text-amber-200 font-semibold">
+            <RefreshCw className="w-4 h-4" />
+            Spaced refresher challenges
+          </div>
+          <p className="text-sm text-slate-400">
+            Re-clear Advantage Gates to keep readiness current (90-day window).
+          </p>
+          <div className="space-y-2">
+            {data.refreshers
+              .filter((r) => r.status === "due-soon" || r.status === "overdue")
+              .map((r) => (
+                <div
+                  key={r.courseSlug}
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-sm"
+                >
+                  <span className="text-white">
+                    {r.icon} {r.shortTitle}{" "}
+                    <span
+                      className={
+                        r.status === "overdue" ? "text-red-300" : "text-amber-200"
+                      }
+                    >
+                      {r.status === "overdue"
+                        ? `${Math.abs(r.daysRemaining)}d overdue`
+                        : `due in ${r.daysRemaining}d`}
+                    </span>
+                  </span>
+                  <Link
+                    href={`/dashboard/courses/${r.courseSlug}`}
+                    className="btn-outline text-xs py-1.5"
+                  >
+                    Re-clear gates
+                  </Link>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
 
       <div className="space-y-3">
         {data.rows.length === 0 ? (

@@ -1,13 +1,22 @@
 "use client";
 
-import { Swords, Fingerprint, Award, ShieldCheck, Layers, Radio } from "lucide-react";
+import {
+  Swords,
+  Fingerprint,
+  Award,
+  ShieldCheck,
+  Radio,
+  Briefcase,
+  ClipboardCheck,
+  RefreshCw,
+} from "lucide-react";
 
 const features = [
   {
     icon: Swords,
     color: "amber",
     title: "Advantage Gates",
-    desc: "Branching emergency scenarios and mastery quizzes. Certificates unlock only after judgment-ready scores — not checkbox theater.",
+    desc: "Branching emergency scenarios and mastery quizzes on every program. Certificates unlock only after judgment-ready scores.",
   },
   {
     icon: Fingerprint,
@@ -16,28 +25,40 @@ const features = [
     desc: "One employer-shareable readiness profile with gate scores, certificates, and Red Cross pathway status.",
   },
   {
+    icon: Radio,
+    color: "green",
+    title: "Facility Drill Mode",
+    desc: "Timed team drills with injects, role missions, and after-action reports for code blue, threat, WPV, and HICS surge.",
+  },
+  {
+    icon: Briefcase,
+    color: "cyan",
+    title: "Role readiness matrices",
+    desc: "ED nurse, security, front desk, and more — gap analysis against required trainings and gates.",
+  },
+  {
+    icon: ClipboardCheck,
+    color: "amber",
+    title: "Instructor skill sign-off",
+    desc: "Observed CPR/BLS/First Aid/bleeding skills recorded in-app. Red Cross cards stay on the real authorized pathway.",
+  },
+  {
+    icon: RefreshCw,
+    color: "violet",
+    title: "Spaced refresher challenges",
+    desc: "90-day readiness nudges that send learners back through gates — not once-and-done certificates.",
+  },
+  {
     icon: ShieldCheck,
     color: "cyan",
     title: "Dual-certificate honesty",
-    desc: "NyxPulse issues its own Certificate of Completion. Optional American Red Cross cards stay on the real instructor pathway — never faked in-app.",
-  },
-  {
-    icon: Radio,
-    color: "green",
-    title: "Healthcare-real scenarios",
-    desc: "Active threat, triage agitation, lobby collapse, and bleeding control trees built for clinics and hospitals — not generic office slides.",
+    desc: "NyxPulse issues its own Certificate of Completion. Optional American Red Cross cards are never faked in-app.",
   },
   {
     icon: Award,
-    color: "amber",
+    color: "green",
     title: "Public verification",
     desc: "Certificate IDs and passport share links employers can open without logging into NyxPulse.",
-  },
-  {
-    icon: Layers,
-    color: "violet",
-    title: "Flat-fee, unbundled programs",
-    desc: "CPR, OSHA, ICS/HICS, and threat prep stay separate enrollments. No seat-license maze. No junk bundles.",
   },
 ];
 
