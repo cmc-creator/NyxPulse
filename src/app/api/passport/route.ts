@@ -5,6 +5,8 @@ import {
   listChallengeResults,
   listLearnerCertificates,
 } from "@/lib/firebase/learner-data";
+import { buildRefresherQueue } from "@/lib/refreshers";
+import { listSkillSignoffsForLearner } from "@/lib/skills/store";
 import {
   asStringArray,
   type PrivateUserMetadata,
@@ -33,6 +35,7 @@ export async function GET() {
     const challengeResults = isFirebaseAdminConfigured()
       ? await listChallengeResults(userId)
       : (privateMetadata.challengeResults ?? {});
+    const skillSignoffs = await listSkillSignoffsForLearner(userId);
 
     const rows = buildPassportRows({
       enrolledSlugs,
@@ -40,11 +43,19 @@ export async function GET() {
       certificates,
       challengeResults,
     });
+    const refreshers = buildRefresherQueue({ certificates, challengeResults });
 
     return Response.json({
       recipientName,
       readiness: readinessScore(rows),
       rows,
+      refreshers,
+      skillSignoffs: skillSignoffs.map((s) => ({
+        courseSlug: s.courseSlug,
+        signedAt: s.signedAt,
+        instructorName: s.instructorName,
+        skillCount: s.skillIds.length,
+      })),
     });
   } catch (err) {
     console.error("Failed to load passport:", err);
