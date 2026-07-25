@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { courses } from "@/lib/courses";
 import { Calendar, Loader2, CheckCircle } from "lucide-react";
 
 export default function SkillsSessionBooking() {
+  const { user } = useUser();
   const searchParams = useSearchParams();
   const presetCourse = searchParams.get("course") ?? "";
   const arcCourses = useMemo(
@@ -19,10 +21,26 @@ export default function SkillsSessionBooking() {
     arcCourses.some((c) => c.slug === presetCourse) ? presetCourse : arcCourses[0]?.slug ?? ""
   );
   const [preferredDate, setPreferredDate] = useState("");
+  const [format, setFormat] = useState("In-person skills session");
   const [notes, setNotes] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    if (!user) return;
+    if (!name) {
+      const full = [user.firstName, user.lastName].filter(Boolean).join(" ");
+      if (full) setName(full);
+    }
+    if (!email) {
+      const primary =
+        user.primaryEmailAddress?.emailAddress ??
+        user.emailAddresses[0]?.emailAddress ??
+        "";
+      if (primary) setEmail(primary);
+    }
+  }, [user, name, email]);
 
   const selected = arcCourses.find((course) => course.slug === courseSlug);
 
@@ -36,6 +54,7 @@ export default function SkillsSessionBooking() {
     const message = [
       "Skills session booking request",
       `Course: ${courseTitle}`,
+      `Format: ${format}`,
       preferredDate ? `Preferred date/time: ${preferredDate}` : "Preferred date/time: flexible",
       notes ? `Notes: ${notes}` : null,
       "Learner already understands NyxPulse certificate is separate from optional Red Cross digital certificate.",
@@ -51,7 +70,7 @@ export default function SkillsSessionBooking() {
           name,
           email,
           trainingType: [courseTitle],
-          format: "Live / Hybrid skills session",
+          format,
           message,
         }),
       });
@@ -132,15 +151,30 @@ export default function SkillsSessionBooking() {
         </select>
       </label>
 
-      <label className="block text-sm">
-        <span className="text-slate-400 mb-1.5 block">Preferred date / time</span>
-        <input
-          value={preferredDate}
-          onChange={(e) => setPreferredDate(e.target.value)}
-          placeholder="e.g. Next Tuesday afternoon, or flexible"
-          className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2.5 text-white"
-        />
-      </label>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <label className="block text-sm">
+          <span className="text-slate-400 mb-1.5 block">Format</span>
+          <select
+            value={format}
+            onChange={(e) => setFormat(e.target.value)}
+            className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2.5 text-white"
+          >
+            <option>In-person skills session</option>
+            <option>Virtual skills coaching</option>
+            <option>Facility group session</option>
+            <option>Flexible / not sure</option>
+          </select>
+        </label>
+        <label className="block text-sm">
+          <span className="text-slate-400 mb-1.5 block">Preferred date / time</span>
+          <input
+            value={preferredDate}
+            onChange={(e) => setPreferredDate(e.target.value)}
+            placeholder="e.g. Next Tuesday afternoon, or flexible"
+            className="w-full rounded-xl bg-black/40 border border-white/10 px-3 py-2.5 text-white"
+          />
+        </label>
+      </div>
 
       <label className="block text-sm">
         <span className="text-slate-400 mb-1.5 block">Notes</span>

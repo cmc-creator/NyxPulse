@@ -45,6 +45,7 @@ interface EmailPayload {
     | 'team-invitation'
     | 'enrollment'
     | 'expiration-reminder'
+    | 'refresher-challenge'
     | 'contact-request'
     | 'contact-confirmation';
 }
@@ -192,7 +193,8 @@ export async function sendTeamInvitationEmail(
   inviteToken: string,
   role: string
 ): Promise<EmailResult> {
-  const acceptUrl = `https://nyxpulse.com/accept-invite?token=${encodeURIComponent(inviteToken)}`;
+  const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
+  const acceptUrl = `${appUrl}/accept-invite?token=${encodeURIComponent(inviteToken)}`;
 
   const html = baseTemplate(`You're invited to ${organizationName}`, `
     <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">You've Been Invited</h1>
@@ -237,6 +239,42 @@ export async function sendEnrollmentConfirmationEmail(
     subject: 'Welcome! Your courses are ready',
     html,
     type: 'enrollment',
+  });
+}
+
+export async function sendRefresherChallengeEmail(
+  email: string,
+  learnerName: string,
+  data: {
+    courseTitle: string;
+    daysRemaining: number;
+    status: "due-soon" | "overdue";
+    courseUrl: string;
+  }
+): Promise<EmailResult> {
+  const overdue = data.status === "overdue";
+  const timing = overdue
+    ? `${Math.abs(data.daysRemaining)} days overdue`
+    : `due in ${data.daysRemaining} days`;
+
+  const html = baseTemplate("Refresher challenge", `
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Keep your readiness current</h1>
+    <p style="margin:0 0 24px;color:#a78bfa;">Hi ${learnerName}, your NyxPulse Advantage Gates need a refresher.</p>
+    <div style="background:${overdue ? "rgba(239,68,68,0.15)" : "rgba(251,191,36,0.1)"};border:1px solid ${overdue ? "rgba(239,68,68,0.4)" : "rgba(251,191,36,0.3)"};border-radius:12px;padding:20px;margin-bottom:24px;">
+      <p style="margin:0;font-size:16px;color:#fff;font-weight:600;">${data.courseTitle}</p>
+      <p style="margin:8px 0 0;color:${overdue ? "#fca5a5" : "#fcd34d"};">90-day refresher ${timing}</p>
+    </div>
+    <p style="color:#94a3b8;line-height:1.6;">Re-clear the scenario and mastery gates to keep your Skills Passport employer-ready. Your original NyxPulse certificate remains on file.</p>
+    ${btn("Re-clear gates", data.courseUrl)}
+  `);
+
+  return sendAutomatedEmail({
+    to: email,
+    subject: overdue
+      ? `Overdue refresher: ${data.courseTitle}`
+      : `Refresher due soon: ${data.courseTitle}`,
+    html,
+    type: "refresher-challenge",
   });
 }
 

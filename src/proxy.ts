@@ -16,7 +16,7 @@ const isProtectedRoute = createRouteMatcher([
   "/api/drills(.*)",
   "/api/skills(.*)",
   "/api/roles(.*)",
-  "/api/refreshers(.*)",
+  "/api/org(.*)",
 ]);
 
 const clerkAuthMiddleware = clerkMiddleware(async (auth, request) => {

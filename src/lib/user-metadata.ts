@@ -8,11 +8,18 @@ export interface PublicUserMetadata {
   plan?: string;
   orgName?: string;
   orgRole?: "admin" | "member";
+  /** Selected workforce role for role-readiness matrices */
+  workforceRoleId?: string;
+  /** Instructor portal access when true */
+  instructor?: boolean;
   orgMembers?: {
     email: string;
     name: string;
     courses: string[];
     completedCourses: string[];
+    workforceRoleId?: string;
+    invitedAt?: string;
+    status?: "invited" | "active";
   }[];
 }
 
