@@ -1,10 +1,10 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser, getSessionUserId } from "@/lib/auth/server";
 import { drillTemplates, getDrillTemplate } from "@/lib/drills/catalog";
 import { createDrill, listDrillsForUser } from "@/lib/drills/store";
 import type { DrillRecord, DrillRole } from "@/lib/drills/types";
 
 export async function GET() {
-  const { userId } = await auth();
+  const userId = await getSessionUserId();
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
@@ -17,8 +17,10 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { userId, firstName, lastName, displayName } = session;
 
   let templateId: string;
   let facilityName: string;
@@ -42,12 +44,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
     const organizerName =
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-      user.username ||
-      "Drill organizer";
+      [firstName, lastName].filter(Boolean).join(" ") || displayName || "Drill organizer";
 
     const defaultParticipants =
       participants && Array.isArray(participants) && participants.length > 0

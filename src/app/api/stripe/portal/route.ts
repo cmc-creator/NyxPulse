@@ -1,18 +1,15 @@
 import { NextResponse } from "next/server";
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { getStripe } from "@/lib/stripe";
-import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 export async function POST() {
-  const { userId } = await auth();
-  if (!userId) {
+  const session = await getSessionUser();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const user = await currentUser();
-    const customerId = (user?.privateMetadata as PrivateUserMetadata | undefined)
-      ?.stripeCustomerId;
+    const customerId = session.profile.stripeCustomerId;
 
     if (!customerId) {
       return NextResponse.json(

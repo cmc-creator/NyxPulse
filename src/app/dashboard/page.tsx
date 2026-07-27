@@ -1,40 +1,39 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { courses } from "@/lib/courses";
 import { getAllTopicKeys } from "@/lib/course-progress";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { listLearnerProgress } from "@/lib/firebase/learner-data";
-import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 import { BookOpen, Calendar, Award, ArrowRight, Zap, Fingerprint, Radio, Briefcase, RefreshCw } from "lucide-react";
 import { listChallengeResults, listLearnerCertificates } from "@/lib/firebase/learner-data";
 import { buildRefresherQueue } from "@/lib/refreshers";
 
 export default async function DashboardPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
+  const session = await getSessionUser();
+  if (!session) redirect("/sign-in");
 
-  const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-  const enrolledSlugs = asStringArray(publicMetadata.courses);
-  const completedSlugs = asStringArray(publicMetadata.completedCourses);
-  const plan = publicMetadata.plan ?? "individual";
+  const { userId, profile, firstName: sessionFirst } = session;
+  const enrolledSlugs = profile.courses;
+  const completedSlugs = profile.completedCourses;
+  const plan = profile.plan ?? "individual";
   const firebaseProgress = isFirebaseAdminConfigured()
-    ? await listLearnerProgress(user.id)
+    ? await listLearnerProgress(userId)
     : null;
   const certificates = isFirebaseAdminConfigured()
-    ? await listLearnerCertificates(user.id)
-    : (privateMetadata.certificates ?? {});
+    ? await listLearnerCertificates(userId)
+    : (profile.certificates ?? {});
   const challengeResults = isFirebaseAdminConfigured()
-    ? await listChallengeResults(user.id)
-    : (privateMetadata.challengeResults ?? {});
+    ? await listChallengeResults(userId)
+    : (profile.challengeResults ?? {});
   const refresherItems = buildRefresherQueue({ certificates, challengeResults });
   const actionableRefreshers = refresherItems.filter(
     (item) => item.status === "due-soon" || item.status === "overdue"
   );
 
   const enrolledCourses = courses.filter((c) => enrolledSlugs.includes(c.slug));
-  const firstName = user.firstName ?? "there";
+  const firstName = sessionFirst ?? "there";
 
   const stats = [
     {
@@ -188,7 +187,7 @@ export default async function DashboardPage() {
               const isCompleted = completedSlugs.includes(course.slug);
               const progressTopics =
                 firebaseProgress?.[course.slug] ??
-                asStringArray(privateMetadata.courseProgress?.[course.slug]);
+                asStringArray(profile.courseProgress?.[course.slug]);
               const total = getAllTopicKeys(course).length;
               const progress = isCompleted
                 ? 100

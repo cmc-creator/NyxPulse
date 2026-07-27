@@ -20,7 +20,7 @@ export default function HIPAAPage() {
     {
       icon: Eye,
       title: "Access Controls",
-      desc: "Account authentication is handled by Clerk with signed-in access to learner dashboards.",
+      desc: "Account authentication is handled by Firebase Auth with signed-in access to learner dashboards.",
     },
     {
       icon: Shield,
@@ -85,7 +85,7 @@ export default function HIPAAPage() {
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">What the platform stores today</h2>
                 <ul className="space-y-2 list-disc list-inside">
-                  <li>Account identity and authentication data (via Clerk)</li>
+                  <li>Account identity and authentication data (via Firebase Auth)</li>
                   <li>Course enrollment and completion status</li>
                   <li>Learner progress checklists for enrolled courses</li>
                   <li>Payment metadata required for Stripe checkout and receipts</li>
@@ -114,7 +114,7 @@ export default function HIPAAPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">Service providers</h2>
                 <ul className="space-y-2 list-disc list-inside mt-3">
                   <li>Stripe — payment processing</li>
-                  <li>Clerk — authentication</li>
+                  <li>Firebase Authentication — sign-in and identity</li>
                   <li>Vercel — application hosting</li>
                 </ul>
               </section>

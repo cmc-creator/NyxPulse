@@ -1,32 +1,38 @@
 import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { isClerkServerConfigured } from "@/lib/clerk-config";
+import type { NextRequest } from "next/server";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 
-const isClerkConfigured = isClerkServerConfigured();
+function isProtectedPath(pathname: string) {
+  if (pathname.startsWith("/dashboard")) return true;
+  const protectedApis = [
+    "/api/stripe/portal",
+    "/api/stripe/checkout",
+    "/api/stripe/session-status",
+    "/api/courses/complete",
+    "/api/courses/progress",
+    "/api/courses/challenges",
+    "/api/passport",
+    "/api/drills",
+    "/api/skills",
+    "/api/roles",
+    "/api/refreshers",
+    "/api/auth/me",
+  ];
+  return protectedApis.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/stripe/portal(.*)",
-  "/api/stripe/checkout(.*)",
-  "/api/stripe/session-status(.*)",
-  "/api/courses/complete(.*)",
-  "/api/courses/progress(.*)",
-  "/api/courses/challenges(.*)",
-  "/api/passport(.*)",
-  "/api/drills(.*)",
-  "/api/skills(.*)",
-  "/api/roles(.*)",
-  "/api/refreshers(.*)",
-]);
-
-const clerkAuthMiddleware = clerkMiddleware(async (auth, request) => {
-  if (!isProtectedRoute(request)) {
-    return;
+export default function proxy(request: NextRequest) {
+  if (!isProtectedPath(request.nextUrl.pathname)) {
+    return NextResponse.next();
   }
 
-  const { userId } = await auth();
-  if (userId) {
-    return;
+  // Cookie presence gate only — full verification happens in Node route handlers /
+  // server components via Firebase Admin verifySessionCookie.
+  const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  if (session) {
+    return NextResponse.next();
   }
 
   if (request.nextUrl.pathname.startsWith("/api/")) {
@@ -36,17 +42,7 @@ const clerkAuthMiddleware = clerkMiddleware(async (auth, request) => {
   const signInUrl = new URL("/sign-in", request.url);
   signInUrl.searchParams.set("redirect_url", request.url);
   return NextResponse.redirect(signInUrl);
-});
-
-function passthroughMiddleware() {
-  return NextResponse.next();
 }
-
-/**
- * If Clerk env vars are missing (common after recreating a Vercel project),
- * do not crash every request — serve the public site and skip auth gates.
- */
-export default isClerkConfigured ? clerkAuthMiddleware : passthroughMiddleware;
 
 export const config = {
   matcher: [

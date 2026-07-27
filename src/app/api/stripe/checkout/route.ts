@@ -1,50 +1,52 @@
 import { NextResponse } from "next/server";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
+import { updateUserProfile } from "@/lib/auth/profile";
 import { getStripe } from "@/lib/stripe";
 import { getCourseBySlug } from "@/lib/courses";
-import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 function slugToEnvKey(slug: string) {
   return slug.replace(/[^a-zA-Z0-9]/g, "_").toUpperCase();
 }
 
-async function ensureStripeCustomer(userId: string) {
-  const clerk = await clerkClient();
-  const user = await clerk.users.getUser(userId);
-  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-  const existingCustomerId = privateMetadata.stripeCustomerId;
+async function ensureStripeCustomer(session: {
+  userId: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  displayName: string;
+  profile: { stripeCustomerId?: string };
+}) {
+  const existingCustomerId = session.profile.stripeCustomerId;
 
   if (existingCustomerId) {
     return existingCustomerId;
   }
 
-  const primaryEmail = user.emailAddresses.find(
-    (email) => email.id === user.primaryEmailAddressId
-  )?.emailAddress;
-
   const stripe = getStripe();
   const customer = await stripe.customers.create({
-    email: primaryEmail,
-    name: [user.firstName, user.lastName].filter(Boolean).join(" ") || undefined,
-    metadata: { userId },
+    email: session.email || undefined,
+    name:
+      [session.firstName, session.lastName].filter(Boolean).join(" ") ||
+      session.displayName ||
+      undefined,
+    metadata: { userId: session.userId },
   });
 
-  await clerk.users.updateUserMetadata(userId, {
-    privateMetadata: {
-      ...privateMetadata,
-      stripeCustomerId: customer.id,
-    },
+  await updateUserProfile(session.userId, {
+    stripeCustomerId: customer.id,
   });
 
   return customer.id;
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
+  const session = await getSessionUser();
 
-  if (!userId) {
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { userId } = session;
 
   let courseSlug: string | undefined;
   try {
@@ -99,9 +101,9 @@ export async function POST(req: Request) {
 
   try {
     const stripe = getStripe();
-    const customerId = await ensureStripeCustomer(userId);
+    const customerId = await ensureStripeCustomer(session);
 
-    const session = await stripe.checkout.sessions.create({
+    const checkoutSession = await stripe.checkout.sessions.create({
       mode: "payment",
       customer: customerId,
       customer_update: { address: "auto", name: "auto" },
@@ -135,7 +137,7 @@ export async function POST(req: Request) {
       cancel_url: `${appUrl}/courses/${courseSlug}`,
     });
 
-    return NextResponse.json({ url: session.url });
+    return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
     console.error("Failed to create checkout session:", err);
     const message = err instanceof Error ? err.message : "Checkout failed";

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUserId } from "@/lib/auth/server";
 import { getDrillTemplate } from "@/lib/drills/catalog";
 import { getDrill, updateDrill } from "@/lib/drills/store";
 import type { DrillRecord } from "@/lib/drills/types";
@@ -6,7 +6,7 @@ import type { DrillRecord } from "@/lib/drills/types";
 type Ctx = { params: Promise<{ id: string }> };
 
 export async function GET(_req: Request, ctx: Ctx) {
-  const { userId } = await auth();
+  const userId = await getSessionUserId();
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await ctx.params;
@@ -25,7 +25,7 @@ export async function GET(_req: Request, ctx: Ctx) {
 }
 
 export async function PATCH(req: Request, ctx: Ctx) {
-  const { userId } = await auth();
+  const userId = await getSessionUserId();
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await ctx.params;

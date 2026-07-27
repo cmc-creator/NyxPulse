@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { sendEnrollmentConfirmationEmail } from "@/lib/email-automation";
 
 /**
@@ -29,10 +29,8 @@ export async function POST(req: Request) {
     name?: string;
   };
 
-  const user = await currentUser().catch(() => null);
-  const accountEmail = user?.emailAddresses.find(
-    (email) => email.id === user.primaryEmailAddressId
-  )?.emailAddress;
+  const user = await getSessionUser().catch(() => null);
+  const accountEmail = user?.email;
   const targetEmail = body.email ?? accountEmail;
 
   if (!targetEmail) {
@@ -42,7 +40,8 @@ export async function POST(req: Request) {
     );
   }
 
-  const firstName = body.name ?? user?.firstName ?? user?.username ?? "NyxPulse Learner";
+  const firstName =
+    body.name ?? user?.firstName ?? user?.displayName ?? "NyxPulse Learner";
   const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
 
   const result = await sendEnrollmentConfirmationEmail(

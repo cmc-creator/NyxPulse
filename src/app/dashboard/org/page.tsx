@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import {
@@ -22,10 +22,10 @@ interface PublicMetadata {
 }
 
 export default async function OrgPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
+  const session = await getSessionUser();
+  if (!session) redirect("/sign-in");
 
-  const pub = (user.publicMetadata ?? {}) as PublicMetadata;
+  const pub = session.profile;
   const plan = pub.plan ?? "individual";
   const orgName = pub.orgName ?? "Your Organization";
   const orgRole = pub.orgRole ?? "admin";

@@ -1,12 +1,12 @@
 import { Suspense } from "react";
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, ShieldCheck } from "lucide-react";
 import SkillsSessionBooking from "@/components/SkillsSessionBooking";
 
 export default async function SessionsPage() {
-  const user = await currentUser();
+  const user = await getSessionUser();
   if (!user) redirect("/sign-in");
 
   return (

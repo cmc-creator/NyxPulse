@@ -1,16 +1,16 @@
 import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { getStripe } from "@/lib/stripe";
 import { enrollUserInCourses, parseCourseSlugsFromMetadata } from "@/lib/enrollment";
-import { clerkClient } from "@clerk/nextjs/server";
-import { asStringArray, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function GET(req: Request) {
-  const { userId } = await auth();
-  if (!userId) {
+  const session = await getSessionUser();
+  if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { userId, profile } = session;
   const { searchParams } = new URL(req.url);
   const sessionId = searchParams.get("session_id");
 
@@ -20,31 +20,29 @@ export async function GET(req: Request) {
 
   try {
     const stripe = getStripe();
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const sessionUserId = session.metadata?.userId ?? session.client_reference_id;
+    const checkoutSession = await stripe.checkout.sessions.retrieve(sessionId);
+    const sessionUserId =
+      checkoutSession.metadata?.userId ?? checkoutSession.client_reference_id;
 
     if (!sessionUserId || sessionUserId !== userId) {
       return NextResponse.json({ error: "Session does not belong to this user" }, { status: 403 });
     }
 
     const paid =
-      session.payment_status === "paid" ||
-      session.status === "complete";
+      checkoutSession.payment_status === "paid" ||
+      checkoutSession.status === "complete";
 
-    const courseSlugs = parseCourseSlugsFromMetadata(session.metadata);
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    let enrolledCourses = asStringArray(publicMetadata.courses);
+    const courseSlugs = parseCourseSlugsFromMetadata(checkoutSession.metadata);
+    let enrolledCourses = asStringArray(profile.courses);
     let enrolled =
       courseSlugs.length > 0 &&
       courseSlugs.every((slug) => enrolledCourses.includes(slug));
 
     if (paid && !enrolled && courseSlugs.length > 0) {
       const customerId =
-        typeof session.customer === "string"
-          ? session.customer
-          : session.customer?.id;
+        typeof checkoutSession.customer === "string"
+          ? checkoutSession.customer
+          : checkoutSession.customer?.id;
 
       const result = await enrollUserInCourses({
         userId,
@@ -56,12 +54,14 @@ export async function GET(req: Request) {
     }
 
     return NextResponse.json({
-      status: session.status,
-      paymentStatus: session.payment_status,
+      status: checkoutSession.status,
+      paymentStatus: checkoutSession.payment_status,
       paid,
       enrolled,
-      courseSlugs: enrolled ? courseSlugs : enrolledCourses.filter((slug) => courseSlugs.includes(slug)),
-      pathId: session.metadata?.pathId ?? null,
+      courseSlugs: enrolled
+        ? courseSlugs
+        : enrolledCourses.filter((slug) => courseSlugs.includes(slug)),
+      pathId: checkoutSession.metadata?.pathId ?? null,
     });
   } catch (err) {
     console.error("Failed to load checkout session status:", err);

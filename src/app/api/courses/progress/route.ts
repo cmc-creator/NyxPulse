@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser, getSessionUserId } from "@/lib/auth/server";
+import { updateUserProfile } from "@/lib/auth/profile";
 import { getCourseBySlug } from "@/lib/courses";
 import { normalizeTopicKeys, type CourseProgressMap } from "@/lib/course-progress";
 import {
@@ -6,13 +7,15 @@ import {
   saveLearnerProgressTopics,
 } from "@/lib/firebase/learner-data";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
-import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) {
+  const session = await getSessionUser();
+  if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { userId, profile } = session;
 
   let courseSlug: string;
   let completedTopics: string[];
@@ -38,11 +41,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-    const enrolledSlugs = asStringArray(publicMetadata.courses);
+    const enrolledSlugs = asStringArray(profile.courses);
 
     if (!enrolledSlugs.includes(courseSlug)) {
       return Response.json({ error: "Not enrolled in this course" }, { status: 403 });
@@ -54,16 +53,10 @@ export async function POST(req: Request) {
       await saveLearnerProgressTopics(userId, courseSlug, normalized);
     } else {
       const nextProgress: CourseProgressMap = {
-        ...(privateMetadata.courseProgress ?? {}),
+        ...(profile.courseProgress ?? {}),
         [courseSlug]: normalized,
       };
-
-      await clerk.users.updateUserMetadata(userId, {
-        privateMetadata: {
-          ...privateMetadata,
-          courseProgress: nextProgress,
-        },
-      });
+      await updateUserProfile(userId, { courseProgress: nextProgress });
     }
 
     return Response.json({ success: true, completedTopics: normalized });
@@ -74,7 +67,7 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
-  const { userId } = await auth();
+  const userId = await getSessionUserId();
   if (!userId) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -90,11 +83,9 @@ export async function GET(req: Request) {
       return Response.json({ completedTopics: topics ?? [] });
     }
 
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
+    const session = await getSessionUser();
     return Response.json({
-      completedTopics: asStringArray(privateMetadata.courseProgress?.[courseSlug]),
+      completedTopics: asStringArray(session?.profile.courseProgress?.[courseSlug]),
     });
   } catch (err) {
     console.error("Failed to load course progress:", err);

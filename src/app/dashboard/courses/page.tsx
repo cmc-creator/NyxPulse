@@ -1,24 +1,23 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { ArrowRight, BookOpen, CheckCircle } from "lucide-react";
+import { getSessionUser } from "@/lib/auth/server";
 import { courses } from "@/lib/courses";
-import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 import { getAllTopicKeys } from "@/lib/course-progress";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { listLearnerProgress } from "@/lib/firebase/learner-data";
 
 export default async function MyCoursesPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
+  const session = await getSessionUser();
+  if (!session) redirect("/sign-in");
 
-  const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-  const enrolledSlugs = asStringArray(publicMetadata.courses);
-  const completedSlugs = asStringArray(publicMetadata.completedCourses);
+  const { userId, profile } = session;
+  const enrolledSlugs = profile.courses;
+  const completedSlugs = profile.completedCourses;
   const enrolledCourses = courses.filter((course) => enrolledSlugs.includes(course.slug));
   const firebaseProgress = isFirebaseAdminConfigured()
-    ? await listLearnerProgress(user.id)
+    ? await listLearnerProgress(userId)
     : null;
 
   return (
@@ -47,7 +46,7 @@ export default async function MyCoursesPage() {
             const done = completedSlugs.includes(course.slug);
             const progressTopics =
               firebaseProgress?.[course.slug] ??
-              asStringArray(privateMetadata.courseProgress?.[course.slug]);
+              asStringArray(profile.courseProgress?.[course.slug]);
             const total = getAllTopicKeys(course).length;
             const progress =
               done ? 100 : total > 0 ? Math.round((progressTopics.length / total) * 100) : 0;

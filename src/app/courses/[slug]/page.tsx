@@ -6,8 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 import { getCourseBySlug, courses } from "@/lib/courses";
-import { currentUser } from "@clerk/nextjs/server";
-import { isClerkServerConfigured } from "@/lib/clerk-config";
+import { getSessionUser } from "@/lib/auth/server";
 import BuyButton from "@/components/BuyButton";
 
 interface Props {
@@ -40,8 +39,8 @@ export default async function CourseDetailPage({ params }: Props) {
   const course = getCourseBySlug(slug);
   if (!course) notFound();
 
-  const user = isClerkServerConfigured() ? await currentUser() : null;
-  const enrolledSlugs = (user?.publicMetadata?.courses as string[]) ?? [];
+  const user = await getSessionUser();
+  const enrolledSlugs = user?.profile.courses ?? [];
   const hasCourse = enrolledSlugs.includes(slug);
   const hasArcPathway = Boolean(course.americanRedCrossPathway);
 

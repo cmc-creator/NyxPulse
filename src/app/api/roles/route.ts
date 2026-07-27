@@ -1,36 +1,28 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
+import { updateUserProfile } from "@/lib/auth/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { listChallengeResults } from "@/lib/firebase/learner-data";
 import { analyzeRoleGap } from "@/lib/roles/gap";
 import { roleMatrices, type WorkforceRoleId } from "@/lib/roles/matrices";
 import { listSkillSignoffsForLearner } from "@/lib/skills/store";
-import {
-  asStringArray,
-  type PrivateUserMetadata,
-  type PublicUserMetadata,
-} from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function GET(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
+  const { userId, profile } = session;
   const roleId = new URL(req.url).searchParams.get("roleId");
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata & {
-      workforceRoleId?: string;
-    };
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-    const enrolledSlugs = asStringArray(publicMetadata.courses);
-    const completedSlugs = asStringArray(publicMetadata.completedCourses);
+    const enrolledSlugs = asStringArray(profile.courses);
+    const completedSlugs = asStringArray(profile.completedCourses);
     const selected =
-      roleId || publicMetadata.workforceRoleId || roleMatrices[0]?.id || "ed-nurse";
+      roleId || profile.workforceRoleId || roleMatrices[0]?.id || "ed-nurse";
 
     const challengeResults = isFirebaseAdminConfigured()
       ? await listChallengeResults(userId)
-      : (privateMetadata.challengeResults ?? {});
+      : (profile.challengeResults ?? {});
     const skillSignoffs = await listSkillSignoffsForLearner(userId);
 
     const analysis = analyzeRoleGap({
@@ -53,8 +45,8 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   let roleId: string;
   try {
@@ -69,16 +61,8 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata & {
-      workforceRoleId?: string;
-    };
-    await clerk.users.updateUserMetadata(userId, {
-      publicMetadata: {
-        ...publicMetadata,
-        workforceRoleId: roleId as WorkforceRoleId,
-      },
+    await updateUserProfile(session.userId, {
+      workforceRoleId: roleId as WorkforceRoleId,
     });
     return Response.json({ success: true, roleId });
   } catch (err) {

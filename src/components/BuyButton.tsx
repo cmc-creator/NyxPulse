@@ -1,10 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Loader2, BookOpen, ShoppingCart } from "lucide-react";
-import { isClerkPublishableConfigured } from "@/lib/clerk-config";
+import { useAuth } from "@/components/AuthProvider";
 
 interface BuyButtonProps {
   courseSlug: string;
@@ -13,15 +12,14 @@ interface BuyButtonProps {
   className?: string;
 }
 
-function BuyButtonUI({
+export default function BuyButton({
   courseSlug,
   price,
   hasCourse,
   className = "",
-  isSignedIn,
-  isLoaded,
-}: BuyButtonProps & { isSignedIn: boolean; isLoaded: boolean }) {
+}: BuyButtonProps) {
   const router = useRouter();
+  const { isSignedIn, isLoaded } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -111,23 +109,4 @@ function BuyButtonUI({
       {error && <p className="text-red-400 text-xs text-center">{error}</p>}
     </div>
   );
-}
-
-function BuyButtonWithClerk(props: BuyButtonProps) {
-  const { isSignedIn, isLoaded } = useUser();
-  return (
-    <BuyButtonUI
-      {...props}
-      isSignedIn={Boolean(isSignedIn)}
-      isLoaded={isLoaded}
-    />
-  );
-}
-
-export default function BuyButton(props: BuyButtonProps) {
-  if (!isClerkPublishableConfigured()) {
-    return <BuyButtonUI {...props} isSignedIn={false} isLoaded />;
-  }
-
-  return <BuyButtonWithClerk {...props} />;
 }
