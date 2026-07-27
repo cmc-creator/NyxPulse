@@ -2,11 +2,14 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase/admin";
 import {
+  diagnoseFirebaseAdminEnv,
   isFirebaseAdminConfigured,
   parseFirebaseServiceAccount,
 } from "@/lib/firebase/admin-env";
 import { ensureUserProfile } from "@/lib/auth/profile";
 import { SESSION_COOKIE_NAME, SESSION_EXPIRES_MS } from "@/lib/auth/constants";
+
+export const dynamic = "force-dynamic";
 
 function explainTokenError(err: unknown): { status: number; error: string } {
   const message = err instanceof Error ? err.message : String(err);
@@ -42,8 +45,21 @@ function explainTokenError(err: unknown): { status: number; error: string } {
 
 export async function POST(req: Request) {
   if (!isFirebaseAdminConfigured()) {
+    const diag = diagnoseFirebaseAdminEnv();
     return NextResponse.json(
-      { error: "Firebase Admin is not configured" },
+      {
+        error: "Firebase Admin is not configured",
+        hint:
+          diag.parseIssue ??
+          "Set FIREBASE_SERVICE_ACCOUNT_BASE64 (one-line base64 of the nyxpulse service-account JSON) on Vercel Production, then redeploy.",
+        adminDiag: {
+          jsonEnvPresent: diag.jsonEnvPresent,
+          jsonEnvChars: diag.jsonEnvChars,
+          base64EnvPresent: diag.base64EnvPresent,
+          parseOk: diag.parseOk,
+          splitVarsComplete: diag.splitVarsComplete,
+        },
+      },
       { status: 503 }
     );
   }
