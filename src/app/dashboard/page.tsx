@@ -246,19 +246,29 @@ export default async function DashboardPage() {
 
       <section>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-bold text-white">Upcoming Live Sessions</h2>
+          <h2 className="text-xl font-bold text-white">Skills Sessions</h2>
+          <Link
+            href="/dashboard/sessions"
+            className="text-sm text-violet-400 hover:text-violet-300 flex items-center gap-1"
+          >
+            Open booking <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
         <div className="glass-card p-8 text-center">
-          <Calendar className="w-10 h-10 text-slate-600 mx-auto mb-4" />
+          <Calendar className="w-10 h-10 text-cyan-500/80 mx-auto mb-4" />
           <h3 className="text-base font-semibold text-white mb-2">
-            Book instructor-led training
+            Book instructor-led skills practice
           </h3>
           <p className="text-slate-400 text-sm mb-6 max-w-sm mx-auto">
-            Self-serve scheduling is coming soon. Contact us to reserve a live or
-            virtual session for your team.
+            Request a session with Jeremy for CPR/AED, First Aid, or BLS skills.
+            NyxPulse certificates stay in-app; optional Red Cross cards follow the
+            authorized instructor pathway.
           </p>
-          <Link href="/contact" className="btn-outline inline-flex items-center gap-2 text-sm">
-            Book Training <ArrowRight className="w-4 h-4" />
+          <Link
+            href="/dashboard/sessions"
+            className="btn-primary inline-flex items-center gap-2 text-sm"
+          >
+            Book Skills Session <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
       </section>

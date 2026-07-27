@@ -43,10 +43,25 @@ Open [http://localhost:3000](http://localhost:3000).
 - `NEXT_PUBLIC_URL` = `https://www.nyxpulse.com`
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
-- SMTP vars for cert/invite emails
-- `NYXPULSE_INSTRUCTOR_EMAILS` and/or `NYXPULSE_INSTRUCTOR_PIN`
+- `FIREBASE_SERVICE_ACCOUNT_JSON` (or the three `FIREBASE_*` vars)
 
-After setting vars, redeploy. Check `GET /api/health` for `launchReady` (Firebase client + Admin present).
+**Email + instructor (for cert emails, invites, skill sign-off):**
+- `SMTP_HOST` / `SMTP_PORT` / `SMTP_USER` / `SMTP_PASS` / `SMTP_FROM_EMAIL`
+- `NYXPULSE_INSTRUCTOR_EMAILS` and/or `NYXPULSE_INSTRUCTOR_PIN`
+- `REFRESHERS_CRON_TOKEN` (for `POST /api/refreshers/notify`)
+
+**Optional:** `NEXT_PUBLIC_FIREBASE_*` web config
+
+After setting vars, redeploy. Check `GET /api/health` — it returns `launchReady`, `emailReady`, `instructorReady`, and `missingForLaunch` (booleans only; no secret values).
+
+### Launch checklist
+
+1. Clerk keys live + sign-in works
+2. Stripe secret + webhook (`checkout.session.completed`) → enrollments land in Clerk
+3. `FIREBASE_SERVICE_ACCOUNT_JSON` set → progress/certs/passport/verify persist
+4. SMTP set → completion + invite + refresher emails send
+5. Instructor emails/PIN set → `/dashboard/instructor` sign-offs work
+6. Smoke: enroll → pass gates → claim cert → passport share → book skills session → team invite
 
 ### Auth notes
 
@@ -75,3 +90,11 @@ Event: `checkout.session.completed`.
 - `npm run build` — production build
 - `npm run start` — start production server
 - `npm run lint` — ESLint
+
+## Notes
+
+- Contact leads go to Firestore when Firebase Admin is configured; otherwise `.data/contact-leads.ndjson` (local/dev only).
+- Team Portal supports roster invites, role packs, and course assignment (sandbox enable available for demos).
+- Skills sessions are request-based via `/dashboard/sessions` (routes to contact/leads + email).
+- Analytics UI stays light until real aggregate metrics exist.
+- HIPAA language describes readiness for covered deployments — do not submit clinical PHI without an active BAA engagement.

@@ -116,13 +116,18 @@ export default function InstructorPortalPage() {
 
       <div className="glass-card p-4 flex items-start gap-3 text-sm">
         <Shield className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />
-        <p className="text-slate-400">
-          {data.isInstructor
-            ? "You are recognized as an instructor on this account."
-            : data.pinConfigured
-              ? "Enter the facility instructor PIN to authorize a sign-off, or use an approved instructor account."
-              : "Set NYXPULSE_INSTRUCTOR_EMAILS or NYXPULSE_INSTRUCTOR_PIN in the environment to authorize sign-offs."}
-        </p>
+        <div className="text-slate-400 space-y-1">
+          <p>
+            {data.isInstructor
+              ? "You are recognized as an instructor on this account."
+              : data.pinConfigured
+                ? "Enter the facility instructor PIN to authorize a sign-off, or use an approved instructor account."
+                : "Production setup needed: set NYXPULSE_INSTRUCTOR_EMAILS and/or NYXPULSE_INSTRUCTOR_PIN in Vercel, or set Clerk publicMetadata.instructor=true on Jeremy’s account."}
+          </p>
+          <p className="text-xs text-slate-500">
+            Check <code className="text-slate-400">/api/health</code> → <code className="text-slate-400">instructorReady</code> after deploying env vars.
+          </p>
+        </div>
       </div>
 
       <section className="glass-card p-5 space-y-4">
