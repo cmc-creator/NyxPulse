@@ -1,9 +1,44 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { getAdminAuth } from "@/lib/firebase/admin";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
+import {
+  isFirebaseAdminConfigured,
+  parseFirebaseServiceAccount,
+} from "@/lib/firebase/admin-env";
 import { ensureUserProfile } from "@/lib/auth/profile";
 import { SESSION_COOKIE_NAME, SESSION_EXPIRES_MS } from "@/lib/auth/constants";
+
+function explainTokenError(err: unknown): { status: number; error: string } {
+  const message = err instanceof Error ? err.message : String(err);
+
+  if (/Cannot find module|ERR_REQUIRE_ESM|Failed to load external module/i.test(message)) {
+    return { status: 503, error: `Session backend error: ${message}` };
+  }
+  if (/credential|private[_ ]key|DECODER|PEM|Invalid JWT Signature/i.test(message)) {
+    return {
+      status: 503,
+      error:
+        "Firebase Admin credentials look invalid. Re-paste FIREBASE_SERVICE_ACCOUNT_JSON (full JSON) in Vercel and redeploy.",
+    };
+  }
+  if (/incorrect "aud"|audience|incorrect "iss"|issuer/i.test(message)) {
+    const adminProject = parseFirebaseServiceAccount()?.projectId ?? "(unknown)";
+    const clientProject = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID ?? "(missing)";
+    return {
+      status: 401,
+      error: `Firebase project mismatch: web client is "${clientProject}" but service account is "${adminProject}". They must be the same project.`,
+    };
+  }
+  if (/no "kid"|ArgumentError|Decoding Firebase ID token failed/i.test(message)) {
+    return {
+      status: 401,
+      error: "Invalid or incomplete ID token. Sign out, refresh the page, and sign in again.",
+    };
+  }
+
+  console.error("Failed to create session:", err);
+  return { status: 401, error: `Invalid token: ${message}` };
+}
 
 export async function POST(req: Request) {
   if (!isFirebaseAdminConfigured()) {
@@ -52,16 +87,8 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ success: true, userId: decoded.uid });
   } catch (err) {
-    console.error("Failed to create session:", err);
-    const message = err instanceof Error ? err.message : "Invalid token";
-    // Surface SDK load failures clearly (vs opaque HTML 500 from an uncaught import crash).
-    if (/Cannot find module|FIREBASE|credential|private key/i.test(message)) {
-      return NextResponse.json(
-        { error: `Session backend error: ${message}` },
-        { status: 503 }
-      );
-    }
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
+    const { status, error } = explainTokenError(err);
+    return NextResponse.json({ error }, { status });
   }
 }
 

@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
+import {
+  isFirebaseAdminConfigured,
+  parseFirebaseServiceAccount,
+} from "@/lib/firebase/admin-env";
 import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
 
 /**
@@ -8,6 +11,12 @@ import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
  */
 export async function GET() {
   try {
+    const clientProjectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim() || null;
+    const adminProjectId = parseFirebaseServiceAccount()?.projectId ?? null;
+    const projectIdsMatch = Boolean(
+      clientProjectId && adminProjectId && clientProjectId === adminProjectId
+    );
+
     const env = {
       firebaseClient: isFirebaseClientConfigured(),
       firebaseAdmin: isFirebaseAdminConfigured(),
@@ -17,17 +26,24 @@ export async function GET() {
       smtpHost: Boolean(process.env.SMTP_HOST),
       instructorEmails: Boolean(process.env.NYXPULSE_INSTRUCTOR_EMAILS?.trim()),
       instructorPin: Boolean(process.env.NYXPULSE_INSTRUCTOR_PIN?.trim()),
+      clientProjectId,
+      adminProjectId,
+      projectIdsMatch,
     };
 
     return NextResponse.json({
       ok: true,
-      launchReady: env.firebaseClient && env.firebaseAdmin,
+      launchReady: env.firebaseClient && env.firebaseAdmin && projectIdsMatch,
       paymentsReady: env.stripeSecretKey && env.stripeWebhookSecret,
       instructorReady: env.instructorEmails || env.instructorPin,
       missingForAuth: (
         [
           !env.firebaseClient && "NEXT_PUBLIC_FIREBASE_* client config",
           !env.firebaseAdmin && "FIREBASE_SERVICE_ACCOUNT_JSON",
+          env.firebaseClient &&
+            env.firebaseAdmin &&
+            !projectIdsMatch &&
+            "NEXT_PUBLIC_FIREBASE_PROJECT_ID must match service account project_id",
         ] as (string | false)[]
       ).filter(Boolean),
       env,
