@@ -20,6 +20,8 @@ export function getAdminApp(): App {
 
   return initializeApp({
     credential: cert(serviceAccount),
+    // Explicit projectId so verifyIdToken checks the same project as the web client.
+    projectId: serviceAccount.projectId,
   });
 }
 

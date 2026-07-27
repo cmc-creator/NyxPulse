@@ -53,7 +53,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         await updateProfile(credential.user, { displayName: name.trim() });
       }
 
-      const idToken = await credential.user.getIdToken();
+      const idToken = await credential.user.getIdToken(/* forceRefresh */ true);
       const res = await fetch("/api/auth/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
