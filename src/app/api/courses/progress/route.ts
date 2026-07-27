@@ -6,7 +6,7 @@ import {
   getLearnerProgressTopics,
   saveLearnerProgressTopics,
 } from "@/lib/firebase/learner-data";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { asStringArray } from "@/lib/user-metadata";
 
 export async function POST(req: Request) {

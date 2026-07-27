@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { OrgInvite } from "@/lib/org/types";
 
 function filePath() {
@@ -26,7 +27,7 @@ async function writeFileStore(records: OrgInvite[]) {
 
 export async function saveOrgInvite(invite: OrgInvite): Promise<OrgInvite> {
   if (isFirebaseAdminConfigured()) {
-    await getAdminDb().collection("orgInvites").doc(invite.token).set(invite);
+    await (await getAdminDb()).collection("orgInvites").doc(invite.token).set(invite);
     return invite;
   }
   const all = await readFileStore();
@@ -37,7 +38,7 @@ export async function saveOrgInvite(invite: OrgInvite): Promise<OrgInvite> {
 
 export async function getOrgInvite(token: string): Promise<OrgInvite | null> {
   if (isFirebaseAdminConfigured()) {
-    const snap = await getAdminDb().collection("orgInvites").doc(token).get();
+    const snap = await (await getAdminDb()).collection("orgInvites").doc(token).get();
     if (!snap.exists) return null;
     return snap.data() as OrgInvite;
   }

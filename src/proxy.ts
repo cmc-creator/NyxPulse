@@ -1,31 +1,41 @@
 import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { isClerkServerConfigured } from "@/lib/clerk-config";
+import type { NextRequest } from "next/server";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 
-const isClerkConfigured = isClerkServerConfigured();
+function isProtectedPath(pathname: string) {
+  if (pathname.startsWith("/dashboard")) return true;
+  const protectedApis = [
+    "/api/stripe/portal",
+    "/api/stripe/checkout",
+    "/api/stripe/session-status",
+    "/api/courses/complete",
+    "/api/courses/progress",
+    "/api/courses/challenges",
+    "/api/passport",
+    "/api/drills",
+    "/api/skills",
+    "/api/roles",
+    "/api/org",
+    "/api/auth/me",
+  ];
+  if (pathname === "/api/refreshers") return true;
+  return protectedApis.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/stripe/portal(.*)",
-  "/api/stripe/checkout(.*)",
-  "/api/stripe/session-status(.*)",
-  "/api/courses/complete(.*)",
-  "/api/courses/progress(.*)",
-  "/api/courses/challenges(.*)",
-  "/api/passport(.*)",
-  "/api/drills(.*)",
-  "/api/skills(.*)",
-  "/api/roles(.*)",
-  "/api/org(.*)",
-]);
-
+/**
+ * Cookie presence gate only — full verification happens in Node route handlers /
+ * server components via Firebase Admin verifySessionCookie.
+ *
+ * Matcher is limited to protected paths so public APIs (session, health, contact)
+ * are not forced through the proxy pass-through path.
+ */
 export default function proxy(request: NextRequest) {
   if (!isProtectedPath(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
-  // Cookie presence gate only — full verification happens in Node route handlers /
-  // server components via Firebase Admin verifySessionCookie.
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   if (session) {
     return NextResponse.next();
@@ -42,7 +52,21 @@ export default function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    "/(api|trpc)(.*)",
+    "/dashboard/:path*",
+    "/api/stripe/portal",
+    "/api/stripe/checkout",
+    "/api/stripe/session-status",
+    "/api/courses/complete",
+    "/api/courses/progress",
+    "/api/courses/challenges/:path*",
+    "/api/passport",
+    "/api/passport/:path*",
+    "/api/drills",
+    "/api/drills/:path*",
+    "/api/skills",
+    "/api/roles",
+    "/api/org",
+    "/api/auth/me",
+    "/api/refreshers",
   ],
 };

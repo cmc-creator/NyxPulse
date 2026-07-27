@@ -2,12 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/components/AuthProvider";
 import { courses } from "@/lib/courses";
 import { Calendar, Loader2, CheckCircle } from "lucide-react";
 
 export default function SkillsSessionBooking() {
-  const { user } = useUser();
+  const { displayName, email: authEmail } = useAuth();
   const searchParams = useSearchParams();
   const presetCourse = searchParams.get("course") ?? "";
   const arcCourses = useMemo(
@@ -28,19 +28,9 @@ export default function SkillsSessionBooking() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
-    if (!name) {
-      const full = [user.firstName, user.lastName].filter(Boolean).join(" ");
-      if (full) setName(full);
-    }
-    if (!email) {
-      const primary =
-        user.primaryEmailAddress?.emailAddress ??
-        user.emailAddresses[0]?.emailAddress ??
-        "";
-      if (primary) setEmail(primary);
-    }
-  }, [user, name, email]);
+    if (!name && displayName) setName(displayName);
+    if (!email && authEmail) setEmail(authEmail);
+  }, [displayName, authEmail, name, email]);
 
   const selected = arcCourses.find((course) => course.slug === courseSlug);
 

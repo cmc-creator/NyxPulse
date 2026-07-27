@@ -1,12 +1,11 @@
-import { clerkClient } from "@clerk/nextjs/server";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import {
   listChallengeResults,
   listLearnerCertificates,
 } from "@/lib/firebase/learner-data";
+import { listLearnerProfiles } from "@/lib/auth/profile";
 import { sendRefresherChallengeEmail } from "@/lib/email-automation";
 import { buildRefresherQueue } from "@/lib/refreshers";
-import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 /**
  * Cron/manual endpoint to email learners with due/overdue refresher challenges.
@@ -26,6 +25,10 @@ export async function POST(req: Request) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  if (!isFirebaseAdminConfigured()) {
+    return Response.json({ error: "Firebase Admin is not configured" }, { status: 503 });
+  }
+
   let limit = 40;
   try {
     const body = await req.json().catch(() => ({}));
@@ -37,21 +40,15 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const users = await clerk.users.getUserList({ limit });
+    const profiles = await listLearnerProfiles(limit);
     const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
     let sent = 0;
     let skipped = 0;
     const errors: string[] = [];
 
-    for (const user of users.data) {
-      const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-      const certificates = isFirebaseAdminConfigured()
-        ? await listLearnerCertificates(user.id)
-        : (privateMetadata.certificates ?? {});
-      const challengeResults = isFirebaseAdminConfigured()
-        ? await listChallengeResults(user.id)
-        : (privateMetadata.challengeResults ?? {});
+    for (const profile of profiles) {
+      const certificates = await listLearnerCertificates(profile.userId);
+      const challengeResults = await listChallengeResults(profile.userId);
 
       const actionable = buildRefresherQueue({ certificates, challengeResults }).filter(
         (item) => item.status === "due-soon" || item.status === "overdue"
@@ -62,15 +59,13 @@ export async function POST(req: Request) {
         continue;
       }
 
-      const email = user.emailAddresses.find(
-        (e) => e.id === user.primaryEmailAddressId
-      )?.emailAddress;
+      const email = profile.email;
       if (!email) {
         skipped += 1;
         continue;
       }
 
-      const learnerName = user.firstName ?? user.username ?? "NyxPulse Learner";
+      const learnerName = profile.firstName || profile.displayName || "NyxPulse Learner";
       for (const item of actionable) {
         const result = await sendRefresherChallengeEmail(email, learnerName, {
           courseTitle: item.title,
@@ -83,7 +78,7 @@ export async function POST(req: Request) {
       }
     }
 
-    return Response.json({ success: true, scanned: users.data.length, sent, skipped, errors });
+    return Response.json({ success: true, scanned: profiles.length, sent, skipped, errors });
   } catch (err) {
     console.error("Refresher notify failed:", err);
     return Response.json({ error: "Server error" }, { status: 500 });
