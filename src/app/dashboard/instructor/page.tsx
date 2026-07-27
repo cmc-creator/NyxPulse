@@ -122,7 +122,7 @@ export default function InstructorPortalPage() {
               ? "You are recognized as an instructor on this account."
               : data.pinConfigured
                 ? "Enter the facility instructor PIN to authorize a sign-off, or use an approved instructor account."
-                : "Production setup needed: set NYXPULSE_INSTRUCTOR_EMAILS and/or NYXPULSE_INSTRUCTOR_PIN in Vercel, or set Clerk publicMetadata.instructor=true on Jeremy’s account."}
+                : "Production setup needed: set NYXPULSE_INSTRUCTOR_EMAILS and/or NYXPULSE_INSTRUCTOR_PIN in Vercel, or mark the learner profile with instructor=true in Firestore."}
           </p>
           <p className="text-xs text-slate-500">
             Check <code className="text-slate-400">/api/health</code> → <code className="text-slate-400">instructorReady</code> after deploying env vars.

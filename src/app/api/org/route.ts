@@ -1,15 +1,19 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
+import {
+  findUserIdByEmail,
+  updateUserProfile,
+  type UserProfile,
+} from "@/lib/auth/profile";
 import { courses } from "@/lib/courses";
 import { enrollUserInCourses } from "@/lib/enrollment";
 import { sendTeamInvitationEmail } from "@/lib/email-automation";
 import { saveOrgInvite } from "@/lib/org/store";
 import type { OrgMember } from "@/lib/org/types";
 import { getRoleMatrix } from "@/lib/roles/matrices";
-import { asStringArray, type PublicUserMetadata } from "@/lib/user-metadata";
 
-function requireTeamAdmin(publicMetadata: PublicUserMetadata) {
-  const plan = publicMetadata.plan ?? "individual";
-  const orgRole = publicMetadata.orgRole ?? "admin";
+function requireTeamAdmin(profile: UserProfile) {
+  const plan = profile.plan ?? "individual";
+  const orgRole = profile.orgRole ?? "admin";
   if (plan === "individual") {
     return { error: "Team or Organization plan required", status: 403 as const };
   }
@@ -20,18 +24,16 @@ function requireTeamAdmin(publicMetadata: PublicUserMetadata) {
 }
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
+    const { profile } = session;
     return Response.json({
-      plan: publicMetadata.plan ?? "individual",
-      orgName: publicMetadata.orgName ?? "Your Organization",
-      orgRole: publicMetadata.orgRole ?? "admin",
-      members: publicMetadata.orgMembers ?? [],
+      plan: profile.plan ?? "individual",
+      orgName: profile.orgName ?? "Your Organization",
+      orgRole: profile.orgRole ?? "admin",
+      members: profile.orgMembers ?? [],
       catalog: courses.map((c) => ({
         slug: c.slug,
         shortTitle: c.shortTitle,
@@ -47,8 +49,8 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   let action: string;
   let email: string | undefined;
@@ -74,18 +76,13 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    const gate = requireTeamAdmin(publicMetadata);
+    const { userId, profile, displayName } = session;
+    const gate = requireTeamAdmin(profile);
     if (gate) return Response.json({ error: gate.error }, { status: gate.status });
 
-    const orgName = publicMetadata.orgName ?? "Your Organization";
-    const members: OrgMember[] = [...(publicMetadata.orgMembers ?? [])];
-    const adminName =
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-      user.username ||
-      "Team admin";
+    const orgName = profile.orgName ?? "Your Organization";
+    const members: OrgMember[] = [...(profile.orgMembers ?? [])];
+    const adminName = displayName || "Team admin";
 
     if (action === "invite") {
       if (!email || !name) {
@@ -133,25 +130,18 @@ export async function POST(req: Request) {
         status: "invited",
       });
 
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: {
-          ...publicMetadata,
-          orgMembers: members,
-          orgRole: publicMetadata.orgRole ?? "admin",
-          orgName,
-        },
+      await updateUserProfile(userId, {
+        orgMembers: members,
+        orgRole: profile.orgRole ?? "admin",
+        orgName,
       });
 
-      // If they already have a NyxPulse account, enroll immediately.
-      const existing = await clerk.users.getUserList({ emailAddress: [email], limit: 1 });
-      const existingUser = existing.data[0];
-      if (existingUser && assigned.length > 0) {
-        await enrollUserInCourses({ userId: existingUser.id, courseSlugs: assigned });
+      const existingUserId = await findUserIdByEmail(email);
+      if (existingUserId && assigned.length > 0) {
+        await enrollUserInCourses({ userId: existingUserId, courseSlugs: assigned });
         const idx = members.findIndex((m) => m.email === email);
         if (idx >= 0) members[idx] = { ...members[idx], status: "active" };
-        await clerk.users.updateUserMetadata(userId, {
-          publicMetadata: { ...publicMetadata, orgMembers: members, orgName },
-        });
+        await updateUserProfile(userId, { orgMembers: members, orgName });
       }
 
       const emailResult = await sendTeamInvitationEmail(
@@ -191,18 +181,12 @@ export async function POST(req: Request) {
       const nextCourses = Array.from(new Set([...members[idx].courses, ...courseSlugs]));
       members[idx] = { ...members[idx], courses: nextCourses };
 
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: { ...publicMetadata, orgMembers: members },
-      });
+      await updateUserProfile(userId, { orgMembers: members });
 
-      const existing = await clerk.users.getUserList({
-        emailAddress: [memberEmail],
-        limit: 1,
-      });
-      const existingUser = existing.data[0];
-      if (existingUser) {
+      const existingUserId = await findUserIdByEmail(memberEmail);
+      if (existingUserId) {
         await enrollUserInCourses({
-          userId: existingUser.id,
+          userId: existingUserId,
           courseSlugs,
         });
       }
@@ -229,43 +213,28 @@ export async function POST(req: Request) {
         courses: nextCourses,
       };
 
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: { ...publicMetadata, orgMembers: members },
-      });
+      await updateUserProfile(userId, { orgMembers: members });
 
-      const existing = await clerk.users.getUserList({
-        emailAddress: [memberEmail],
-        limit: 1,
-      });
-      if (existing.data[0]) {
+      const existingUserId = await findUserIdByEmail(memberEmail);
+      if (existingUserId) {
         await enrollUserInCourses({
-          userId: existing.data[0].id,
+          userId: existingUserId,
           courseSlugs: role.requiredCourseSlugs,
         });
-        await clerk.users.updateUserMetadata(existing.data[0].id, {
-          publicMetadata: {
-            ...(existing.data[0].publicMetadata as PublicUserMetadata),
-            workforceRoleId,
-          },
-        });
+        await updateUserProfile(existingUserId, { workforceRoleId });
       }
 
       return Response.json({ success: true, members, role });
     }
 
     if (action === "bootstrap-org") {
-      // Allow converting an individual account into a team admin sandbox for demos/sales.
       const desiredName =
         typeof name === "string" && name.length > 0 ? name : `${adminName}'s Team`;
-      await clerk.users.updateUserMetadata(userId, {
-        publicMetadata: {
-          ...publicMetadata,
-          plan: publicMetadata.plan === "org" ? "org" : "team",
-          orgRole: "admin",
-          orgName: desiredName,
-          orgMembers: publicMetadata.orgMembers ?? [],
-          courses: asStringArray(publicMetadata.courses),
-        },
+      await updateUserProfile(userId, {
+        plan: profile.plan === "org" ? "org" : "team",
+        orgRole: "admin",
+        orgName: desiredName,
+        orgMembers: profile.orgMembers ?? [],
       });
       return Response.json({ success: true, plan: "team", orgName: desiredName });
     }
