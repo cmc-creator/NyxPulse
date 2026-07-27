@@ -1,7 +1,8 @@
 import { getCourseBySlug } from "@/lib/courses";
 import { sendEnrollmentConfirmationEmail } from "@/lib/email-automation";
 import { getUserProfile, updateUserProfile } from "@/lib/auth/profile";
-import { getAdminAuth, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminAuth } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
 export function parseCourseSlugsFromMetadata(
   metadata: Record<string, string> | null | undefined
@@ -48,7 +49,7 @@ export async function enrollUserInCourses(options: {
   });
 
   if (sendEmail && newlyEnrolled.length > 0) {
-    const authUser = await getAdminAuth().getUser(userId);
+    const authUser = await (await getAdminAuth()).getUser(userId);
     const email = authUser.email ?? profile?.email;
     if (email) {
       const firstName =

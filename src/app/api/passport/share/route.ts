@@ -1,5 +1,5 @@
 import { getSessionUser } from "@/lib/auth/server";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { createPassportShare } from "@/lib/firebase/learner-data";
 
 export async function POST() {

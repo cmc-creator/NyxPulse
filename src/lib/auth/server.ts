@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
-import { getAdminAuth, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminAuth } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 import {
   ensureUserProfile,
@@ -23,7 +24,8 @@ export async function getSessionUserId(): Promise<string | null> {
   const session = jar.get(SESSION_COOKIE_NAME)?.value;
   if (!session) return null;
   try {
-    const decoded = await getAdminAuth().verifySessionCookie(session, true);
+    const auth = await getAdminAuth();
+    const decoded = await auth.verifySessionCookie(session, true);
     return decoded.uid;
   } catch {
     return null;
@@ -37,8 +39,9 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   if (!session) return null;
 
   try {
-    const decoded = await getAdminAuth().verifySessionCookie(session, true);
-    const authUser = await getAdminAuth().getUser(decoded.uid);
+    const auth = await getAdminAuth();
+    const decoded = await auth.verifySessionCookie(session, true);
+    const authUser = await auth.getUser(decoded.uid);
     const email = authUser.email ?? "";
     const displayName =
       authUser.displayName ||

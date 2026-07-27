@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
-import { isFirebaseClientConfigured } from "@/lib/firebase/client";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
+import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
 
 /**
  * Non-secret env presence check for debugging Vercel setup.
- * Does not return key values.
+ * Does not return key values. Avoids importing firebase-admin.
  */
 export async function GET() {
   try {

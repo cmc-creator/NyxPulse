@@ -1,7 +1,8 @@
 import type { CourseProgressMap } from "@/lib/course-progress";
 import type { IssuedCertificate } from "@/lib/certificates";
 import type { CourseChallengeResults } from "@/lib/challenges/types";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
 export type OrgMember = {
   email: string;
@@ -36,8 +37,8 @@ export type UserProfile = {
   updatedAt: string;
 };
 
-function profileRef(userId: string) {
-  return getAdminDb().collection("learners").doc(userId);
+async function profileRef(userId: string) {
+  return (await getAdminDb()).collection("learners").doc(userId);
 }
 
 export function emptyProfile(userId: string, email = "", displayName = "NyxPulse Learner"): UserProfile {
@@ -56,7 +57,7 @@ export function emptyProfile(userId: string, email = "", displayName = "NyxPulse
 
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await profileRef(userId).get();
+  const snap = await (await profileRef(userId)).get();
   if (!snap.exists) return null;
   const data = snap.data() as Partial<UserProfile>;
   return {
@@ -92,7 +93,7 @@ export async function ensureUserProfile(input: {
       lastName: input.lastName || existing.lastName,
       updatedAt: now,
     };
-    await profileRef(input.userId).set(next, { merge: true });
+    await (await profileRef(input.userId)).set(next, { merge: true });
     return next;
   }
 
@@ -103,7 +104,7 @@ export async function ensureUserProfile(input: {
   );
   created.firstName = input.firstName ?? undefined;
   created.lastName = input.lastName ?? undefined;
-  await profileRef(input.userId).set(created, { merge: true });
+  await (await profileRef(input.userId)).set(created, { merge: true });
   return created;
 }
 
@@ -118,14 +119,14 @@ export async function updateUserProfile(
     userId,
     updatedAt: new Date().toISOString(),
   };
-  await profileRef(userId).set(next, { merge: true });
+  await (await profileRef(userId)).set(next, { merge: true });
   return next;
 }
 
 export async function findUserIdByEmail(email: string): Promise<string | null> {
   if (!isFirebaseAdminConfigured()) return null;
   const normalized = email.trim().toLowerCase();
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("learners")
     .where("email", "==", normalized)
     .limit(1)
@@ -136,7 +137,7 @@ export async function findUserIdByEmail(email: string): Promise<string | null> {
 
 export async function listLearnerProfiles(limit = 40): Promise<UserProfile[]> {
   if (!isFirebaseAdminConfigured()) return [];
-  const snap = await getAdminDb().collection("learners").limit(limit).get();
+  const snap = await (await getAdminDb()).collection("learners").limit(limit).get();
   return snap.docs.map((doc) => {
     const data = doc.data() as Partial<UserProfile>;
     return {

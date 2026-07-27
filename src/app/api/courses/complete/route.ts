@@ -5,7 +5,7 @@ import { createCertificateId } from "@/lib/certificates";
 import { hasPassedAllChallenges } from "@/lib/challenges/scoring";
 import { isCourseProgressComplete } from "@/lib/course-progress";
 import { sendCourseCompletionEmail } from "@/lib/email-automation";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import {
   getChallengeResults,
   getLearnerCertificate,
