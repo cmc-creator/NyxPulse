@@ -28,7 +28,7 @@ function isProtectedPath(pathname: string) {
  * Cookie presence gate only — full verification happens in Node route handlers /
  * server components via Firebase Admin verifySessionCookie.
  *
- * Do not import firebase-admin or @clerk here (Edge middleware).
+ * Do not import firebase-admin here (Edge middleware / proxy).
  */
 export default function proxy(request: NextRequest) {
   if (!isProtectedPath(request.nextUrl.pathname)) {
