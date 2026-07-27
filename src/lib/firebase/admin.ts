@@ -1,4 +1,5 @@
 import { cert, getApps, initializeApp, type App, type ServiceAccount } from "firebase-admin/app";
+import { getAuth, type Auth } from "firebase-admin/auth";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 
 function parseServiceAccountFromJsonEnv(): ServiceAccount | null {
@@ -47,7 +48,7 @@ export function isFirebaseAdminConfigured(): boolean {
   return getServiceAccount() !== null;
 }
 
-function getAdminApp(): App {
+export function getAdminApp(): App {
   const existing = getApps()[0];
   if (existing) return existing;
 
@@ -65,4 +66,8 @@ function getAdminApp(): App {
 
 export function getAdminDb(): Firestore {
   return getFirestore(getAdminApp());
+}
+
+export function getAdminAuth(): Auth {
+  return getAuth(getAdminApp());
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
-import { isFirebaseClientConfigured } from "@/lib/firebase/client-auth";
+import { isFirebaseClientConfigured } from "@/lib/firebase/client";
 
 /**
  * Non-secret env presence check for debugging Vercel setup.
