@@ -1,31 +1,29 @@
-import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Award, ArrowRight } from "lucide-react";
+import { getSessionUser } from "@/lib/auth/server";
 import { courses } from "@/lib/courses";
 import CertificateCard from "@/components/CertificateCard";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { listLearnerCertificates } from "@/lib/firebase/learner-data";
-import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 export default async function CertificatesPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
+  const session = await getSessionUser();
+  if (!session) redirect("/sign-in");
 
-  const enrolledSlugs = (user.publicMetadata?.courses as string[]) ?? [];
-  const completedSlugs = (user.publicMetadata?.completedCourses as string[]) ?? [];
-  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
+  const { userId, profile, displayName } = session;
+  const enrolledSlugs = profile.courses;
+  const completedSlugs = profile.completedCourses;
   const certificates = isFirebaseAdminConfigured()
-    ? await listLearnerCertificates(user.id)
-    : (privateMetadata.certificates ?? {});
+    ? await listLearnerCertificates(userId)
+    : (profile.certificates ?? {});
 
   const completedCourses = courses.filter((c) => completedSlugs.includes(c.slug));
   const inProgressCourses = courses.filter(
     (c) => enrolledSlugs.includes(c.slug) && !completedSlugs.includes(c.slug)
   );
 
-  const fullName =
-    [user.firstName, user.lastName].filter(Boolean).join(" ") || "Learner";
+  const fullName = displayName || "Learner";
 
   return (
     <div className="space-y-10">

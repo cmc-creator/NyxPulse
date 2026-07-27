@@ -1,27 +1,24 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import {
   listChallengeResults,
   listLearnerCertificates,
 } from "@/lib/firebase/learner-data";
 import { buildRefresherQueue } from "@/lib/refreshers";
-import type { PrivateUserMetadata } from "@/lib/user-metadata";
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { userId, profile } = session;
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-
     const certificates = isFirebaseAdminConfigured()
       ? await listLearnerCertificates(userId)
-      : (privateMetadata.certificates ?? {});
+      : (profile.certificates ?? {});
     const challengeResults = isFirebaseAdminConfigured()
       ? await listChallengeResults(userId)
-      : (privateMetadata.challengeResults ?? {});
+      : (profile.challengeResults ?? {});
 
     const items = buildRefresherQueue({ certificates, challengeResults });
     const actionable = items.filter(

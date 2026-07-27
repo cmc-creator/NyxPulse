@@ -1,31 +1,19 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { CreditCard, Receipt, Package, ArrowRight } from "lucide-react";
 import ManageBillingButton from "@/components/ManageBillingButton";
 import { courses } from "@/lib/courses";
 
-interface PublicMetadata {
-  courses?: string[];
-  completedCourses?: string[];
-  plan?: string;
-}
-
-interface PrivateMetadata {
-  stripeCustomerId?: string;
-}
-
 export default async function BillingPage() {
-  const user = await currentUser();
-  if (!user) redirect("/sign-in");
+  const session = await getSessionUser();
+  if (!session) redirect("/sign-in");
 
-  const pub = (user.publicMetadata ?? {}) as PublicMetadata;
-  const priv = (user.privateMetadata ?? {}) as PrivateMetadata;
-
-  const enrolledSlugs: string[] = pub.courses ?? [];
-  const completedSlugs: string[] = pub.completedCourses ?? [];
-  const plan = pub.plan ?? "individual";
-  const hasStripeCustomer = Boolean(priv.stripeCustomerId);
+  const { profile } = session;
+  const enrolledSlugs: string[] = profile.courses ?? [];
+  const completedSlugs: string[] = profile.completedCourses ?? [];
+  const plan = profile.plan ?? "individual";
+  const hasStripeCustomer = Boolean(profile.stripeCustomerId);
 
   const enrolledCourses = courses.filter((c) => enrolledSlugs.includes(c.slug));
   const totalSpent = enrolledCourses.reduce((sum, c) => sum + (c.price ?? 0), 0);

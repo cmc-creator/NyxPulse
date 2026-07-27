@@ -1,4 +1,4 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { buildPassportRows, readinessScore } from "@/lib/passport";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import {
@@ -7,34 +7,26 @@ import {
 } from "@/lib/firebase/learner-data";
 import { buildRefresherQueue } from "@/lib/refreshers";
 import { listSkillSignoffsForLearner } from "@/lib/skills/store";
-import {
-  asStringArray,
-  type PrivateUserMetadata,
-  type PublicUserMetadata,
-} from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { userId, firstName, lastName, displayName, profile } = session;
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-    const enrolledSlugs = asStringArray(publicMetadata.courses);
-    const completedSlugs = asStringArray(publicMetadata.completedCourses);
+    const enrolledSlugs = asStringArray(profile.courses);
+    const completedSlugs = asStringArray(profile.completedCourses);
     const recipientName =
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-      user.username ||
-      "NyxPulse Learner";
+      [firstName, lastName].filter(Boolean).join(" ") || displayName || "NyxPulse Learner";
 
     const certificates = isFirebaseAdminConfigured()
       ? await listLearnerCertificates(userId)
-      : (privateMetadata.certificates ?? {});
+      : (profile.certificates ?? {});
     const challengeResults = isFirebaseAdminConfigured()
       ? await listChallengeResults(userId)
-      : (privateMetadata.challengeResults ?? {});
+      : (profile.challengeResults ?? {});
     const skillSignoffs = await listSkillSignoffsForLearner(userId);
 
     const rows = buildPassportRows({

@@ -5,8 +5,8 @@ Emergency and safety training platform for healthcare teams — CPR/AED, BLS, de
 ## Stack
 
 - Next.js 16 (App Router) + React 19
-- Clerk authentication
-- Firebase Firestore (progress, certificates, contact leads) via Admin SDK
+- **Firebase Authentication** (email/password + session cookies)
+- Firebase Firestore (profiles, progress, certificates, leads) via Admin SDK
 - Stripe Checkout (one-time course purchases)
 - Nodemailer SMTP for transactional email
 - Tailwind CSS 4
@@ -19,8 +19,9 @@ Emergency and safety training platform for healthcare teams — CPR/AED, BLS, de
 cp .env.example .env.local
 ```
 
-2. Fill in Clerk, Stripe, SMTP, and Firebase Admin values.
-3. Install and run:
+2. Fill in Firebase (client + Admin), Stripe, and SMTP values.
+3. In Firebase Console → Authentication → Sign-in method, enable **Email/Password**.
+4. Install and run:
 
 ```bash
 npm install
@@ -29,16 +30,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Vercel environment variables (required after creating/recreating the project)
+## Vercel environment variables
 
-Deleting a Vercel project wipes env vars. Re-add these before the site will fully work:
-
-**Required for the site to authenticate (without these, pages used to 500):**
-- `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`
-- `CLERK_SECRET_KEY`
+**Required for auth + learner data:**
+- `NEXT_PUBLIC_FIREBASE_API_KEY`
+- `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN`
+- `NEXT_PUBLIC_FIREBASE_PROJECT_ID`
+- `NEXT_PUBLIC_FIREBASE_APP_ID`
+- `FIREBASE_SERVICE_ACCOUNT_JSON` (or the three `FIREBASE_*` Admin vars)
 
 **Strongly recommended:**
-- `NEXT_PUBLIC_URL` = your production URL (e.g. `https://nyx-pulse.vercel.app` or custom domain)
+- `NEXT_PUBLIC_URL` = `https://www.nyxpulse.com`
 - `STRIPE_SECRET_KEY`
 - `STRIPE_WEBHOOK_SECRET`
 - `FIREBASE_SERVICE_ACCOUNT_JSON` (or the three `FIREBASE_*` vars)
@@ -61,34 +63,26 @@ After setting vars, redeploy. Check `GET /api/health` — it returns `launchRead
 5. Instructor emails/PIN set → `/dashboard/instructor` sign-offs work
 6. Smoke: enroll → pass gates → claim cert → passport share → book skills session → team invite
 
+### Auth notes
+
+- Sign-in/up uses Firebase Auth in the browser, then `POST /api/auth/session` creates an httpOnly session cookie verified by Firebase Admin.
+- Enrollment, plan, org roster, and Stripe customer id live on the Firestore `learners/{uid}` profile document (not Clerk).
+
 ## Important product flows
 
-- **Purchase:** signed-in user → Stripe Checkout → webhook/session reconcile → Clerk `publicMetadata.courses`
-- **Billing portal:** requires `privateMetadata.stripeCustomerId` (created at checkout)
-- **Progress / certificates / leads:** stored in Firestore when Firebase Admin env vars are set; otherwise falls back to Clerk metadata / local `.data` file
-- **Certificate verify:** `/verify/[certId]` (requires Firestore)
-- **Certificates claim:** `/api/courses/complete` only succeeds when all topics are complete
-
-## Firebase setup
-
-1. In Firebase Console for project `nyxpulse`, create a **Firestore** database (production mode).
-2. Deploy or paste the locked-down rules from `firestore.rules` (deny all client access; server uses Admin SDK).
-3. Project settings → Service accounts → **Generate new private key**.
-4. Put credentials in `.env.local` / Vercel using either:
-   - `FIREBASE_SERVICE_ACCOUNT_JSON` = the full service-account JSON as one line, **or**
-   - `FIREBASE_PROJECT_ID` + `FIREBASE_CLIENT_EMAIL` + `FIREBASE_PRIVATE_KEY` (`\n` escaped)
-5. Optional: copy the web app config into the `NEXT_PUBLIC_FIREBASE_*` vars for Analytics later.
-6. Never commit the service-account JSON file to git.
+- **Purchase:** signed-in user → Stripe Checkout → webhook → enroll into Firestore profile `courses`
+- **Billing portal:** requires `stripeCustomerId` on the learner profile
+- **Progress / certificates / leads:** Firestore via Admin SDK
+- **Certificate verify:** `/verify/[certId]`
+- **Certificates claim:** `/api/courses/complete` when topics + Advantage Gates are complete
 
 ## Stripe webhook
 
-Point Stripe to:
-
 ```text
-POST /api/stripe/webhook
+POST https://www.nyxpulse.com/api/stripe/webhook
 ```
 
-Events needed: `checkout.session.completed`.
+Event: `checkout.session.completed`.
 
 ## Scripts
 

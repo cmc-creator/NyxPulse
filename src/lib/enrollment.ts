@@ -1,7 +1,7 @@
-import { clerkClient } from "@clerk/nextjs/server";
 import { getCourseBySlug } from "@/lib/courses";
 import { sendEnrollmentConfirmationEmail } from "@/lib/email-automation";
-import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
+import { getUserProfile, updateUserProfile } from "@/lib/auth/profile";
+import { getAdminAuth, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 
 export function parseCourseSlugsFromMetadata(
   metadata: Record<string, string> | null | undefined
@@ -33,42 +33,37 @@ export async function enrollUserInCourses(options: {
   if (!userId || courseSlugs.length === 0) {
     throw new Error("userId and courseSlugs are required for enrollment");
   }
+  if (!isFirebaseAdminConfigured()) {
+    throw new Error("Firebase Admin is required for enrollment");
+  }
 
-  const clerk = await clerkClient();
-  const user = await clerk.users.getUser(userId);
-  const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-  const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-  const existingCourses = asStringArray(publicMetadata.courses);
+  const profile = await getUserProfile(userId);
+  const existingCourses = profile?.courses ?? [];
   const nextCourses = Array.from(new Set([...existingCourses, ...courseSlugs]));
   const newlyEnrolled = courseSlugs.filter((slug) => !existingCourses.includes(slug));
 
-  await clerk.users.updateUserMetadata(userId, {
-    publicMetadata: {
-      ...publicMetadata,
-      courses: nextCourses,
-    },
-    privateMetadata: {
-      ...privateMetadata,
-      ...(stripeCustomerId ? { stripeCustomerId } : {}),
-    },
+  await updateUserProfile(userId, {
+    courses: nextCourses,
+    ...(stripeCustomerId ? { stripeCustomerId } : {}),
   });
 
   if (sendEmail && newlyEnrolled.length > 0) {
-    const primaryEmail = user.emailAddresses.find(
-      (email) => email.id === user.primaryEmailAddressId
-    )?.emailAddress;
-
-    if (primaryEmail) {
-      const firstName = user.firstName ?? user.username ?? "NyxPulse Learner";
+    const authUser = await getAdminAuth().getUser(userId);
+    const email = authUser.email ?? profile?.email;
+    if (email) {
+      const firstName =
+        profile?.firstName ||
+        authUser.displayName?.split(" ")[0] ||
+        email.split("@")[0] ||
+        "NyxPulse Learner";
       const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
       const titles = newlyEnrolled.map((slug) => getCourseBySlug(slug)?.title ?? slug);
       const emailResult = await sendEnrollmentConfirmationEmail(
-        primaryEmail,
+        email,
         firstName,
         titles,
         `${appUrl}/dashboard`
       );
-
       if (!emailResult.success) {
         console.error("Failed to send enrollment confirmation email:", emailResult.error);
       }

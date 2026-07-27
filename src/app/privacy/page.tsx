@@ -79,7 +79,7 @@ export default function PrivacyPage() {
                   We do not sell your personal information. We may share information with:
                 </p>
                 <ul className="space-y-2 list-disc list-inside mt-3">
-                  <li><strong>Service providers</strong> (Stripe for payments, Clerk for auth, Vercel for hosting)</li>
+                  <li><strong>Service providers</strong> (Stripe for payments, Firebase for auth/data, Vercel for hosting)</li>
                   <li><strong>Legal requirements</strong> (law enforcement, court orders)</li>
                   <li><strong>Team administrators</strong> (if you join an organization, limited to relevant data)</li>
                 </ul>

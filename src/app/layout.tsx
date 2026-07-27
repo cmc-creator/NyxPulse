@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
+import { AuthProvider } from "@/components/AuthProvider";
 import { generateOrganizationSchema, generateSoftwareApplicationSchema } from "@/lib/seo-schema";
 import "./globals.css";
 
@@ -33,37 +33,11 @@ export const metadata: Metadata = {
   },
 };
 
-const clerkPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const content = clerkPublishableKey ? (
-    <ClerkProvider
-      publishableKey={clerkPublishableKey}
-      afterSignOutUrl="/"
-      signInUrl="/sign-in"
-      signUpUrl="/sign-up"
-      appearance={{
-        variables: {
-          colorPrimary: "#7c3aed",
-          colorBackground: "#04040a",
-          colorText: "#f1f5f9",
-          colorTextSecondary: "#94a3b8",
-          colorInputBackground: "rgba(255,255,255,0.04)",
-          colorInputText: "#f1f5f9",
-          borderRadius: "12px",
-        },
-      }}
-    >
-      {children}
-    </ClerkProvider>
-  ) : (
-    children
-  );
-
   return (
     <html lang="en">
       <head>
@@ -80,7 +54,9 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">{content}</body>
+      <body className="antialiased">
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

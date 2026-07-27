@@ -1,7 +1,9 @@
 import type { CourseProgressMap } from "@/lib/course-progress";
 import type { IssuedCertificate } from "@/lib/certificates";
 import type { CourseChallengeResults } from "@/lib/challenges/types";
+import type { OrgMember } from "@/lib/auth/profile";
 
+/** @deprecated Use UserProfile from @/lib/auth/profile — kept for transitional imports. */
 export interface PublicUserMetadata {
   courses?: string[];
   completedCourses?: string[];
@@ -23,12 +25,11 @@ export interface PublicUserMetadata {
   }[];
 }
 
+/** @deprecated Use UserProfile from @/lib/auth/profile */
 export interface PrivateUserMetadata {
   stripeCustomerId?: string;
   courseProgress?: CourseProgressMap;
-  /** NyxPulse-issued certificates keyed by course slug */
   certificates?: Record<string, IssuedCertificate>;
-  /** Mastery/scenario gate results keyed by course slug */
   challengeResults?: Record<string, CourseChallengeResults>;
 }
 

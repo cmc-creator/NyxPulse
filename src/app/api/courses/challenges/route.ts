@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser, getSessionUserId } from "@/lib/auth/server";
+import { updateUserProfile } from "@/lib/auth/profile";
 import { getChallenge } from "@/lib/challenges/catalog";
 import {
   mergeChallengeResult,
@@ -11,14 +12,10 @@ import {
   getChallengeResults,
   saveChallengeResults,
 } from "@/lib/firebase/learner-data";
-import {
-  asStringArray,
-  type PrivateUserMetadata,
-  type PublicUserMetadata,
-} from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function GET(req: Request) {
-  const { userId } = await auth();
+  const userId = await getSessionUserId();
   if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   const courseSlug = new URL(req.url).searchParams.get("courseSlug");
@@ -32,11 +29,9 @@ export async function GET(req: Request) {
       return Response.json({ results: results ?? null });
     }
 
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
+    const session = await getSessionUser();
     return Response.json({
-      results: privateMetadata.challengeResults?.[courseSlug] ?? null,
+      results: session?.profile.challengeResults?.[courseSlug] ?? null,
     });
   } catch (err) {
     console.error("Failed to load challenge results:", err);
@@ -45,8 +40,10 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+  const { userId, profile } = session;
 
   let courseSlug: string;
   let challengeId: string;
@@ -73,11 +70,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-    const enrolled = asStringArray(publicMetadata.courses);
+    const enrolled = asStringArray(profile.courses);
 
     if (!enrolled.includes(courseSlug)) {
       return Response.json({ error: "Not enrolled in this course" }, { status: 403 });
@@ -91,7 +84,7 @@ export async function POST(req: Request) {
     const useFirebase = isFirebaseAdminConfigured();
     const existing = useFirebase
       ? await getChallengeResults(userId, courseSlug)
-      : (privateMetadata.challengeResults?.[courseSlug] ?? null);
+      : (profile.challengeResults?.[courseSlug] ?? null);
 
     const merged = mergeChallengeResult(existing, courseSlug, {
       challengeId,
@@ -104,15 +97,10 @@ export async function POST(req: Request) {
       await saveChallengeResults(userId, merged);
     } else {
       const nextMap: Record<string, CourseChallengeResults> = {
-        ...(privateMetadata.challengeResults ?? {}),
+        ...(profile.challengeResults ?? {}),
         [courseSlug]: merged,
       };
-      await clerk.users.updateUserMetadata(userId, {
-        privateMetadata: {
-          ...privateMetadata,
-          challengeResults: nextMap,
-        },
-      });
+      await updateUserProfile(userId, { challengeResults: nextMap });
     }
 
     return Response.json({

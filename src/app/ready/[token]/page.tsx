@@ -4,6 +4,7 @@ import { Fingerprint, ShieldCheck, ArrowLeft } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
+import { getUserProfile } from "@/lib/auth/profile";
 import { buildPassportRows, readinessScore } from "@/lib/passport";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import {
@@ -11,8 +12,7 @@ import {
   listChallengeResults,
   listLearnerCertificates,
 } from "@/lib/firebase/learner-data";
-import { clerkClient } from "@clerk/nextjs/server";
-import { asStringArray, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 interface Props {
   params: Promise<{ token: string }>;
@@ -36,18 +36,17 @@ export default async function PublicPassportPage({ params }: Props) {
   let recipientName = share?.recipientName ?? "Learner";
 
   if (share) {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(share.userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
+    const profile = await getUserProfile(share.userId);
     recipientName =
       share.recipientName ||
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
+      [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
+      profile?.displayName ||
       "NyxPulse Learner";
     const certificates = await listLearnerCertificates(share.userId);
     const challengeResults = await listChallengeResults(share.userId);
     rows = buildPassportRows({
-      enrolledSlugs: asStringArray(publicMetadata.courses),
-      completedSlugs: asStringArray(publicMetadata.completedCourses),
+      enrolledSlugs: asStringArray(profile?.courses),
+      completedSlugs: asStringArray(profile?.completedCourses),
       certificates,
       challengeResults,
     });
