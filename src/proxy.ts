@@ -1,35 +1,28 @@
-import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { isClerkServerConfigured } from "@/lib/clerk-config";
+import { NextRequest, NextResponse } from "next/server";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 
-const isClerkConfigured = isClerkServerConfigured();
+const protectedPrefixes = [
+  "/dashboard",
+  "/api/stripe/portal",
+  "/api/stripe/checkout",
+  "/api/stripe/session-status",
+  "/api/courses/complete",
+  "/api/courses/progress",
+  "/api/courses/challenges",
+  "/api/passport",
+  "/api/drills",
+  "/api/skills",
+  "/api/roles",
+  "/api/org",
+];
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/stripe/portal(.*)",
-  "/api/stripe/checkout(.*)",
-  "/api/stripe/session-status(.*)",
-  "/api/courses/complete(.*)",
-  "/api/courses/progress(.*)",
-  "/api/courses/challenges(.*)",
-  "/api/passport(.*)",
-  "/api/drills(.*)",
-  "/api/skills(.*)",
-  "/api/roles(.*)",
-  "/api/org(.*)",
-]);
+const isProtectedPath = (pathname: string) => protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
 
 export default function proxy(request: NextRequest) {
-  if (!isProtectedPath(request.nextUrl.pathname)) {
-    return NextResponse.next();
-  }
+  if (!isProtectedPath(request.nextUrl.pathname)) return NextResponse.next();
 
-  // Cookie presence gate only — full verification happens in Node route handlers /
-  // server components via Firebase Admin verifySessionCookie.
-  const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  if (session) {
-    return NextResponse.next();
-  }
+  // Route handlers and server components verify this Firebase session cookie with Admin SDK.
+  if (request.cookies.get(SESSION_COOKIE_NAME)?.value) return NextResponse.next();
 
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
