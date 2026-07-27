@@ -1,31 +1,40 @@
 import { NextResponse } from "next/server";
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { isClerkServerConfigured } from "@/lib/clerk-config";
+import type { NextRequest } from "next/server";
+import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 
-const isClerkConfigured = isClerkServerConfigured();
+function isProtectedPath(pathname: string) {
+  if (pathname.startsWith("/dashboard")) return true;
+  const protectedApis = [
+    "/api/stripe/portal",
+    "/api/stripe/checkout",
+    "/api/stripe/session-status",
+    "/api/courses/complete",
+    "/api/courses/progress",
+    "/api/courses/challenges",
+    "/api/passport",
+    "/api/drills",
+    "/api/skills",
+    "/api/roles",
+    "/api/org",
+    "/api/auth/me",
+  ];
+  if (pathname === "/api/refreshers") return true;
+  return protectedApis.some(
+    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
+  );
+}
 
-const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/api/stripe/portal(.*)",
-  "/api/stripe/checkout(.*)",
-  "/api/stripe/session-status(.*)",
-  "/api/courses/complete(.*)",
-  "/api/courses/progress(.*)",
-  "/api/courses/challenges(.*)",
-  "/api/passport(.*)",
-  "/api/drills(.*)",
-  "/api/skills(.*)",
-  "/api/roles(.*)",
-  "/api/org(.*)",
-]);
-
+/**
+ * Cookie presence gate only — full verification happens in Node route handlers /
+ * server components via Firebase Admin verifySessionCookie.
+ *
+ * Do not import firebase-admin or @clerk here (Edge middleware).
+ */
 export default function proxy(request: NextRequest) {
   if (!isProtectedPath(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
-  // Cookie presence gate only — full verification happens in Node route handlers /
-  // server components via Firebase Admin verifySessionCookie.
   const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   if (session) {
     return NextResponse.next();
