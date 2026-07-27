@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import {
+  diagnoseFirebaseAdminEnv,
   isFirebaseAdminConfigured,
-  parseFirebaseServiceAccount,
 } from "@/lib/firebase/admin-env";
 import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
+
+export const dynamic = "force-dynamic";
 
 /**
  * Non-secret env presence check for debugging Vercel setup.
@@ -12,7 +14,8 @@ import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
 export async function GET() {
   try {
     const clientProjectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim() || null;
-    const adminProjectId = parseFirebaseServiceAccount()?.projectId ?? null;
+    const adminDiag = diagnoseFirebaseAdminEnv();
+    const adminProjectId = adminDiag.adminProjectId;
     const projectIdsMatch = Boolean(
       clientProjectId && adminProjectId && clientProjectId === adminProjectId
     );
@@ -29,6 +32,18 @@ export async function GET() {
       clientProjectId,
       adminProjectId,
       projectIdsMatch,
+      adminDiag: {
+        jsonEnvPresent: adminDiag.jsonEnvPresent,
+        jsonEnvChars: adminDiag.jsonEnvChars,
+        base64EnvPresent: adminDiag.base64EnvPresent,
+        parseOk: adminDiag.parseOk,
+        parseIssue: adminDiag.parseIssue,
+        hasProjectId: adminDiag.hasProjectId,
+        hasClientEmail: adminDiag.hasClientEmail,
+        hasPrivateKey: adminDiag.hasPrivateKey,
+        splitVarsComplete: adminDiag.splitVarsComplete,
+        source: adminDiag.source,
+      },
     };
 
     return NextResponse.json({
@@ -39,7 +54,9 @@ export async function GET() {
       missingForAuth: (
         [
           !env.firebaseClient && "NEXT_PUBLIC_FIREBASE_* client config",
-          !env.firebaseAdmin && "FIREBASE_SERVICE_ACCOUNT_JSON",
+          !env.firebaseAdmin &&
+            (adminDiag.parseIssue ||
+              "Set FIREBASE_SERVICE_ACCOUNT_BASE64 (recommended) or FIREBASE_SERVICE_ACCOUNT_JSON for project nyxpulse"),
           env.firebaseClient &&
             env.firebaseAdmin &&
             !projectIdsMatch &&
