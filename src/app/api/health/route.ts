@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import {
+  diagnoseFirebaseAdminEnv,
   isFirebaseAdminConfigured,
-  parseFirebaseServiceAccount,
 } from "@/lib/firebase/admin-env";
 import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
 
@@ -12,7 +12,8 @@ import { isFirebaseClientConfigured } from "@/lib/firebase/client-config";
 export async function GET() {
   try {
     const clientProjectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID?.trim() || null;
-    const adminProjectId = parseFirebaseServiceAccount()?.projectId ?? null;
+    const adminDiag = diagnoseFirebaseAdminEnv();
+    const adminProjectId = adminDiag.adminProjectId;
     const projectIdsMatch = Boolean(
       clientProjectId && adminProjectId && clientProjectId === adminProjectId
     );
@@ -29,6 +30,16 @@ export async function GET() {
       clientProjectId,
       adminProjectId,
       projectIdsMatch,
+      adminDiag: {
+        jsonEnvPresent: adminDiag.jsonEnvPresent,
+        jsonEnvChars: adminDiag.jsonEnvChars,
+        parseOk: adminDiag.parseOk,
+        parseIssue: adminDiag.parseIssue,
+        hasProjectId: adminDiag.hasProjectId,
+        hasClientEmail: adminDiag.hasClientEmail,
+        hasPrivateKey: adminDiag.hasPrivateKey,
+        splitVarsComplete: adminDiag.splitVarsComplete,
+      },
     };
 
     return NextResponse.json({
@@ -39,7 +50,8 @@ export async function GET() {
       missingForAuth: (
         [
           !env.firebaseClient && "NEXT_PUBLIC_FIREBASE_* client config",
-          !env.firebaseAdmin && "FIREBASE_SERVICE_ACCOUNT_JSON",
+          !env.firebaseAdmin &&
+            (adminDiag.parseIssue || "FIREBASE_SERVICE_ACCOUNT_JSON"),
           env.firebaseClient &&
             env.firebaseAdmin &&
             !projectIdsMatch &&
