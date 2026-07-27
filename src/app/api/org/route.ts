@@ -15,7 +15,7 @@ function requireTeamAdmin(user: Awaited<ReturnType<typeof getSessionUser>>) {
 export async function GET() {
   const user = await getSessionUser();
   const gate = requireTeamAdmin(user);
-  if (gate) return Response.json({ error: gate.error }, { status: gate.status });
+  if (gate || !user) return Response.json({ error: gate?.error ?? "Unauthorized" }, { status: gate?.status ?? 401 });
   return Response.json({
     plan: user.profile.plan,
     orgName: user.profile.orgName ?? "Your Organization",
@@ -28,7 +28,7 @@ export async function GET() {
 export async function POST(request: Request) {
   const user = await getSessionUser();
   const gate = requireTeamAdmin(user);
-  if (gate) return Response.json({ error: gate.error }, { status: gate.status });
+  if (gate || !user) return Response.json({ error: gate?.error ?? "Unauthorized" }, { status: gate?.status ?? 401 });
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body.action !== "string") return Response.json({ error: "Invalid request body" }, { status: 400 });
