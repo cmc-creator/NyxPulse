@@ -1,4 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
+import { updateUserProfile } from "@/lib/auth/profile";
 import { getCourseBySlug } from "@/lib/courses";
 import { createCertificateId } from "@/lib/certificates";
 import { hasPassedAllChallenges } from "@/lib/challenges/scoring";
@@ -11,13 +12,15 @@ import {
   getLearnerProgressTopics,
   saveLearnerCertificate,
 } from "@/lib/firebase/learner-data";
-import { asStringArray, type PrivateUserMetadata, type PublicUserMetadata } from "@/lib/user-metadata";
+import { asStringArray } from "@/lib/user-metadata";
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
-  if (!userId) {
+  const session = await getSessionUser();
+  if (!session) {
     return Response.json({ error: "Unauthorized" }, { status: 401 });
   }
+
+  const { userId, email, firstName, lastName, displayName, profile } = session;
 
   let courseSlug: string;
   try {
@@ -44,11 +47,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
-    const publicMetadata = (user.publicMetadata ?? {}) as PublicUserMetadata;
-    const privateMetadata = (user.privateMetadata ?? {}) as PrivateUserMetadata;
-    const enrolledSlugs = asStringArray(publicMetadata.courses);
+    const enrolledSlugs = asStringArray(profile.courses);
 
     if (!enrolledSlugs.includes(courseSlug)) {
       return Response.json({ error: "Not enrolled in this course" }, { status: 403 });
@@ -57,7 +56,7 @@ export async function POST(req: Request) {
     const useFirebase = isFirebaseAdminConfigured();
     const progressTopics = useFirebase
       ? ((await getLearnerProgressTopics(userId, courseSlug)) ?? [])
-      : asStringArray(privateMetadata.courseProgress?.[courseSlug]);
+      : asStringArray(profile.courseProgress?.[courseSlug]);
 
     if (!isCourseProgressComplete(course, progressTopics)) {
       return Response.json(
@@ -68,7 +67,7 @@ export async function POST(req: Request) {
 
     const challengeResults = useFirebase
       ? await getChallengeResults(userId, courseSlug)
-      : (privateMetadata.challengeResults?.[courseSlug] ?? null);
+      : (profile.challengeResults?.[courseSlug] ?? null);
 
     if (!hasPassedAllChallenges(courseSlug, challengeResults)) {
       return Response.json(
@@ -80,15 +79,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const completedSlugs = asStringArray(publicMetadata.completedCourses);
+    const completedSlugs = asStringArray(profile.completedCourses);
     const existingCert = useFirebase
       ? await getLearnerCertificate(userId, courseSlug)
-      : (privateMetadata.certificates?.[courseSlug] ?? null);
+      : (profile.certificates?.[courseSlug] ?? null);
 
     const recipientName =
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-      user.username ||
-      "NyxPulse Learner";
+      [firstName, lastName].filter(Boolean).join(" ") || displayName || "NyxPulse Learner";
 
     const certificate =
       existingCert ??
@@ -100,50 +97,35 @@ export async function POST(req: Request) {
       } as const);
 
     if (!completedSlugs.includes(courseSlug) || !existingCert) {
+      const nextCompleted = Array.from(new Set([...completedSlugs, courseSlug]));
+
       if (useFirebase) {
         await saveLearnerCertificate(userId, certificate);
-        await clerk.users.updateUserMetadata(userId, {
-          publicMetadata: {
-            ...publicMetadata,
-            completedCourses: Array.from(new Set([...completedSlugs, courseSlug])),
-          },
-        });
+        await updateUserProfile(userId, { completedCourses: nextCompleted });
       } else {
-        await clerk.users.updateUserMetadata(userId, {
-          publicMetadata: {
-            ...publicMetadata,
-            completedCourses: Array.from(new Set([...completedSlugs, courseSlug])),
-          },
-          privateMetadata: {
-            ...privateMetadata,
-            certificates: {
-              ...(privateMetadata.certificates ?? {}),
-              [courseSlug]: certificate,
-            },
+        await updateUserProfile(userId, {
+          completedCourses: nextCompleted,
+          certificates: {
+            ...(profile.certificates ?? {}),
+            [courseSlug]: certificate,
           },
         });
       }
 
-      if (!existingCert) {
-        const primaryEmail = user.emailAddresses.find(
-          (email) => email.id === user.primaryEmailAddressId
-        )?.emailAddress;
+      if (!existingCert && email) {
+        const name = firstName ?? displayName ?? "NyxPulse Learner";
+        const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
+        const certificateUrl = `${appUrl}/dashboard/certificates?course=${encodeURIComponent(courseSlug)}`;
 
-        if (primaryEmail) {
-          const firstName = user.firstName ?? user.username ?? "NyxPulse Learner";
-          const appUrl = process.env.NEXT_PUBLIC_URL ?? "https://nyxpulse.com";
-          const certificateUrl = `${appUrl}/dashboard/certificates?course=${encodeURIComponent(courseSlug)}`;
+        const emailResult = await sendCourseCompletionEmail(
+          email,
+          name,
+          course.title,
+          certificateUrl
+        );
 
-          const emailResult = await sendCourseCompletionEmail(
-            primaryEmail,
-            firstName,
-            course.title,
-            certificateUrl
-          );
-
-          if (!emailResult.success) {
-            console.error("Failed to send completion email:", emailResult.error);
-          }
+        if (!emailResult.success) {
+          console.error("Failed to send completion email:", emailResult.error);
         }
       }
     }

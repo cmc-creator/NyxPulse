@@ -1,10 +1,10 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { getSessionUser } from "@/lib/auth/server";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
 import { createPassportShare } from "@/lib/firebase/learner-data";
 
 export async function POST() {
-  const { userId } = await auth();
-  if (!userId) return Response.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await getSessionUser();
+  if (!session) return Response.json({ error: "Unauthorized" }, { status: 401 });
 
   if (!isFirebaseAdminConfigured()) {
     return Response.json(
@@ -17,12 +17,9 @@ export async function POST() {
   }
 
   try {
-    const clerk = await clerkClient();
-    const user = await clerk.users.getUser(userId);
+    const { userId, firstName, lastName, displayName } = session;
     const recipientName =
-      [user.firstName, user.lastName].filter(Boolean).join(" ") ||
-      user.username ||
-      "NyxPulse Learner";
+      [firstName, lastName].filter(Boolean).join(" ") || displayName || "NyxPulse Learner";
 
     const share = await createPassportShare(userId, recipientName);
     if (!share) {
