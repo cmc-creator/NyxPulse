@@ -25,8 +25,19 @@ export function getAdminApp(): App {
   });
 }
 
+let firestoreConfigured = false;
+
 export function getAdminDb(): Firestore {
-  return getFirestore(getAdminApp());
+  const db = getFirestore(getAdminApp());
+  if (!firestoreConfigured) {
+    try {
+      db.settings({ ignoreUndefinedProperties: true });
+    } catch {
+      // Already configured on this app instance
+    }
+    firestoreConfigured = true;
+  }
+  return db;
 }
 
 export function getAdminAuth(): Auth {
