@@ -38,6 +38,12 @@ function explainTokenError(err: unknown): { status: number; error: string } {
       error: "Invalid or incomplete ID token. Sign out, refresh the page, and sign in again.",
     };
   }
+  if (/Firestore|undefined|ignoreUndefinedProperties/i.test(message)) {
+    return {
+      status: 500,
+      error: `Profile save failed: ${message}`,
+    };
+  }
 
   console.error("Failed to create session:", err);
   return { status: 401, error: `Invalid token: ${message}` };
@@ -84,12 +90,17 @@ export async function POST(req: Request) {
     });
 
     const user = await auth.getUser(decoded.uid);
+    const displayName =
+      user.displayName?.trim() ||
+      user.email?.split("@")[0] ||
+      "NyxPulse Learner";
+    const nameParts = displayName.split(/\s+/).filter(Boolean);
     await ensureUserProfile({
       userId: decoded.uid,
       email: user.email ?? "",
-      displayName: user.displayName ?? user.email?.split("@")[0] ?? "NyxPulse Learner",
-      firstName: user.displayName?.split(" ")[0],
-      lastName: user.displayName?.split(" ").slice(1).join(" ") || undefined,
+      displayName,
+      firstName: nameParts[0] ?? null,
+      lastName: nameParts.length > 1 ? nameParts.slice(1).join(" ") : null,
     });
 
     const jar = await cookies();
