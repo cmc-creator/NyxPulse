@@ -1,28 +1,22 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { SESSION_COOKIE_NAME } from "@/lib/auth/constants";
 
-function isProtectedPath(pathname: string) {
-  if (pathname.startsWith("/dashboard")) return true;
-  const protectedApis = [
-    "/api/stripe/portal",
-    "/api/stripe/checkout",
-    "/api/stripe/session-status",
-    "/api/courses/complete",
-    "/api/courses/progress",
-    "/api/courses/challenges",
-    "/api/passport",
-    "/api/drills",
-    "/api/skills",
-    "/api/roles",
-    "/api/org",
-    "/api/auth/me",
-  ];
-  if (pathname === "/api/refreshers") return true;
-  return protectedApis.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-  );
-}
+const protectedPrefixes = [
+  "/dashboard",
+  "/api/stripe/portal",
+  "/api/stripe/checkout",
+  "/api/stripe/session-status",
+  "/api/courses/complete",
+  "/api/courses/progress",
+  "/api/courses/challenges",
+  "/api/passport",
+  "/api/drills",
+  "/api/skills",
+  "/api/roles",
+  "/api/org",
+];
+
+const isProtectedPath = (pathname: string) => protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
 
 /**
  * Cookie presence gate only — full verification happens in Node route handlers /
@@ -32,14 +26,10 @@ function isProtectedPath(pathname: string) {
  * are not forced through the proxy pass-through path.
  */
 export default function proxy(request: NextRequest) {
-  if (!isProtectedPath(request.nextUrl.pathname)) {
-    return NextResponse.next();
-  }
+  if (!isProtectedPath(request.nextUrl.pathname)) return NextResponse.next();
 
-  const session = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-  if (session) {
-    return NextResponse.next();
-  }
+  // Route handlers and server components verify this Firebase session cookie with Admin SDK.
+  if (request.cookies.get(SESSION_COOKIE_NAME)?.value) return NextResponse.next();
 
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

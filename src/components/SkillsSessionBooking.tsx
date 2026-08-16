@@ -7,7 +7,7 @@ import { courses } from "@/lib/courses";
 import { Calendar, Loader2, CheckCircle } from "lucide-react";
 
 export default function SkillsSessionBooking() {
-  const { displayName, email: authEmail } = useAuth();
+  const { user, displayName, email: sessionEmail } = useAuth();
   const searchParams = useSearchParams();
   const presetCourse = searchParams.get("course") ?? "";
   const arcCourses = useMemo(
@@ -28,9 +28,10 @@ export default function SkillsSessionBooking() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    if (!user) return;
     if (!name && displayName) setName(displayName);
-    if (!email && authEmail) setEmail(authEmail);
-  }, [displayName, authEmail, name, email]);
+    if (!email && sessionEmail) setEmail(sessionEmail);
+  }, [user, displayName, sessionEmail, name, email]);
 
   const selected = arcCourses.find((course) => course.slug === courseSlug);
 

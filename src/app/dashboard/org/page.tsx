@@ -8,7 +8,7 @@ export default async function OrgPage() {
   const session = await getSessionUser();
   if (!session) redirect("/sign-in");
 
-  const { profile } = session;
+  const profile = session.profile;
 
   return (
     <OrgPortalClient
