@@ -7,7 +7,7 @@ import {
   scoreScenarioPath,
 } from "@/lib/challenges/scoring";
 import type { CourseChallengeResults } from "@/lib/challenges/types";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import {
   getChallengeResults,
   saveChallengeResults,

@@ -2,7 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/server";
 import { getChallengesForCourse } from "@/lib/challenges/catalog";
 import { getCourseBySlug } from "@/lib/courses";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import {
   getChallengeResults,
   getLearnerProgressTopics,

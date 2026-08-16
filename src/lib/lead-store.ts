@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
 export type ContactLead = {
   createdAt: string;
@@ -32,7 +33,7 @@ async function ensureStorageDir(filePath: string) {
 }
 
 async function storeLeadInFirestore(lead: ContactLead) {
-  await getAdminDb().collection("leads").add(lead);
+  await (await getAdminDb()).collection("leads").add(lead);
 }
 
 async function storeLeadInFile(lead: ContactLead) {
@@ -51,7 +52,7 @@ export async function storeContactLead(lead: ContactLead) {
 }
 
 async function listLeadsFromFirestore() {
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("leads")
     .orderBy("createdAt", "desc")
     .limit(MAX_LEADS_RETURNED)

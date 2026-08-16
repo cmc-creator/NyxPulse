@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 import { getCourseBySlug } from "@/lib/courses";
 import { formatCertificateDate } from "@/lib/certificates";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { getCertificateById } from "@/lib/firebase/learner-data";
 
 interface Props {

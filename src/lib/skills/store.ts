@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { SkillSignoff } from "@/lib/skills/sheets";
 
 function filePath() {
@@ -26,14 +27,14 @@ async function writeFileStore(records: SkillSignoff[]) {
   await fs.writeFile(fp, JSON.stringify(records, null, 2), "utf8");
 }
 
-function signoffRef(id: string) {
-  return getAdminDb().collection("skillSignoffs").doc(id);
+async function signoffRef(id: string) {
+  return (await getAdminDb()).collection("skillSignoffs").doc(id);
 }
 
 export async function saveSkillSignoff(signoff: SkillSignoff): Promise<SkillSignoff> {
   if (isFirebaseAdminConfigured()) {
-    await signoffRef(signoff.id).set(signoff);
-    await getAdminDb()
+    await (await signoffRef(signoff.id)).set(signoff);
+    await (await getAdminDb())
       .collection("learners")
       .doc(signoff.learnerUserId)
       .collection("skillSignoffs")
@@ -49,7 +50,7 @@ export async function saveSkillSignoff(signoff: SkillSignoff): Promise<SkillSign
 
 export async function listSkillSignoffsForLearner(userId: string): Promise<SkillSignoff[]> {
   if (isFirebaseAdminConfigured()) {
-    const snap = await getAdminDb()
+    const snap = await (await getAdminDb())
       .collection("learners")
       .doc(userId)
       .collection("skillSignoffs")
@@ -67,7 +68,7 @@ export async function listSkillSignoffsForLearner(userId: string): Promise<Skill
 
 export async function listRecentSkillSignoffs(limit = 40): Promise<SkillSignoff[]> {
   if (isFirebaseAdminConfigured()) {
-    const snap = await getAdminDb().collection("skillSignoffs").limit(limit).get();
+    const snap = await (await getAdminDb()).collection("skillSignoffs").limit(limit).get();
     return snap.docs
       .map((doc) => doc.data() as SkillSignoff)
       .sort((a, b) => b.signedAt.localeCompare(a.signedAt));

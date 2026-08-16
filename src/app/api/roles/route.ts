@@ -1,6 +1,6 @@
 import { getSessionUser } from "@/lib/auth/server";
 import { updateUserProfile } from "@/lib/auth/profile";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { listChallengeResults } from "@/lib/firebase/learner-data";
 import { analyzeRoleGap } from "@/lib/roles/gap";
 import { roleMatrices, type WorkforceRoleId } from "@/lib/roles/matrices";

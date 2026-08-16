@@ -53,13 +53,24 @@ export default function AuthForm({ mode }: { mode: Mode }) {
         await updateProfile(credential.user, { displayName: name.trim() });
       }
 
-      const idToken = await credential.user.getIdToken();
+      const idToken = await credential.user.getIdToken(/* forceRefresh */ true);
       const res = await fetch("/api/auth/session", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ idToken }),
       });
-      const json = await res.json();
+      const raw = await res.text();
+      let json: { error?: string; success?: boolean } = {};
+      try {
+        json = raw ? (JSON.parse(raw) as { error?: string; success?: boolean }) : {};
+      } catch {
+        setError(
+          res.ok
+            ? "Could not create session."
+            : `Session service error (${res.status}). Try again after the latest deploy.`
+        );
+        return;
+      }
       if (!res.ok) {
         setError(json.error ?? "Could not create session");
         return;
@@ -78,7 +89,7 @@ export default function AuthForm({ mode }: { mode: Mode }) {
           : message === "auth/invalid-credential" || message === "auth/wrong-password"
             ? "Invalid email or password."
             : message === "auth/user-not-found"
-              ? "No account found. Create one instead."
+              ? "No account found. Create one at Sign up — Firebase accounts are separate from the old Clerk logins."
               : message === "auth/weak-password"
                 ? "Password should be at least 6 characters."
                 : "Authentication failed. Please try again.";

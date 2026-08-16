@@ -1,6 +1,7 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { DrillRecord } from "@/lib/drills/types";
 
 function filePath() {
@@ -24,13 +25,13 @@ async function writeFileStore(records: DrillRecord[]) {
   await fs.writeFile(fp, JSON.stringify(records, null, 2), "utf8");
 }
 
-function drillRef(id: string) {
-  return getAdminDb().collection("drills").doc(id);
+async function drillRef(id: string) {
+  return (await getAdminDb()).collection("drills").doc(id);
 }
 
 export async function createDrill(record: DrillRecord): Promise<DrillRecord> {
   if (isFirebaseAdminConfigured()) {
-    await drillRef(record.id).set(record);
+    await (await drillRef(record.id)).set(record);
     return record;
   }
   const all = await readFileStore();
@@ -41,7 +42,7 @@ export async function createDrill(record: DrillRecord): Promise<DrillRecord> {
 
 export async function getDrill(id: string): Promise<DrillRecord | null> {
   if (isFirebaseAdminConfigured()) {
-    const snap = await drillRef(id).get();
+    const snap = await (await drillRef(id)).get();
     if (!snap.exists) return null;
     return snap.data() as DrillRecord;
   }
@@ -51,7 +52,7 @@ export async function getDrill(id: string): Promise<DrillRecord | null> {
 
 export async function listDrillsForUser(userId: string): Promise<DrillRecord[]> {
   if (isFirebaseAdminConfigured()) {
-    const snap = await getAdminDb()
+    const snap = await (await getAdminDb())
       .collection("drills")
       .where("organizerUserId", "==", userId)
       .limit(50)
@@ -68,7 +69,7 @@ export async function listDrillsForUser(userId: string): Promise<DrillRecord[]> 
 
 export async function updateDrill(record: DrillRecord): Promise<DrillRecord> {
   if (isFirebaseAdminConfigured()) {
-    await drillRef(record.id).set(record, { merge: true });
+    await (await drillRef(record.id)).set(record, { merge: true });
     return record;
   }
   const all = await readFileStore();

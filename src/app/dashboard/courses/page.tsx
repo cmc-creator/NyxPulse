@@ -5,7 +5,7 @@ import { getSessionUser } from "@/lib/auth/server";
 import { courses } from "@/lib/courses";
 import { asStringArray } from "@/lib/user-metadata";
 import { getAllTopicKeys } from "@/lib/course-progress";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { listLearnerProgress } from "@/lib/firebase/learner-data";
 
 export default async function MyCoursesPage() {

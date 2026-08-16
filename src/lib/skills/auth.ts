@@ -18,7 +18,10 @@ export function getInstructorPin(): string | null {
 export function isInstructorUser(options: {
   emailAddresses: string[];
   publicMetadata?: PublicUserMetadata & { instructor?: boolean };
+  /** Firebase Auth custom claims */
+  claims?: { admin?: boolean; instructor?: boolean };
 }): boolean {
+  if (options.claims?.admin === true || options.claims?.instructor === true) return true;
   if (options.publicMetadata?.instructor === true) return true;
   const allow = getInstructorEmails();
   if (allow.length === 0) return false;

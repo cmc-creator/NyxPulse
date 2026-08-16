@@ -1,10 +1,15 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
-  turbopack: {
-    root: path.resolve(__dirname),
-  },
+  // Keep firebase-admin out of the Turbopack server bundle — native/gRPC bits
+  // crash Vercel serverless functions when bundled into route graphs.
+  serverExternalPackages: [
+    "firebase-admin",
+    "@google-cloud/firestore",
+    "@google-cloud/storage",
+    "google-gax",
+    "nodemailer",
+  ],
 };
 
 export default nextConfig;

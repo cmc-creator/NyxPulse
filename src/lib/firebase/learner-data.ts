@@ -1,6 +1,7 @@
 import type { IssuedCertificate } from "@/lib/certificates";
 import type { CourseChallengeResults } from "@/lib/challenges/types";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
 export type LearnerProgressDoc = {
   courseSlug: string;
@@ -8,32 +9,36 @@ export type LearnerProgressDoc = {
   updatedAt: string;
 };
 
-function progressRef(userId: string, courseSlug: string) {
-  return getAdminDb().collection("learners").doc(userId).collection("progress").doc(courseSlug);
+async function progressRef(userId: string, courseSlug: string) {
+  return (await getAdminDb())
+    .collection("learners")
+    .doc(userId)
+    .collection("progress")
+    .doc(courseSlug);
 }
 
-function certificateRef(userId: string, courseSlug: string) {
-  return getAdminDb()
+async function certificateRef(userId: string, courseSlug: string) {
+  return (await getAdminDb())
     .collection("learners")
     .doc(userId)
     .collection("certificates")
     .doc(courseSlug);
 }
 
-function certificateIndexRef(certificateId: string) {
-  return getAdminDb().collection("certificateIndex").doc(certificateId);
+async function certificateIndexRef(certificateId: string) {
+  return (await getAdminDb()).collection("certificateIndex").doc(certificateId);
 }
 
-function challengeResultsRef(userId: string, courseSlug: string) {
-  return getAdminDb()
+async function challengeResultsRef(userId: string, courseSlug: string) {
+  return (await getAdminDb())
     .collection("learners")
     .doc(userId)
     .collection("challengeResults")
     .doc(courseSlug);
 }
 
-function passportShareRef(token: string) {
-  return getAdminDb().collection("passportShares").doc(token);
+async function passportShareRef(token: string) {
+  return (await getAdminDb()).collection("passportShares").doc(token);
 }
 
 export async function getLearnerProgressTopics(
@@ -41,7 +46,7 @@ export async function getLearnerProgressTopics(
   courseSlug: string
 ): Promise<string[] | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await progressRef(userId, courseSlug).get();
+  const snap = await (await progressRef(userId, courseSlug)).get();
   if (!snap.exists) return [];
   const data = snap.data() as Partial<LearnerProgressDoc>;
   return Array.isArray(data.completedTopics)
@@ -53,7 +58,7 @@ export async function listLearnerProgress(
   userId: string
 ): Promise<Record<string, string[]>> {
   if (!isFirebaseAdminConfigured()) return {};
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("learners")
     .doc(userId)
     .collection("progress")
@@ -76,7 +81,7 @@ export async function saveLearnerProgressTopics(
 ): Promise<boolean> {
   if (!isFirebaseAdminConfigured()) return false;
   const updatedAt = new Date().toISOString();
-  await progressRef(userId, courseSlug).set(
+  await (await progressRef(userId, courseSlug)).set(
     {
       courseSlug,
       completedTopics,
@@ -92,7 +97,7 @@ export async function getLearnerCertificate(
   courseSlug: string
 ): Promise<IssuedCertificate | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await certificateRef(userId, courseSlug).get();
+  const snap = await (await certificateRef(userId, courseSlug)).get();
   if (!snap.exists) return null;
   return snap.data() as IssuedCertificate;
 }
@@ -101,7 +106,7 @@ export async function listLearnerCertificates(
   userId: string
 ): Promise<Record<string, IssuedCertificate>> {
   if (!isFirebaseAdminConfigured()) return {};
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("learners")
     .doc(userId)
     .collection("certificates")
@@ -120,10 +125,11 @@ export async function saveLearnerCertificate(
 ): Promise<boolean> {
   if (!isFirebaseAdminConfigured()) return false;
 
-  const batch = getAdminDb().batch();
-  batch.set(certificateRef(userId, certificate.courseSlug), certificate, { merge: true });
+  const db = await getAdminDb();
+  const batch = db.batch();
+  batch.set(await certificateRef(userId, certificate.courseSlug), certificate, { merge: true });
   batch.set(
-    certificateIndexRef(certificate.id),
+    await certificateIndexRef(certificate.id),
     {
       ...certificate,
       userId,
@@ -139,7 +145,7 @@ export async function getCertificateById(
   certificateId: string
 ): Promise<(IssuedCertificate & { userId?: string }) | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await certificateIndexRef(certificateId).get();
+  const snap = await (await certificateIndexRef(certificateId)).get();
   if (!snap.exists) return null;
   return snap.data() as IssuedCertificate & { userId?: string };
 }
@@ -149,7 +155,7 @@ export async function getChallengeResults(
   courseSlug: string
 ): Promise<CourseChallengeResults | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await challengeResultsRef(userId, courseSlug).get();
+  const snap = await (await challengeResultsRef(userId, courseSlug)).get();
   if (!snap.exists) return null;
   return snap.data() as CourseChallengeResults;
 }
@@ -158,7 +164,7 @@ export async function listChallengeResults(
   userId: string
 ): Promise<Record<string, CourseChallengeResults>> {
   if (!isFirebaseAdminConfigured()) return {};
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("learners")
     .doc(userId)
     .collection("challengeResults")
@@ -175,7 +181,7 @@ export async function saveChallengeResults(
   results: CourseChallengeResults
 ): Promise<boolean> {
   if (!isFirebaseAdminConfigured()) return false;
-  await challengeResultsRef(userId, results.courseSlug).set(results, { merge: true });
+  await (await challengeResultsRef(userId, results.courseSlug)).set(results, { merge: true });
   return true;
 }
 
@@ -201,8 +207,8 @@ export async function createPassportShare(
     recipientName,
     createdAt: new Date().toISOString(),
   };
-  await passportShareRef(token).set(share);
-  await getAdminDb().collection("learners").doc(userId).set(
+  await (await passportShareRef(token)).set(share);
+  await (await getAdminDb()).collection("learners").doc(userId).set(
     { passportShareToken: token, passportUpdatedAt: share.createdAt },
     { merge: true }
   );
@@ -211,7 +217,7 @@ export async function createPassportShare(
 
 export async function getPassportShare(token: string): Promise<PassportShare | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await passportShareRef(token).get();
+  const snap = await (await passportShareRef(token)).get();
   if (!snap.exists) return null;
   return snap.data() as PassportShare;
 }

@@ -1,7 +1,8 @@
 import type { CourseProgressMap } from "@/lib/course-progress";
 import type { IssuedCertificate } from "@/lib/certificates";
 import type { CourseChallengeResults } from "@/lib/challenges/types";
-import { getAdminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { getAdminDb } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
 export type OrgMember = {
   email: string;
@@ -36,8 +37,17 @@ export type UserProfile = {
   updatedAt: string;
 };
 
-function profileRef(userId: string) {
-  return getAdminDb().collection("learners").doc(userId);
+async function profileRef(userId: string) {
+  return (await getAdminDb()).collection("learners").doc(userId);
+}
+
+/** Firestore rejects `undefined` field values — strip them before writes. */
+function stripUndefined<T extends Record<string, unknown>>(value: T): T {
+  const out: Record<string, unknown> = {};
+  for (const [key, entry] of Object.entries(value)) {
+    if (entry !== undefined) out[key] = entry;
+  }
+  return out as T;
 }
 
 export function emptyProfile(userId: string, email = "", displayName = "NyxPulse Learner"): UserProfile {
@@ -56,7 +66,7 @@ export function emptyProfile(userId: string, email = "", displayName = "NyxPulse
 
 export async function getUserProfile(userId: string): Promise<UserProfile | null> {
   if (!isFirebaseAdminConfigured()) return null;
-  const snap = await profileRef(userId).get();
+  const snap = await (await profileRef(userId)).get();
   if (!snap.exists) return null;
   const data = snap.data() as Partial<UserProfile>;
   return {
@@ -83,27 +93,39 @@ export async function ensureUserProfile(input: {
 
   const existing = await getUserProfile(input.userId);
   const now = new Date().toISOString();
+  const firstName =
+    (typeof input.firstName === "string" && input.firstName.trim()) ||
+    undefined;
+  const lastName =
+    (typeof input.lastName === "string" && input.lastName.trim()) || undefined;
+
   if (existing) {
     const next: UserProfile = {
       ...existing,
       email: input.email || existing.email,
       displayName: input.displayName || existing.displayName,
-      firstName: input.firstName || existing.firstName,
-      lastName: input.lastName || existing.lastName,
       updatedAt: now,
     };
-    await profileRef(input.userId).set(next, { merge: true });
+    if (firstName) next.firstName = firstName;
+    else if (existing.firstName) next.firstName = existing.firstName;
+    else delete next.firstName;
+
+    if (lastName) next.lastName = lastName;
+    else if (existing.lastName) next.lastName = existing.lastName;
+    else delete next.lastName;
+
+    await (await profileRef(input.userId)).set(stripUndefined({ ...next }), { merge: true });
     return next;
   }
 
   const created = emptyProfile(
     input.userId,
     input.email ?? "",
-    input.displayName || input.firstName || "NyxPulse Learner"
+    input.displayName || firstName || "NyxPulse Learner"
   );
-  created.firstName = input.firstName ?? undefined;
-  created.lastName = input.lastName ?? undefined;
-  await profileRef(input.userId).set(created, { merge: true });
+  if (firstName) created.firstName = firstName;
+  if (lastName) created.lastName = lastName;
+  await (await profileRef(input.userId)).set(stripUndefined({ ...created }), { merge: true });
   return created;
 }
 
@@ -118,14 +140,14 @@ export async function updateUserProfile(
     userId,
     updatedAt: new Date().toISOString(),
   };
-  await profileRef(userId).set(next, { merge: true });
+  await (await profileRef(userId)).set(stripUndefined({ ...next }), { merge: true });
   return next;
 }
 
 export async function findUserIdByEmail(email: string): Promise<string | null> {
   if (!isFirebaseAdminConfigured()) return null;
   const normalized = email.trim().toLowerCase();
-  const snap = await getAdminDb()
+  const snap = await (await getAdminDb())
     .collection("learners")
     .where("email", "==", normalized)
     .limit(1)
@@ -136,7 +158,7 @@ export async function findUserIdByEmail(email: string): Promise<string | null> {
 
 export async function listLearnerProfiles(limit = 40): Promise<UserProfile[]> {
   if (!isFirebaseAdminConfigured()) return [];
-  const snap = await getAdminDb().collection("learners").limit(limit).get();
+  const snap = await (await getAdminDb()).collection("learners").limit(limit).get();
   return snap.docs.map((doc) => {
     const data = doc.data() as Partial<UserProfile>;
     return {

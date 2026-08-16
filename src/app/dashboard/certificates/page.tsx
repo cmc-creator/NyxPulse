@@ -4,7 +4,7 @@ import { Award, ArrowRight } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/server";
 import { courses } from "@/lib/courses";
 import CertificateCard from "@/components/CertificateCard";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { listLearnerCertificates } from "@/lib/firebase/learner-data";
 
 export default async function CertificatesPage() {

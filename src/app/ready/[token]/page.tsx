@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 import { getUserProfile } from "@/lib/auth/profile";
 import { buildPassportRows, readinessScore } from "@/lib/passport";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import {
   getPassportShare,
   listChallengeResults,

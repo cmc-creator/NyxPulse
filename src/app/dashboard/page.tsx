@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { courses } from "@/lib/courses";
 import { getAllTopicKeys } from "@/lib/course-progress";
-import { isFirebaseAdminConfigured } from "@/lib/firebase/admin";
+import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import { listLearnerProgress } from "@/lib/firebase/learner-data";
 import { asStringArray } from "@/lib/user-metadata";
 import { BookOpen, Calendar, Award, ArrowRight, Zap, Fingerprint, Radio, Briefcase, RefreshCw } from "lucide-react";
