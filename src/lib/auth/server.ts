@@ -7,6 +7,7 @@ import {
   getUserProfile,
   type UserProfile,
 } from "@/lib/auth/profile";
+import { readCustomClaims, type AuthCustomClaims } from "@/lib/auth/claims";
 
 export type SessionUser = {
   userId: string;
@@ -15,6 +16,8 @@ export type SessionUser = {
   firstName?: string;
   lastName?: string;
   profile: UserProfile;
+  /** Firebase Auth custom claims (admin / instructor). */
+  claims: AuthCustomClaims;
 };
 
 export async function getSessionUserId(): Promise<string | null> {
@@ -54,6 +57,12 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       firstName: displayName.split(" ")[0],
       lastName: displayName.split(" ").slice(1).join(" ") || undefined,
     });
+    const claims = readCustomClaims({
+      ...((authUser.customClaims ?? {}) as AuthCustomClaims),
+      admin: decoded.admin === true || authUser.customClaims?.admin === true,
+      instructor:
+        decoded.instructor === true || authUser.customClaims?.instructor === true,
+    });
 
     return {
       userId: decoded.uid,
@@ -62,6 +71,7 @@ export async function getSessionUser(): Promise<SessionUser | null> {
       firstName: profile.firstName,
       lastName: profile.lastName,
       profile,
+      claims,
     };
   } catch {
     return null;

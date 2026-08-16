@@ -18,6 +18,7 @@ export async function GET(req: Request) {
     const instructor = isInstructorUser({
       emailAddresses: email ? [email] : [],
       publicMetadata: { instructor: profile.instructor },
+      claims: session.claims,
     });
 
     const mine = await listSkillSignoffsForLearner(learnerId);
@@ -85,6 +86,7 @@ export async function POST(req: Request) {
     const instructor = isInstructorUser({
       emailAddresses: email ? [email] : [],
       publicMetadata: { instructor: profile.instructor },
+      claims: session.claims,
     });
     const pinOk = pinAllowsSignoff(pin);
 
