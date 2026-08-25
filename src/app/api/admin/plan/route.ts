@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth/server";
+import { isAdminSession } from "@/lib/auth/admin";
 import { findUserIdByEmail, getUserProfile, updateUserProfile } from "@/lib/auth/profile";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
@@ -9,9 +10,10 @@ type Plan = (typeof VALID_PLANS)[number];
 /**
  * Grant or change a client's billing plan (sales-led team/org onboarding).
  *
- * Auth (either):
- * - Header `x-admin-bootstrap-token` matching `NYXPULSE_ADMIN_BOOTSTRAP_TOKEN`, or
- * - Signed-in user with Firebase custom claim `admin: true`
+ * Auth (any of):
+ * - Signed-in user whose email is on NYXPULSE_ADMIN_EMAILS (simplest), or
+ * - Signed-in user with Firebase custom claim `admin: true`, or
+ * - Header `x-admin-bootstrap-token` matching `NYXPULSE_ADMIN_BOOTSTRAP_TOKEN`
  *
  * Body: `{ "email": "buyer@client.com", "plan": "team" | "org" | "individual", "orgName"?: "Client Facility" }`
  *
@@ -28,7 +30,7 @@ export async function POST(req: Request) {
   const provided = req.headers.get("x-admin-bootstrap-token")?.trim();
   const session = await getSessionUser();
   const bootstrapOk = Boolean(bootstrap && provided && provided === bootstrap);
-  const adminOk = session?.claims.admin === true;
+  const adminOk = isAdminSession(session);
 
   if (!bootstrapOk && !adminOk) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
