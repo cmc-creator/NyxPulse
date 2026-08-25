@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { ArrowRight, BookOpen, CheckCircle } from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle, GraduationCap } from "lucide-react";
 import { getSessionUser } from "@/lib/auth/server";
+import { isInstructorSession } from "@/lib/auth/instructor";
 import { courses } from "@/lib/courses";
 import { asStringArray } from "@/lib/user-metadata";
 import { getAllTopicKeys } from "@/lib/course-progress";
@@ -16,6 +17,10 @@ export default async function MyCoursesPage() {
   const enrolledSlugs = profile.courses;
   const completedSlugs = profile.completedCourses;
   const enrolledCourses = courses.filter((course) => enrolledSlugs.includes(course.slug));
+  const isInstructor = isInstructorSession(session);
+  const instructorLibrary = isInstructor
+    ? courses.filter((course) => !enrolledSlugs.includes(course.slug))
+    : [];
   const firebaseProgress = isFirebaseAdminConfigured()
     ? await listLearnerProgress(userId)
     : null;
@@ -86,6 +91,42 @@ export default async function MyCoursesPage() {
               </Link>
             );
           })}
+        </div>
+      )}
+
+      {instructorLibrary.length > 0 && (
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <GraduationCap className="w-5 h-5 text-amber-300" />
+            <h2 className="text-xl font-bold text-white">Instructor Course Library</h2>
+          </div>
+          <p className="text-slate-400 text-sm mb-5">
+            Your instructor account unlocks every course — full lesson content, study notes,
+            and American Red Cross videos — without enrollment. Progress tracking stays off
+            in instructor view.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {instructorLibrary.map((course) => (
+              <Link
+                key={course.slug}
+                href={`/dashboard/courses/${course.slug}`}
+                className="glass-card p-5 hover:border-amber-400/30 transition-colors block"
+              >
+                <div className="flex items-start gap-4">
+                  <span className="text-3xl">{course.icon}</span>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-white font-semibold truncate">{course.shortTitle}</h3>
+                    <p className="text-slate-400 text-sm line-clamp-2 mt-1 mb-3">
+                      {course.tagline}
+                    </p>
+                    <span className="text-xs text-amber-300/90 inline-flex items-center gap-1">
+                      Open with instructor access <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         </div>
       )}
     </div>

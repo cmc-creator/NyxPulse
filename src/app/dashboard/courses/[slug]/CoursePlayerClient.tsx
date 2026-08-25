@@ -21,6 +21,7 @@ import {
   Loader2,
   ShieldCheck,
   ExternalLink,
+  GraduationCap,
 } from "lucide-react";
 
 interface CoursePlayerClientProps {
@@ -29,6 +30,12 @@ interface CoursePlayerClientProps {
   isCompleted: boolean;
   challenges?: CourseChallenge[];
   initialChallengeResults?: Record<string, ChallengeAttemptResult>;
+  /**
+   * Read-only instructor access to a course the user is not enrolled in.
+   * All lesson content is visible; progress tracking and certificate
+   * claiming are disabled.
+   */
+  instructorPreview?: boolean;
 }
 
 export default function CoursePlayerClient({
@@ -37,6 +44,7 @@ export default function CoursePlayerClient({
   isCompleted: initialIsCompleted,
   challenges = [],
   initialChallengeResults = {},
+  instructorPreview = false,
 }: CoursePlayerClientProps) {
   const [completedTopics, setCompletedTopics] = useState<Set<string>>(
     () => new Set(initialCompletedTopics)
@@ -130,7 +138,7 @@ export default function CoursePlayerClient({
   };
 
   const toggleTopic = (moduleIdx: number, topicIdx: number) => {
-    if (isCompleted) return;
+    if (isCompleted || instructorPreview) return;
 
     const key = getTopicKey(moduleIdx, topicIdx);
     const updated = new Set(completedTopics);
@@ -187,6 +195,29 @@ export default function CoursePlayerClient({
         </div>
       </div>
 
+      {instructorPreview && (
+        <div className="glass-card p-5 border border-amber-400/25 bg-amber-500/5">
+          <div className="flex items-start gap-3">
+            <GraduationCap className="w-5 h-5 text-amber-300 flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-slate-300 space-y-1">
+              <p className="text-white font-semibold">Instructor access</p>
+              <p>
+                You&apos;re viewing this course with your instructor account — all lesson
+                content, study notes, and American Red Cross videos are unlocked without
+                enrollment. Progress tracking and certificate claiming are disabled in
+                this view.
+              </p>
+              <Link
+                href="/dashboard/instructor"
+                className="inline-flex items-center gap-1.5 text-amber-300 hover:text-white transition-colors"
+              >
+                Open instructor portal <ExternalLink className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+
       {hasArcPathway && (
         <div className="glass-card p-5 border border-cyan-400/25 bg-cyan-500/5">
           <div className="flex items-start gap-3">
@@ -220,6 +251,7 @@ export default function CoursePlayerClient({
         </div>
       )}
 
+      {!instructorPreview && (
       <div className="glass-card p-5">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm font-medium text-white">Your Progress</span>
@@ -300,8 +332,9 @@ export default function CoursePlayerClient({
           </div>
         )}
       </div>
+      )}
 
-      {challenges.length > 0 && (
+      {!instructorPreview && challenges.length > 0 && (
         <ChallengePanel
           courseSlug={course.slug}
           challenges={challenges}
@@ -390,15 +423,21 @@ export default function CoursePlayerClient({
                   <h3 className="text-white font-semibold text-lg">{currentTopic.title}</h3>
                   <p className="text-xs text-slate-500 mt-1">Study notes</p>
                 </div>
-                <button
-                  onClick={() => toggleTopic(activeModule, activeTopic)}
-                  disabled={isCompleted}
-                  className="btn-outline text-sm py-2 disabled:opacity-40"
-                >
-                  {completedTopics.has(getTopicKey(activeModule, activeTopic))
-                    ? "Marked complete"
-                    : "Mark complete"}
-                </button>
+                {instructorPreview ? (
+                  <span className="text-xs text-amber-300/90 border border-amber-400/25 rounded-full px-3 py-1.5 flex-shrink-0">
+                    Instructor preview
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => toggleTopic(activeModule, activeTopic)}
+                    disabled={isCompleted}
+                    className="btn-outline text-sm py-2 disabled:opacity-40"
+                  >
+                    {completedTopics.has(getTopicKey(activeModule, activeTopic))
+                      ? "Marked complete"
+                      : "Mark complete"}
+                  </button>
+                )}
               </div>
               {currentVideo && <RedCrossVideo video={currentVideo} className="mb-5" />}
               {currentMedia && (
