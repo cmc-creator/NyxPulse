@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { ClipboardCheck, Shield } from "lucide-react";
+import Link from "next/link";
+import { BookOpen, ClipboardCheck, ExternalLink, HeartPulse, Shield } from "lucide-react";
 import type { SkillSheet, SkillSignoff } from "@/lib/skills/sheets";
 
 type Payload = {
@@ -113,6 +114,51 @@ export default function InstructorPortalPage() {
           applicable.
         </p>
       </div>
+
+      {data.isInstructor && (
+        <section className="glass-card p-5 border border-red-400/20 bg-red-500/5 space-y-4">
+          <div className="flex items-start gap-3">
+            <HeartPulse className="w-5 h-5 text-red-300 flex-shrink-0 mt-0.5" />
+            <div>
+              <h2 className="text-white font-semibold">American Red Cross instructor content</h2>
+              <p className="text-sm text-slate-400 mt-1 max-w-2xl">
+                Your certified-instructor materials — full course videos, skill sheets, and
+                class reporting — live in the Red Cross Learning Center (the former
+                Instructor&apos;s Corner). Sign in there with your own Red Cross instructor
+                account; that licensed content stays on their platform.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://www.redcrosslearningcenter.org/s/login2"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-primary inline-flex items-center gap-2 text-sm py-2"
+            >
+              Sign in to Red Cross Learning Center <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="https://www.redcross.org/take-a-class/digital-certificate"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn-outline inline-flex items-center gap-2 text-sm py-2"
+            >
+              Digital certificate lookup <ExternalLink className="w-3.5 h-3.5" />
+            </a>
+            <Link
+              href="/dashboard/courses"
+              className="btn-outline inline-flex items-center gap-2 text-sm py-2"
+            >
+              <BookOpen className="w-3.5 h-3.5" /> NyxPulse instructor course library
+            </Link>
+          </div>
+          <p className="text-xs text-slate-500">
+            Every NyxPulse course is also unlocked for your account — open any course from the
+            library to review lesson content and the embedded Red Cross videos without enrolling.
+          </p>
+        </section>
+      )}
 
       <div className="glass-card p-4 flex items-start gap-3 text-sm">
         <Shield className="w-4 h-4 text-cyan-300 mt-0.5 flex-shrink-0" />

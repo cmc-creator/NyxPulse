@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award, ShieldCheck } from "lucide-react";
+import { Clock, ArrowRight, ArrowLeft, Check, Monitor, Users, Award, ShieldCheck, PlayCircle } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 import { getCourseBySlug, courses } from "@/lib/courses";
+import { getCourseLessonVideos, getLessonVideo } from "@/lib/courses/lesson-videos";
 import { getSessionUser } from "@/lib/auth/server";
 import BuyButton from "@/components/BuyButton";
+import RedCrossVideo from "@/components/RedCrossVideo";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -43,6 +45,7 @@ export default async function CourseDetailPage({ params }: Props) {
   const enrolledSlugs = user?.profile.courses ?? [];
   const hasCourse = enrolledSlugs.includes(slug);
   const hasArcPathway = Boolean(course.americanRedCrossPathway);
+  const courseVideos = getCourseLessonVideos(course.slug);
 
   return (
     <div className="relative min-h-screen page-shell">
@@ -150,6 +153,25 @@ export default async function CourseDetailPage({ params }: Props) {
             </div>
           </div>
 
+          {courseVideos.length > 0 && (
+            <div className="mb-8">
+              <h2 className="text-white font-bold text-2xl mb-2 flex items-center gap-3">
+                <span className="w-1 h-6 rounded-full bg-gradient-to-b from-red-500 to-rose-400 inline-block" />
+                Official American Red Cross Videos
+              </h2>
+              <p className="text-slate-400 text-sm mb-5 max-w-3xl">
+                These lessons include official training videos streamed from the American Red
+                Cross YouTube channel. Preview them here — inside the course, each video appears
+                alongside the matching study topic.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {courseVideos.map((video) => (
+                  <RedCrossVideo key={video.youtubeId} video={video} />
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Modules — main column */}
             <div className="lg:col-span-2 space-y-4">
@@ -175,7 +197,15 @@ export default async function CourseDetailPage({ params }: Props) {
                     {mod.topics.map((t) => (
                       <li key={t.title} className="flex items-start gap-2 text-sm text-slate-400">
                         <Check className="w-3.5 h-3.5 text-cyan-500 flex-shrink-0 mt-0.5" />
-                        {t.title}
+                        <span>
+                          {t.title}
+                          {getLessonVideo(course.slug, t.title) && (
+                            <span className="ml-2 inline-flex items-center gap-1 align-middle text-[11px] font-semibold text-red-300/90">
+                              <PlayCircle className="w-3.5 h-3.5" />
+                              Red Cross video
+                            </span>
+                          )}
+                        </span>
                       </li>
                     ))}
                   </ul>

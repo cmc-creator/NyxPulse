@@ -78,3 +78,47 @@ export async function enrollUserInCourses(options: {
     alreadyEnrolled: newlyEnrolled.length === 0,
   };
 }
+
+/**
+ * Revoke course access after a full refund or chargeback. Removes the
+ * courses from both enrollments and completions so certificates can no
+ * longer be claimed. Progress records and already-issued certificate
+ * documents are kept as an audit trail. Idempotent — safe for Stripe
+ * webhook retries.
+ */
+export async function revokeUserCourses(options: {
+  userId: string;
+  courseSlugs: string[];
+  reason: "refund" | "dispute";
+}) {
+  const { userId, courseSlugs, reason } = options;
+
+  if (!userId || courseSlugs.length === 0) {
+    throw new Error("userId and courseSlugs are required for revocation");
+  }
+  if (!isFirebaseAdminConfigured()) {
+    throw new Error("Firebase Admin is required for revocation");
+  }
+
+  const profile = await getUserProfile(userId);
+  if (!profile) {
+    return { userId, revoked: [] as string[] };
+  }
+
+  const revoked = courseSlugs.filter((slug) => profile.courses.includes(slug));
+  if (revoked.length === 0) {
+    return { userId, revoked };
+  }
+
+  await updateUserProfile(userId, {
+    courses: profile.courses.filter((slug) => !courseSlugs.includes(slug)),
+    completedCourses: profile.completedCourses.filter(
+      (slug) => !courseSlugs.includes(slug)
+    ),
+  });
+
+  console.log(
+    `Revoked course access (${reason}) for user ${userId}: ${revoked.join(", ")}`
+  );
+  return { userId, revoked };
+}

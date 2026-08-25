@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth/server";
+import { isAdminSession } from "@/lib/auth/admin";
 import { setUserAdminClaim } from "@/lib/auth/claims";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 
@@ -24,7 +25,7 @@ export async function POST(req: Request) {
   const provided = req.headers.get("x-admin-bootstrap-token")?.trim();
   const session = await getSessionUser();
   const bootstrapOk = Boolean(bootstrap && provided && provided === bootstrap);
-  const adminOk = session?.claims.admin === true;
+  const adminOk = isAdminSession(session);
 
   if (!bootstrapOk && !adminOk) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

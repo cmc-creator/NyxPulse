@@ -1,9 +1,37 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
-import { enrollUserInCourses, parseCourseSlugsFromMetadata } from "@/lib/enrollment";
+import {
+  enrollUserInCourses,
+  parseCourseSlugsFromMetadata,
+  revokeUserCourses,
+} from "@/lib/enrollment";
 import type Stripe from "stripe";
 
 export const dynamic = "force-dynamic";
+
+/**
+ * Resolve the userId + courseSlugs for a charge-level event. Checkout puts
+ * metadata on both the session and (via payment_intent_data) the
+ * PaymentIntent, so prefer metadata already on the event object and fall
+ * back to retrieving the PaymentIntent.
+ */
+async function resolvePurchaseMetadata(
+  metadata: Stripe.Metadata | null | undefined,
+  paymentIntentId: string | null | undefined
+): Promise<{ userId?: string; courseSlugs: string[] }> {
+  let userId = metadata?.userId;
+  let courseSlugs = parseCourseSlugsFromMetadata(metadata);
+
+  if ((!userId || courseSlugs.length === 0) && paymentIntentId) {
+    const intent = await getStripe().paymentIntents.retrieve(paymentIntentId);
+    userId = userId || intent.metadata?.userId;
+    if (courseSlugs.length === 0) {
+      courseSlugs = parseCourseSlugsFromMetadata(intent.metadata);
+    }
+  }
+
+  return { userId, courseSlugs };
+}
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -51,6 +79,51 @@ export async function POST(req: Request) {
     } catch (err) {
       console.error("Failed to process checkout.session.completed:", err);
       return NextResponse.json({ error: "Enrollment update failed" }, { status: 500 });
+    }
+  }
+
+  // Full refund → revoke course access. `charge.refunded` also fires for
+  // partial refunds; only act when the charge is fully refunded.
+  if (event.type === "charge.refunded") {
+    const charge = event.data.object as Stripe.Charge;
+    if (charge.refunded) {
+      try {
+        const { userId, courseSlugs } = await resolvePurchaseMetadata(
+          charge.metadata,
+          typeof charge.payment_intent === "string"
+            ? charge.payment_intent
+            : charge.payment_intent?.id
+        );
+        if (userId && courseSlugs.length > 0) {
+          await revokeUserCourses({ userId, courseSlugs, reason: "refund" });
+        } else {
+          console.error("charge.refunded without purchase metadata:", charge.id);
+        }
+      } catch (err) {
+        console.error("Failed to process charge.refunded:", err);
+        return NextResponse.json({ error: "Refund revocation failed" }, { status: 500 });
+      }
+    }
+  }
+
+  // Chargeback opened → revoke access immediately while the dispute runs.
+  if (event.type === "charge.dispute.created") {
+    const dispute = event.data.object as Stripe.Dispute;
+    try {
+      const { userId, courseSlugs } = await resolvePurchaseMetadata(
+        dispute.metadata,
+        typeof dispute.payment_intent === "string"
+          ? dispute.payment_intent
+          : dispute.payment_intent?.id
+      );
+      if (userId && courseSlugs.length > 0) {
+        await revokeUserCourses({ userId, courseSlugs, reason: "dispute" });
+      } else {
+        console.error("charge.dispute.created without purchase metadata:", dispute.id);
+      }
+    } catch (err) {
+      console.error("Failed to process charge.dispute.created:", err);
+      return NextResponse.json({ error: "Dispute revocation failed" }, { status: 500 });
     }
   }
 

@@ -132,6 +132,21 @@ export async function POST(req: Request) {
         courseSlug,
         courseSlugs: courseSlug,
       },
+      // Mirror metadata onto the PaymentIntent so refund/dispute webhooks
+      // (which reference charges, not checkout sessions) can trace the
+      // purchase back to the learner and courses.
+      payment_intent_data: {
+        metadata: {
+          userId,
+          courseSlug,
+          courseSlugs: courseSlug,
+        },
+      },
+      // Opt-in Stripe Tax: requires Tax to be activated in the Stripe
+      // dashboard first, otherwise checkout creation fails.
+      ...(process.env.STRIPE_AUTOMATIC_TAX === "true"
+        ? { automatic_tax: { enabled: true } }
+        : {}),
       client_reference_id: userId,
       success_url: `${appUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/courses/${courseSlug}`,

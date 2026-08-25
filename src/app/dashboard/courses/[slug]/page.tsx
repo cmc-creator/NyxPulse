@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { getSessionUser } from "@/lib/auth/server";
+import { isInstructorSession } from "@/lib/auth/instructor";
 import { getChallengesForCourse } from "@/lib/challenges/catalog";
 import { getCourseBySlug } from "@/lib/courses";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
@@ -24,7 +25,11 @@ export default async function CoursePlayerPage({ params }: Props) {
 
   const { userId, profile } = session;
   const enrolledSlugs = profile.courses;
-  if (!enrolledSlugs.includes(slug)) {
+  const isEnrolled = enrolledSlugs.includes(slug);
+  // Certified instructors (e.g. the course instructor) get read-only access
+  // to all paid course content without enrolling.
+  const instructorPreview = !isEnrolled && isInstructorSession(session);
+  if (!isEnrolled && !instructorPreview) {
     redirect(`/courses/${slug}`);
   }
 
@@ -47,6 +52,7 @@ export default async function CoursePlayerPage({ params }: Props) {
       isCompleted={isCompleted}
       challenges={challenges}
       initialChallengeResults={challengeResults?.results ?? {}}
+      instructorPreview={instructorPreview}
     />
   );
 }

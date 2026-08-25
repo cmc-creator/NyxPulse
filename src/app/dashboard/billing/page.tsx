@@ -1,9 +1,42 @@
 import { getSessionUser } from "@/lib/auth/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { CreditCard, Receipt, Package, ArrowRight } from "lucide-react";
+import { CreditCard, Receipt, Package, ArrowRight, ExternalLink } from "lucide-react";
 import ManageBillingButton from "@/components/ManageBillingButton";
 import { courses } from "@/lib/courses";
+import { getStripe } from "@/lib/stripe";
+
+type BillingCharge = {
+  id: string;
+  created: number;
+  description: string;
+  amount: number;
+  currency: string;
+  refunded: boolean;
+  receiptUrl: string | null;
+};
+
+/** Real charge history from Stripe; null when Stripe is unavailable. */
+async function listStripeCharges(customerId: string): Promise<BillingCharge[] | null> {
+  if (!process.env.STRIPE_SECRET_KEY) return null;
+  try {
+    const charges = await getStripe().charges.list({ customer: customerId, limit: 20 });
+    return charges.data
+      .filter((charge) => charge.paid)
+      .map((charge) => ({
+        id: charge.id,
+        created: charge.created,
+        description: charge.description ?? "Course purchase",
+        amount: charge.amount,
+        currency: charge.currency,
+        refunded: charge.refunded,
+        receiptUrl: charge.receipt_url ?? null,
+      }));
+  } catch (err) {
+    console.error("Failed to load Stripe charges for billing page:", err);
+    return null;
+  }
+}
 
 export default async function BillingPage() {
   const session = await getSessionUser();
@@ -17,6 +50,9 @@ export default async function BillingPage() {
 
   const enrolledCourses = courses.filter((c) => enrolledSlugs.includes(c.slug));
   const totalSpent = enrolledCourses.reduce((sum, c) => sum + (c.price ?? 0), 0);
+  const stripeCharges = hasStripeCustomer
+    ? await listStripeCharges(profile.stripeCustomerId!)
+    : null;
 
   const planConfig: Record<string, { name: string; description: string; bar: string }> = {
     individual: {
@@ -91,9 +127,96 @@ export default async function BillingPage() {
         ))}
       </div>
 
-      {/* Purchase history */}
+      {/* Payment history — real Stripe charges when available */}
+      {stripeCharges && stripeCharges.length > 0 && (
+        <section>
+          <h2 className="text-xl font-bold text-white mb-5">Payments</h2>
+          <div className="glass-card overflow-hidden">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-[rgba(255,255,255,0.06)]">
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Date
+                  </th>
+                  <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">
+                    Description
+                  </th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Amount
+                  </th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                    Status
+                  </th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wider hidden sm:table-cell">
+                    Receipt
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {stripeCharges.map((charge, i) => (
+                  <tr
+                    key={charge.id}
+                    className={
+                      i < stripeCharges.length - 1
+                        ? "border-b border-[rgba(255,255,255,0.04)]"
+                        : ""
+                    }
+                  >
+                    <td className="px-5 py-4 text-slate-300">
+                      {new Date(charge.created * 1000).toLocaleDateString()}
+                    </td>
+                    <td className="px-5 py-4 text-slate-300 hidden sm:table-cell">
+                      {charge.description}
+                    </td>
+                    <td className="px-5 py-4 text-right text-slate-300">
+                      ${(charge.amount / 100).toFixed(2)}{" "}
+                      <span className="text-slate-500 uppercase text-xs">{charge.currency}</span>
+                    </td>
+                    <td className="px-5 py-4 text-right">
+                      {charge.refunded ? (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-300 border border-amber-500/20">
+                          Refunded
+                        </span>
+                      ) : (
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
+                          Paid
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-5 py-4 text-right hidden sm:table-cell">
+                      {charge.receiptUrl ? (
+                        <a
+                          href={charge.receiptUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-violet-300 hover:text-white inline-flex items-center gap-1"
+                        >
+                          View <ExternalLink className="w-3 h-3" />
+                        </a>
+                      ) : (
+                        <span className="text-slate-600">—</span>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
+
+      {/* Enrollment summary (catalog prices — official receipts live in Stripe) */}
       <section>
-        <h2 className="text-xl font-bold text-white mb-5">Purchase History</h2>
+        <h2 className="text-xl font-bold text-white mb-1">
+          {stripeCharges && stripeCharges.length > 0 ? "Enrolled Courses" : "Purchase History"}
+        </h2>
+        {stripeCharges && stripeCharges.length > 0 && (
+          <p className="text-xs text-slate-500 mb-4">
+            Catalog view of your enrollments. Amounts shown are list prices — see Payments
+            above for actual charges and receipts.
+          </p>
+        )}
+        {!(stripeCharges && stripeCharges.length > 0) && <div className="mb-4" />}
         {enrolledCourses.length === 0 ? (
           <div className="glass-card p-8 text-center">
             <Receipt className="w-10 h-10 text-slate-600 mx-auto mb-4" />
@@ -142,7 +265,7 @@ export default async function BillingPage() {
                     </td>
                     <td className="px-5 py-4 text-right hidden sm:table-cell">
                       <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/15 text-green-400 border border-green-500/20">
-                        Paid
+                        Enrolled
                       </span>
                     </td>
                   </tr>

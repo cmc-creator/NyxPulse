@@ -4,11 +4,14 @@ import { CheckCircle2, AlertTriangle } from "lucide-react";
 
 type Props = { searchParams: Promise<{ token?: string }> };
 
+function isInviteExpired(expiresAt: string): boolean {
+  return new Date(expiresAt).getTime() < Date.now();
+}
+
 export default async function AcceptInvitePage({ searchParams }: Props) {
   const { token } = await searchParams;
   const invite = token ? await getOrgInvite(token) : null;
-  const expired =
-    invite && new Date(invite.expiresAt).getTime() < Date.now();
+  const expired = invite ? isInviteExpired(invite.expiresAt) : false;
 
   return (
     <main className="min-h-screen bg-[#02020a] px-6 py-20">
