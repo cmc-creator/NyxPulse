@@ -37,10 +37,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const auth = getClientAuth();
-    if (!auth) {
-      setIsLoaded(true);
-      return;
-    }
+    // When Firebase client is unconfigured, getClientAuth() is null and the
+    // isLoaded initializer already started as true — nothing to do here.
+    if (!auth) return;
     return onAuthStateChanged(auth, (next) => {
       setUser(next);
       setIsLoaded(true);
