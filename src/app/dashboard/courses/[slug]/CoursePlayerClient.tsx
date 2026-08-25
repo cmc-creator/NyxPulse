@@ -6,8 +6,10 @@ import Link from "next/link";
 import { Course } from "@/lib/courses";
 import { getTopicKey } from "@/lib/course-progress";
 import { getLessonMedia } from "@/lib/courses/lesson-media";
+import { getLessonVideo } from "@/lib/courses/lesson-videos";
 import type { ChallengeAttemptResult, CourseChallenge } from "@/lib/challenges/types";
 import ChallengePanel from "@/components/ChallengePanel";
+import RedCrossVideo from "@/components/RedCrossVideo";
 import {
   CheckCircle,
   Circle,
@@ -150,6 +152,9 @@ export default function CoursePlayerClient({
   const currentTopic = course.modules[activeModule]?.topics[activeTopic];
   const currentMedia = currentTopic
     ? getLessonMedia(course.slug, currentTopic.title)
+    : undefined;
+  const currentVideo = currentTopic
+    ? getLessonVideo(course.slug, currentTopic.title)
     : undefined;
 
   return (
@@ -395,6 +400,7 @@ export default function CoursePlayerClient({
                     : "Mark complete"}
                 </button>
               </div>
+              {currentVideo && <RedCrossVideo video={currentVideo} className="mb-5" />}
               {currentMedia && (
                 <figure className="mb-5 overflow-hidden rounded-2xl border border-white/10 bg-black/40">
                   <Image
