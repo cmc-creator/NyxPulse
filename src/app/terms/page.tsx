@@ -74,7 +74,7 @@ export default function TermsPage() {
                 <h2 className="text-2xl font-bold text-white mb-4">5. Payment Terms</h2>
                 <ul className="space-y-2 list-disc list-inside">
                   <li>All prices are in USD unless otherwise stated</li>
-                  <li>Payment is processed securely via Stripe</li>
+                  <li>Payment is processed through Stripe</li>
                   <li>Individual course purchases are non-refundable once access is granted</li>
                   <li>Team and enterprise plans may offer refunds subject to our refund policy</li>
                   <li>Invoices are issued upon purchase for business records</li>

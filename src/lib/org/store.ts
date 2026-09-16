@@ -3,10 +3,10 @@ import path from "node:path";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { OrgInvite } from "@/lib/org/types";
+import { resolveStoragePath } from "@/lib/storage-path";
 
 function filePath() {
-  if (process.env.ORG_INVITES_STORAGE_PATH) return process.env.ORG_INVITES_STORAGE_PATH;
-  return path.join(/* turbopackIgnore: true */ process.cwd(), ".data", "org-invites.json");
+  return resolveStoragePath("ORG_INVITES_STORAGE_PATH", "org-invites.json");
 }
 
 async function readFileStore(): Promise<OrgInvite[]> {

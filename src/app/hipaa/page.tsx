@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
 
 export const metadata: Metadata = {
-  title: "HIPAA Compliance | NyxPulse",
+  title: "HIPAA Readiness | NyxPulse",
   description: "NyxPulse HIPAA readiness information and business associate agreement process.",
 };
 
@@ -30,7 +30,7 @@ export default function HIPAAPage() {
     {
       icon: AlertCircle,
       title: "Incident Response",
-      desc: "Security and privacy inquiries are routed to our compliance contacts for investigation.",
+      desc: "Security and privacy inquiries are routed to our privacy and security contacts.",
     },
   ];
 
@@ -47,13 +47,13 @@ export default function HIPAAPage() {
           </Link>
 
           <div className="glass-card p-10 lg:p-14 mb-10">
-            <h1 className="font-display text-4xl font-bold text-white mb-2">HIPAA Compliance</h1>
+            <h1 className="font-display text-4xl font-bold text-white mb-2">HIPAA Readiness</h1>
             <p className="text-slate-400 mb-8">
               NyxPulse is built for healthcare training workflows. Current self-serve accounts are designed for learner identity, enrollment, and course progress — not for storing clinical PHI by default.
             </p>
             <div className="inline-flex items-center gap-2 badge badge-violet">
               <Shield className="w-4 h-4" />
-              HIPAA-ready for covered deployments
+              Available for covered deployments after review
             </div>
           </div>
 

@@ -29,7 +29,7 @@ const steps = [
   {
     icon: ClipboardCheck,
     title: "2. Optional: book a skills session",
-    desc: "If you need an official American Red Cross digital certificate, book a skills session with Jeremy. He may teach through NyxPulse or another authorized organization.",
+    desc: "If you need an American Red Cross digital certificate, book a skills session with Jeremy. He may teach through NyxPulse or another authorized organization.",
   },
   {
     icon: BadgeCheck,
@@ -67,7 +67,7 @@ export default function AmericanRedCrossPage() {
             <p className="text-slate-300 text-lg leading-relaxed mb-6">
               NyxPulse issues its own Certificates of Completion. Separately, Jeremy
               ({jeremyInstructor.credentials[0]}) can run skills sessions for learners who also
-              need an official American Red Cross digital certificate. He teaches through NyxPulse
+              need an American Red Cross digital certificate. He teaches through NyxPulse
               and other organizations as scheduled.
             </p>
             <div className="rounded-2xl border border-amber-400/20 bg-amber-500/10 px-4 py-3 text-sm text-amber-50">

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 import { enrollUserInCourses, parseCourseSlugsFromMetadata } from "@/lib/enrollment";
+import { getCourseBySlug } from "@/lib/courses";
+import { getUserProfile } from "@/lib/auth/profile";
+import { recordStripeInvoice } from "@/lib/accounting/store";
 import type Stripe from "stripe";
 
 export const dynamic = "force-dynamic";
@@ -43,11 +46,43 @@ export async function POST(req: Request) {
     }
 
     try {
+      const profile = await getUserProfile(userId);
       await enrollUserInCourses({
         userId,
         courseSlugs,
         stripeCustomerId: customerId,
       });
+
+      const lineItems = courseSlugs.map((slug) => {
+        const course = getCourseBySlug(slug);
+        return {
+          description: course?.title ?? slug,
+          quantity: 1,
+          unitAmount: course?.price ?? 0,
+          ...(slug ? { courseSlug: slug } : {}),
+        };
+      });
+
+      const customerName =
+        session.customer_details?.name ||
+        profile?.displayName ||
+        [profile?.firstName, profile?.lastName].filter(Boolean).join(" ") ||
+        "NyxPulse Learner";
+      const customerEmail = session.customer_details?.email || profile?.email || "";
+      if (customerEmail) {
+        await recordStripeInvoice({
+          customerUserId: userId,
+          customerName,
+          customerEmail,
+          orgName: profile?.orgName,
+          courseSlugs,
+          lineItems,
+          stripeCheckoutSessionId: session.id,
+          stripePaymentIntentId:
+            typeof session.payment_intent === "string" ? session.payment_intent : session.payment_intent?.id,
+          paymentMethod: session.payment_method_types?.join(", ") ?? "card",
+        });
+      }
     } catch (err) {
       console.error("Failed to process checkout.session.completed:", err);
       return NextResponse.json({ error: "Enrollment update failed" }, { status: 500 });

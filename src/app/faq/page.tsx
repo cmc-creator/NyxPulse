@@ -17,11 +17,11 @@ const faqs = [
   },
   {
     q: "Are your CPR classes American Red Cross certified?",
-    a: "CPR/AED, First Aid, and BLS are taught by Jeremy, an American Red Cross certified instructor. Completing the course in NyxPulse earns a NyxPulse Certificate of Completion. If you also need an official Red Cross digital certificate, book a skills session — Jeremy may teach that class through NyxPulse or another authorized organization, and Red Cross certificates are issued only through the Red Cross Learning Center after reporting.",
+    a: "CPR/AED, First Aid, and BLS are taught by Jeremy, an American Red Cross certified instructor. Completing the course in NyxPulse earns a NyxPulse Certificate of Completion. If you also need an American Red Cross digital certificate, book a skills session — it can only be issued through an authorized Red Cross reporting process.",
   },
   {
-    q: "Are NyxPulse certificates recognized by healthcare providers?",
-    a: "Yes. Our certificates are recognized by hospitals, clinics, EMS, fire departments, and other healthcare organizations. Certificates verify completion of accredited training and are valid for the tenure specified in course materials. Always check your organization's requirements for additional licensing or state-specific certifications.",
+    q: "Can healthcare providers accept NyxPulse certificates?",
+    a: "Some hospitals, clinics, EMS agencies, fire departments, and other organizations use NyxPulse certificates. They verify completion of NyxPulse training and are valid for the tenure specified in course materials. Acceptance always depends on the organization's own training and licensing requirements.",
   },
   {
     q: "How long do certificates remain valid?",
@@ -37,15 +37,15 @@ const faqs = [
   },
   {
     q: "What payment methods do you accept?",
-    a: "We accept all major credit and debit cards (Visa, Mastercard, American Express, Discover) via Stripe. All payments are PCI-DSS compliant and secure. We also support ACH bank transfers for enterprise customers.",
+    a: "We accept major credit and debit cards via Stripe. For enterprise customers, we can also discuss ACH or invoicing options.",
   },
   {
     q: "What is your refund policy?",
     a: "Individual courses are non-refundable after access is granted. Refund requests within 7 days are considered if the course is inaccessible or defective. Team and enterprise plans may have different refund terms. See our Terms of Service for details.",
   },
   {
-    q: "Are NyxPulse courses HIPAA compliant?",
-    a: "NyxPulse is HIPAA-ready for covered deployments. Self-serve accounts are designed for learner identity, enrollment, and training progress — not for storing clinical PHI by default. If your organization needs a BAA or will process PHI, contact hipaa@nyxpulse.com before go-live.",
+    q: "How does NyxPulse handle HIPAA and PHI?",
+    a: "NyxPulse is designed for healthcare training workflows. Self-serve accounts are intended for learner identity, enrollment, and training progress — not for storing clinical PHI by default. If your organization needs a BAA or will process PHI, contact hipaa@nyxpulse.com before go-live.",
   },
   {
     q: "Can instructors see individual learner progress?",
@@ -53,15 +53,15 @@ const faqs = [
   },
   {
     q: "How are certificates issued?",
-    a: "NyxPulse issues its own Certificate of Completion (with certificate ID) when you finish a course in the platform — including CPR, First Aid, BLS, and facility programs. Separately, an official American Red Cross digital certificate can be earned when Jeremy teaches and reports a class under an authorized Red Cross Training Provider process.",
+    a: "NyxPulse issues its own Certificate of Completion (with certificate ID) when you finish a course in the platform — including CPR, First Aid, BLS, and facility programs. Separately, an American Red Cross digital certificate can be earned when Jeremy teaches and reports a class under an authorized Red Cross Training Provider process.",
   },
   {
     q: "What happens if I don't pass an assessment?",
     a: "Most courses allow unlimited retries. You can review the content, take practice quizzes, and attempt the final assessment again. Some enterprise courses may have restricted retries. Check your specific course materials.",
   },
   {
-    q: "Can I generate reports on team training compliance?",
-    a: "Yes. The Admin Dashboard provides completion reports, certification expiration tracking, and compliance status. You can filter by course, date range, and team. Export reports in CSV format for additional analysis.",
+    q: "Can I generate reports on team training status?",
+    a: "Yes. The Admin Dashboard provides completion reports, certification expiration tracking, and training status. You can filter by course, date range, and team. Export reports in CSV format for additional analysis.",
   },
   {
     q: "What support channels are available?",

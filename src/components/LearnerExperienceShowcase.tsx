@@ -162,7 +162,7 @@ export default function LearnerExperienceShowcase() {
                     </div>
                     <div className="flex items-start gap-2.5">
                       <Sparkles className="w-4 h-4 text-amber-300 mt-0.5 flex-shrink-0" />
-                      A product experience that feels premium from enrollment to proof of completion.
+                      A clear experience from enrollment to proof of completion.
                     </div>
                   </div>
                 </div>
@@ -174,18 +174,18 @@ export default function LearnerExperienceShowcase() {
         <MotionReveal className="order-1 xl:order-2">
           <span className="badge badge-cyan mb-4">Learner Journey</span>
           <h2 className="font-display text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5 leading-tight text-balance">
-            Sophisticated for administrators.
-            <span className="gradient-text"> Effortless for learners.</span>
+            Structured for administrators.
+            <span className="gradient-text"> Clear for learners.</span>
           </h2>
           <p className="text-slate-300 text-base sm:text-lg leading-relaxed max-w-xl mb-8">
-            The platform experience is designed to feel calm, clear, and premium. Learners always know what to complete next, while leaders get clean documentation and instant visibility.
+            The platform experience is designed to feel calm and clear. Learners can see what to complete next, while leaders get documentation and visibility in one place.
           </p>
 
           <div className="space-y-4">
             {[
               "Focused progress tracking with no clutter.",
               "Automatic certificate access when requirements are complete.",
-              "A polished digital workflow that reflects the quality of the training itself.",
+              "A straightforward digital workflow that supports the training itself.",
             ].map((item) => (
               <motion.div
                 key={item}

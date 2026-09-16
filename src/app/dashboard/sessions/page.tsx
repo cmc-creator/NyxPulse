@@ -25,7 +25,7 @@ export default async function SessionsPage() {
           <p className="text-white font-semibold mb-1">Two certificate paths</p>
           <p>
             1) NyxPulse Certificate of Completion from this platform.{" "}
-            2) Official American Red Cross digital certificate when a class is taught and reported
+            2) American Red Cross digital certificate when a class is taught and reported
             under an authorized Red Cross Training Provider agreement (Jeremy may teach through
             NyxPulse or other organizations).
           </p>

@@ -5,7 +5,7 @@ import { Quote } from "lucide-react";
 const testimonials = [
   {
     quote:
-      "NyxPulse's BLS training completely changed how our code team communicates. The team dynamics module alone was worth it. Our response times dropped noticeably.",
+      "NyxPulse's BLS training helped our code team communicate more clearly during drills.",
     name: "Sarah M., RN, BSN",
     role: "ICU Charge Nurse",
     org: "Regional Medical Center",
@@ -14,7 +14,7 @@ const testimonials = [
   },
   {
     quote:
-      "We brought NyxPulse in for our entire ED staff for de-escalation. The instructors understood our environment. Real scenarios, no fluff. Our staff left with actual tools.",
+      "The de-escalation training gave our staff practical tools that fit our environment.",
     name: "Dr. James T.",
     role: "Emergency Medicine Physician",
     org: "Urban Health System",
@@ -23,7 +23,7 @@ const testimonials = [
   },
   {
     quote:
-      "Their Emergency Management course helped us pass our TJC survey with zero findings in the emergency preparedness chapter. That has never happened before. Phenomenal.",
+      "The Emergency Management course made our preparedness documentation easier to organize.",
     name: "Linda P.",
     role: "Safety & Emergency Manager",
     org: "Community Hospital Network",
@@ -32,7 +32,7 @@ const testimonials = [
   },
   {
     quote:
-      "The virtual format was seamless. Our staff across three facilities all trained together in real time. Certificate management made compliance tracking easy.",
+      "The virtual format worked well across multiple sites, and certificate tracking simplified follow-up.",
     name: "Marcus W.",
     role: "CNO",
     org: "Multi-Site Outpatient Clinics",
@@ -53,13 +53,13 @@ export default function Testimonials() {
     <section className="relative py-24 lg:py-32 px-6">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-14">
-          <span className="badge badge-green mb-4">Trusted Outcomes</span>
+          <span className="badge badge-green mb-4">Training Feedback</span>
           <h2 className="font-display text-4xl sm:text-5xl font-bold text-white mb-4">
-            Proof That the Experience
-            <span className="gradient-text"> Delivers</span>
+            What teams
+            <span className="gradient-text"> mention</span>
           </h2>
           <p className="text-slate-300 text-lg max-w-2xl mx-auto">
-            High-trust organizations choose NyxPulse because the platform looks polished, the instruction feels credible, and the outcomes are measurable.
+            Teams mention clear instruction, structured delivery, and practical training workflows.
           </p>
         </div>
 
@@ -71,7 +71,7 @@ export default function Testimonials() {
             >
               <div className="flex items-center justify-between mb-6">
                 <Quote className="w-8 h-8 text-indigo-300/40" />
-                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Verified Client</div>
+                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-500">Client feedback</div>
               </div>
               <p className="text-slate-200 text-base leading-relaxed mb-6 italic">
                 &ldquo;{t.quote}&rdquo;
@@ -91,7 +91,7 @@ export default function Testimonials() {
                     {t.role} | {t.org}
                   </div>
                 </div>
-                <span className="ml-auto text-[10px] uppercase tracking-[0.15em] text-slate-500">Trusted</span>
+                <span className="ml-auto text-[10px] uppercase tracking-[0.15em] text-slate-500">Feedback</span>
               </div>
             </div>
           ))}

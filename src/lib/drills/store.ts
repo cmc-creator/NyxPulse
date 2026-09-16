@@ -3,10 +3,10 @@ import path from "node:path";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { DrillRecord } from "@/lib/drills/types";
+import { resolveStoragePath } from "@/lib/storage-path";
 
 function filePath() {
-  if (process.env.DRILLS_STORAGE_PATH) return process.env.DRILLS_STORAGE_PATH;
-  return path.join(/* turbopackIgnore: true */ process.cwd(), ".data", "drills.json");
+  return resolveStoragePath("DRILLS_STORAGE_PATH", "drills.json");
 }
 
 async function readFileStore(): Promise<DrillRecord[]> {

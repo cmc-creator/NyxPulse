@@ -18,7 +18,7 @@ export const jeremyInstructor: InstructorProfile = {
     "Basic Life Support (BLS) instruction",
     "Instructor-led and blended skills sessions",
   ],
-  bio: "Jeremy leads NyxPulse life-safety training and also teaches through other authorized organizations when needed. Learners can earn a NyxPulse Certificate of Completion in this platform, and — when a class is taught under an American Red Cross Training Provider agreement — pursue an official Red Cross digital certificate after skills verification.",
+  bio: "Jeremy leads NyxPulse life-safety training and also teaches through other authorized organizations when needed. Learners can earn a NyxPulse Certificate of Completion in this platform, and — when a class is taught under an American Red Cross Training Provider agreement — pursue an American Red Cross digital certificate after skills verification.",
   specialties: [
     "Adult & Pediatric CPR/AED",
     "First Aid",

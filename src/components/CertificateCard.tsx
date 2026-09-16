@@ -80,7 +80,7 @@ export default function CertificateCard({
               NyxPulse certificate earned — Red Cross pathway optional
             </p>
             <p className="mb-3">
-              This is your official <span className="text-white">NyxPulse Certificate of Completion</span>.
+              This is your <span className="text-white">NyxPulse Certificate of Completion</span>.
               If you also need an American Red Cross digital certificate, book a skills session.
               Red Cross cards are issued only when the class is taught/reported through an authorized
               Red Cross Training Provider process (Jeremy may teach through NyxPulse or other organizations).

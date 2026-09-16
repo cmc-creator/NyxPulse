@@ -46,8 +46,8 @@ export default function PlatformShowcase() {
             <span className="gradient-text"> feels as polished as the teams using it</span>
           </h2>
           <p className="text-slate-300 text-lg leading-relaxed max-w-xl mb-8">
-            NyxPulse is not just a course catalog. It is a refined operating layer for readiness,
-            enrollment, certificates, compliance tracking, and live program coordination.
+            NyxPulse is more than a course catalog. It helps teams manage readiness, enrollment,
+            certificates, training history, and live program coordination.
           </p>
 
           <div className="space-y-4">
@@ -64,8 +64,8 @@ export default function PlatformShowcase() {
               },
               {
                 icon: BadgeCheck,
-                title: "Elegant compliance workflow",
-                detail: "Certificates, rosters, and training histories are organized for audits without the clutter.",
+                title: "Structured records workflow",
+                detail: "Certificates, rosters, and training histories stay organized for review.",
               },
             ].map((item) => (
               <motion.div
@@ -108,7 +108,7 @@ export default function PlatformShowcase() {
                     { icon: Users, label: "Learners" },
                     { icon: CalendarRange, label: "Cohorts" },
                     { icon: BadgeCheck, label: "Certificates" },
-                    { icon: ShieldCheck, label: "Compliance" },
+                    { icon: ShieldCheck, label: "Readiness" },
                   ].map((item) => (
                     <div
                       key={item.label}
@@ -249,7 +249,7 @@ export default function PlatformShowcase() {
           >
             <p className="text-[10px] uppercase tracking-[0.18em] text-slate-500 mb-2">Certificate Status</p>
             <p className="text-white text-2xl font-display font-bold mb-1">98.2%</p>
-            <p className="text-sm text-slate-300">Up-to-date compliance coverage across current roster.</p>
+            <p className="text-sm text-slate-300">Up-to-date readiness coverage across the current roster.</p>
           </motion.div>
         </MotionReveal>
       </div>

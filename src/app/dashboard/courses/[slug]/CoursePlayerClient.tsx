@@ -192,7 +192,7 @@ export default function CoursePlayerClient({
               </p>
               <p>
                 Finish these modules to earn your <span className="text-white">NyxPulse Certificate of Completion</span>.
-                If you also want an official American Red Cross digital certificate, book a skills
+                If you also want an American Red Cross digital certificate, book a skills
                 session with {course.instructor?.name ?? "Jeremy"}. He may teach through NyxPulse or
                 other authorized organizations depending on the class.
               </p>

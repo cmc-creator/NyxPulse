@@ -61,7 +61,12 @@ export default async function BillingPage() {
           </div>
           <div className="flex-shrink-0">
             {hasStripeCustomer ? (
-              <ManageBillingButton />
+              <div className="flex flex-col gap-3">
+                <ManageBillingButton />
+                <Link href="/dashboard/accounting" className="btn-outline text-sm inline-flex items-center gap-2">
+                  View accounting <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             ) : (
               <Link
                 href="/courses"

@@ -44,7 +44,7 @@ export interface Course {
   /** NyxPulse always issues its own completion certificate when enabled. */
   issuesNyxpulseCertificate: boolean;
   /**
-   * When true, learners can also pursue an official American Red Cross
+   * When true, learners can also pursue an American Red Cross
    * digital certificate via instructor skills session + Learning Center reporting.
    * This is separate from the NyxPulse certificate.
    */

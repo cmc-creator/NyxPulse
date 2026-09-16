@@ -27,11 +27,35 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const user = await getSessionUser();
-  const gate = requireTeamAdmin(user);
-  if (gate || !user) return Response.json({ error: gate?.error ?? "Unauthorized" }, { status: gate?.status ?? 401 });
-
   const body = await request.json().catch(() => null);
   if (!body || typeof body.action !== "string") return Response.json({ error: "Invalid request body" }, { status: 400 });
+
+  if (body.action === "bootstrap-org") {
+    if (!user) return Response.json({ error: "Unauthorized" }, { status: 401 });
+
+    const orgName = typeof body.name === "string" && body.name.trim() ? body.name.trim() : "My Facility Team";
+    const now = new Date().toISOString();
+    const members: OrgMember[] = [];
+
+    await updateUserProfile(user.userId, {
+      plan: "team",
+      orgName,
+      orgRole: "admin",
+      orgMembers: members,
+      updatedAt: now,
+    });
+
+    return Response.json({
+      success: true,
+      plan: "team",
+      orgName,
+      orgRole: "admin",
+      members,
+    });
+  }
+
+  const gate = requireTeamAdmin(user);
+  if (gate || !user) return Response.json({ error: gate?.error ?? "Unauthorized" }, { status: gate?.status ?? 401 });
 
   const members: OrgMember[] = [...(user.profile.orgMembers ?? [])];
   const orgName = user.profile.orgName ?? "Your Organization";

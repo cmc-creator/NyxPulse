@@ -73,7 +73,7 @@ export default function LMSIntegrationsPage() {
           <div className="glass-card p-10 lg:p-14 mb-10">
             <h1 className="font-display text-4xl font-bold text-white mb-4">LMS Integrations</h1>
             <p className="text-slate-300 text-lg max-w-2xl">
-              Integrate NyxPulse with your existing learning management system. Embed courses, sync grades, maintain SSO, and build seamless training workflows.
+              Integrate NyxPulse with your existing learning management system. Embed courses, sync completions, maintain SSO, and support your training workflow.
             </p>
           </div>
 
@@ -153,7 +153,7 @@ export default function LMSIntegrationsPage() {
                   Authentication (SSO)
                 </h3>
                 <p className="text-slate-400">
-                  Based on your LMS platform, we support LTI 1.3, OAuth 2.0, or custom SSO. Users log in once and access NyxPulse without re-authenticating.
+                  Based on your LMS platform, we support LTI 1.3, OAuth 2.0, or custom SSO. Users log in once and access NyxPulse without signing in again.
                 </p>
               </div>
 
@@ -165,7 +165,7 @@ export default function LMSIntegrationsPage() {
                   Course Embedding
                 </h3>
                 <p className="text-slate-400">
-                  Embed NyxPulse courses directly in your LMS module or course outline. Deep linking ensures students go straight to the right content.
+                  Embed NyxPulse courses directly in your LMS module or course outline. Deep linking can take students to the right content.
                 </p>
               </div>
 
@@ -177,7 +177,7 @@ export default function LMSIntegrationsPage() {
                   Data Sync
                 </h3>
                 <p className="text-slate-400">
-                  Grades, completion status, and certificates sync back to your LMS. Your gradebook stays up-to-date automatically.
+                  Grades, completion status, and certificates sync back to your LMS. Your gradebook can stay current with less manual entry.
                 </p>
               </div>
 
@@ -189,7 +189,7 @@ export default function LMSIntegrationsPage() {
                   Reporting
                 </h3>
                 <p className="text-slate-400">
-                  View NyxPulse analytics and reports in your LMS dashboard. No context switching needed.
+                  View NyxPulse analytics and reports in your LMS dashboard.
                 </p>
               </div>
             </div>

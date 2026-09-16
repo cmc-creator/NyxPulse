@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  turbopack: {
+    root: process.cwd(),
+  },
   // Keep firebase-admin out of the Turbopack server bundle — native/gRPC bits
   // crash Vercel serverless functions when bundled into route graphs.
   serverExternalPackages: [

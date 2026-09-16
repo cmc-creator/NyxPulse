@@ -5,7 +5,6 @@ import { ArrowLeft, CheckCircle, Clock, BookOpen } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import StarField from "@/components/StarField";
-import BuyPathButton from "@/components/BuyPathButton";
 import { notFound } from "next/navigation";
 
 interface Props {
@@ -89,7 +88,7 @@ export default async function LearningPathPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="glass-card p-10 lg:p-14 mb-10">
+          <div id="trainings" className="glass-card p-10 lg:p-14 mb-10">
             <h2 className="text-2xl font-bold text-white mb-8">Trainings in this track</h2>
 
             <div className="space-y-4">

@@ -8,7 +8,7 @@ import StarField from "@/components/StarField";
 export const metadata: Metadata = {
   title: "About | NyxPulse",
   description:
-    "NyxPulse is a product of NyxCollective LLC, delivering next-generation emergency and safety training for healthcare professionals.",
+    "NyxPulse is a product of NyxCollective LLC, delivering emergency and safety training for healthcare organizations, community programs, and other mission-driven teams.",
 };
 
 const values = [
@@ -77,7 +77,7 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-4 text-slate-400 leading-relaxed">
                   <p>
-                    NyxPulse is the training division of <span className="text-violet-400 font-semibold">NyxCollective LLC</span> — a company dedicated to building tools, platforms, and programs that push the boundaries of what&apos;s possible in healthcare preparedness.
+                    NyxPulse is the training division of <span className="text-violet-400 font-semibold">NyxCollective LLC</span> — a company focused on practical preparedness tools, learning platforms, and programs for healthcare organizations, community groups, and other teams that need effective safety training.
                   </p>
                   <p>
                     Our life-safety programs are taught by{" "}
@@ -85,12 +85,12 @@ export default function AboutPage() {
                     <span className="text-cyan-300 font-semibold">
                       American Red Cross certified instructor
                     </span>
-                    , so CPR, AED, First Aid, and BLS learners can earn official Red Cross
-                    digital certificates through the proper skills-session pathway.
+                    , so CPR, AED, First Aid, and BLS learners can pursue American Red Cross
+                    digital certificates through the proper skills-session and reporting pathway.
                   </p>
                   <p>
-                    From a solo nurse needing BLS recertification to a hospital emergency
-                    operations overhaul — we scale to fit.
+                    From a solo clinician needing BLS recertification to a multi-site team building
+                    a broader readiness program — we scale to fit a range of operational settings.
                   </p>
                 </div>
               </div>

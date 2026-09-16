@@ -82,7 +82,7 @@ export const learningPaths: LearningPath[] = [
     badge: "green",
     courseList: ["osha-safety", "bloodborne-pathogens"],
     totalHours: 8,
-    competency: "Workplace Safety Compliance",
+    competency: "Workplace Safety Readiness",
   },
 ];
 

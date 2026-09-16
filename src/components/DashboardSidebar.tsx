@@ -10,6 +10,7 @@ import {
   BookOpen,
   Award,
   CreditCard,
+  FileText,
   Menu,
   X,
   Users,
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/dashboard/certificates", label: "Certificates", icon: Award, exact: false },
   { href: "/dashboard/sessions", label: "Skills Sessions", icon: Calendar, exact: false },
   { href: "/dashboard/billing", label: "Billing", icon: CreditCard, exact: false },
+  { href: "/dashboard/accounting", label: "Accounting", icon: FileText, exact: false },
   { href: "/dashboard/org", label: "Team Portal", icon: Users, exact: false },
 ];
 

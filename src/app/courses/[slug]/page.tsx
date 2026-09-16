@@ -104,7 +104,8 @@ export default async function CourseDetailPage({ params }: Props) {
                   </p>
                   <p className="mb-2">
                     Complete the course here for your NyxPulse Certificate of Completion. Optionally book a
-                    skills session if you also need an official American Red Cross digital certificate.
+                    skills session if you also need an American Red Cross digital certificate through the
+                    authorized reporting pathway.
                   </p>
                   <Link
                     href="/certifications/american-red-cross"

@@ -3,7 +3,7 @@ import { jeremyInstructor } from "@/lib/instructors";
 
 const arcCompliance = [
   "NyxPulse issues its own Certificate of Completion when you finish the course modules here.",
-  "If you also want an official American Red Cross digital certificate, attend the instructor skills session and complete Red Cross course reporting through the Learning Center.",
+  "If you also want an American Red Cross digital certificate, attend the instructor skills session and complete Red Cross course reporting through the Learning Center.",
   "NyxPulse study modules support learning. They do not replace required Red Cross online coursework when a blended-learning path is assigned.",
   "Jeremy also teaches through other organizations. Red Cross certificates are only issued when a class is taught and reported under an authorized Red Cross Training Provider agreement.",
 ];
@@ -18,7 +18,7 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "❤️",
     tagline: "Learn high-quality CPR and AED use for adults, children, and infants — with a Red Cross certified instructor.",
     description:
-      "Instructor-led American Red Cross Adult & Pediatric CPR/AED training delivered by Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion in this platform. If you also want an official American Red Cross digital certificate, attend Jeremy's skills session so the class can be reported through the Red Cross Learning Center.",
+      "Instructor-led American Red Cross Adult & Pediatric CPR/AED training delivered by Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion in this platform. If you also want an American Red Cross digital certificate, attend Jeremy's skills session so the class can be reported through the Red Cross Learning Center.",
     duration: "3–4 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "All Levels",
@@ -195,7 +195,7 @@ export const arcLifeSafetyCourses: Course[] = [
           {
             title: "What to expect in your Red Cross skills session",
             summary:
-              "Bring focus and comfortable clothes. You will demonstrate CPR, AED, and choking skills on manikins with your instructor. After successful skills verification and course reporting in the Red Cross Learning Center, your official digital certificate is issued by the American Red Cross — not by NyxPulse.",
+              "Bring focus and comfortable clothes. You will demonstrate CPR, AED, and choking skills on manikins with your instructor. After successful skills verification and course reporting in the Red Cross Learning Center, your American Red Cross digital certificate is issued by the American Red Cross — not by NyxPulse.",
           },
           {
             title: "Finding and sharing your Red Cross digital certificate",
@@ -229,7 +229,7 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "🩹",
     tagline: "Recognize and respond to sudden illness and injury until advanced help arrives.",
     description:
-      "American Red Cross Adult & Pediatric First Aid training with Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion here. Optionally continue to an instructor-led skills session for official Red Cross certification through the Learning Center.",
+      "American Red Cross Adult & Pediatric First Aid training with Jeremy, an American Red Cross certified instructor. Earn a NyxPulse Certificate of Completion here. Optionally continue to an instructor-led skills session for American Red Cross certification through the Learning Center.",
     duration: "2–3 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "All Levels",
@@ -370,7 +370,7 @@ export const arcLifeSafetyCourses: Course[] = [
           {
             title: "Skills session + certificate pathways",
             summary:
-              "Completing NyxPulse modules earns your NyxPulse Certificate of Completion. If you also want an official American Red Cross digital certificate, book a skills session with Jeremy so the class can be taught and reported under an authorized Red Cross Training Provider process.",
+              "Completing NyxPulse modules earns your NyxPulse Certificate of Completion. If you also want an American Red Cross digital certificate, book a skills session with Jeremy so the class can be taught and reported under an authorized Red Cross Training Provider process.",
           },
         ],
       },
@@ -399,7 +399,7 @@ export const arcLifeSafetyCourses: Course[] = [
     icon: "🫁",
     tagline: "Clinical-grade resuscitation for healthcare providers — Red Cross BLS with skills verification.",
     description:
-      "American Red Cross Basic Life Support for healthcare providers and students, taught by Jeremy (American Red Cross certified instructor). Earn a NyxPulse Certificate of Completion here. Optionally complete a skills session for an official Red Cross BLS digital certificate.",
+      "American Red Cross Basic Life Support for healthcare providers and students, taught by Jeremy (American Red Cross certified instructor). Earn a NyxPulse Certificate of Completion here. Optionally complete a skills session for an American Red Cross BLS digital certificate.",
     duration: "4–6 hours (+ prep)",
     format: ["Live", "Hybrid"],
     level: "Intermediate",
@@ -535,7 +535,7 @@ export const arcLifeSafetyCourses: Course[] = [
           {
             title: "NyxPulse certificate and optional Red Cross BLS skills",
             summary:
-              "Mark all modules complete to claim your NyxPulse Certificate of Completion. If you also want an official Red Cross BLS card, book Jeremy’s skills session — the Red Cross digital certificate is issued through the Learning Center after testing and course reporting.",
+              "Mark all modules complete to claim your NyxPulse Certificate of Completion. If you also want an American Red Cross BLS card, book Jeremy’s skills session — the Red Cross digital certificate is issued through the Learning Center after testing and course reporting.",
           },
         ],
       },

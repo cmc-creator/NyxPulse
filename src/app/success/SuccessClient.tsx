@@ -155,7 +155,7 @@ export default function SuccessClient() {
         </div>
 
         <p className="mt-10 text-xs text-slate-600">
-          A receipt has been sent to your email. Questions?{" "}
+          A receipt and invoice record are available in your billing area. Questions?{" "}
           <a
             href="mailto:info@nyxpulse.com"
             className="text-violet-400 hover:text-violet-300 transition-colors"

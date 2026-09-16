@@ -3,12 +3,10 @@ import path from "node:path";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
 import type { SkillSignoff } from "@/lib/skills/sheets";
+import { resolveStoragePath } from "@/lib/storage-path";
 
 function filePath() {
-  if (process.env.SKILL_SIGNOFFS_STORAGE_PATH) {
-    return process.env.SKILL_SIGNOFFS_STORAGE_PATH;
-  }
-  return path.join(/* turbopackIgnore: true */ process.cwd(), ".data", "skill-signoffs.json");
+  return resolveStoragePath("SKILL_SIGNOFFS_STORAGE_PATH", "skill-signoffs.json");
 }
 
 async function readFileStore(): Promise<SkillSignoff[]> {

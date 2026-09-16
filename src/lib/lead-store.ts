@@ -2,6 +2,7 @@ import { promises as fs } from "node:fs";
 import path from "node:path";
 import { getAdminDb } from "@/lib/firebase/admin";
 import { isFirebaseAdminConfigured } from "@/lib/firebase/admin-env";
+import { resolveStoragePath } from "@/lib/storage-path";
 
 export type ContactLead = {
   createdAt: string;
@@ -19,12 +20,7 @@ export type ContactLead = {
 const MAX_LEADS_RETURNED = 250;
 
 function getStoragePath() {
-  if (process.env.CONTACT_LEADS_STORAGE_PATH) {
-    return process.env.CONTACT_LEADS_STORAGE_PATH;
-  }
-
-  // Scope to a subfolder so Turbopack NFT tracing does not pull the whole project.
-  return path.join(/* turbopackIgnore: true */ process.cwd(), ".data", "contact-leads.ndjson");
+  return resolveStoragePath("CONTACT_LEADS_STORAGE_PATH", "contact-leads.ndjson");
 }
 
 async function ensureStorageDir(filePath: string) {

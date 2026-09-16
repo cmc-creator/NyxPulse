@@ -27,7 +27,7 @@ const footerLinks = {
   Legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "HIPAA Compliance", href: "/hipaa" },
+    { label: "HIPAA Readiness", href: "/hipaa" },
   ],
 };
 
@@ -74,8 +74,6 @@ export default function Footer() {
                 United States
               </div>
             </div>
-
-            <p className="text-xs text-slate-600">Official social channels coming soon.</p>
           </div>
 
           {Object.entries(footerLinks).map(([title, links]) => (

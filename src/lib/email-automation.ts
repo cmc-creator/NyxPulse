@@ -46,6 +46,7 @@ interface EmailPayload {
     | 'enrollment'
     | 'expiration-reminder'
     | 'refresher-challenge'
+    | 'invoice'
     | 'contact-request'
     | 'contact-confirmation';
 }
@@ -139,7 +140,7 @@ export async function sendCourseCompletionEmail(
     <div style="background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:12px;padding:20px;margin-bottom:24px;text-align:center;">
       <span style="font-size:20px;font-weight:700;color:#fff;">${courseTitle}</span>
     </div>
-    <p style="color:#94a3b8;line-height:1.6;">Your NyxPulse Certificate of Completion is ready to view and print. If you also want an official American Red Cross digital certificate, book a skills session so your instructor can complete the Red Cross reporting process.</p>
+    <p style="color:#94a3b8;line-height:1.6;">Your NyxPulse Certificate of Completion is ready to view and print. If you also want an American Red Cross digital certificate, book a skills session so your instructor can complete the Red Cross reporting process.</p>
     ${btn('View Certificate', certificateUrl)}
   `);
 
@@ -301,7 +302,7 @@ export async function sendExpirationReminderEmail(
       <p style="margin:0;font-size:16px;color:#fff;font-weight:600;">${courseTitle}</p>
       <p style="margin:8px 0 0;color:${urgent ? '#fca5a5' : '#fcd34d'};">Expires: ${expiresAt} (${daysUntilExpiration} days remaining)</p>
     </div>
-    <p style="color:#94a3b8;line-height:1.6;">Renew your certification to stay compliant and maintain your professional credentials.</p>
+    <p style="color:#94a3b8;line-height:1.6;">Renew your certification to stay current and maintain your professional credentials.</p>
     ${btn('Renew Certification', renewalUrl)}
   `);
 
@@ -310,6 +311,58 @@ export async function sendExpirationReminderEmail(
     subject,
     html,
     type: 'expiration-reminder',
+  });
+}
+
+export async function sendInvoiceEmail(
+  email: string,
+  customerName: string,
+  invoiceData: {
+    invoiceNumber: string;
+    lineItems: { description: string; quantity: number; unitAmount: number }[];
+    total: number;
+    currency: string;
+    dueAt?: string;
+    notes?: string;
+    invoiceUrl: string;
+  }
+): Promise<EmailResult> {
+  const currencyLabel = invoiceData.currency.toUpperCase();
+  const dueText = invoiceData.dueAt ? `<p style="margin:12px 0 0;color:#94a3b8;font-size:14px;">Due: <strong style="color:#fbbf24;">${invoiceData.dueAt}</strong></p>` : "";
+  const lineItems = invoiceData.lineItems
+    .map(
+      (item) =>
+        `<tr><td style="padding:10px 0;color:#fff;">${item.description}</td><td style="padding:10px 0;color:#94a3b8;text-align:center;">${item.quantity}</td><td style="padding:10px 0;color:#fff;text-align:right;">$${(item.quantity * item.unitAmount).toFixed(2)}</td></tr>`
+    )
+    .join("");
+
+  const html = baseTemplate(`Invoice ${invoiceData.invoiceNumber}`, `
+    <h1 style="margin:0 0 8px;font-size:24px;color:#fff;">Invoice ready</h1>
+    <p style="margin:0 0 24px;color:#a78bfa;">Hi ${customerName}, your training invoice is ready.</p>
+    <table width="100%" cellpadding="8" style="background:rgba(139,92,246,0.1);border-radius:12px;border:1px solid rgba(139,92,246,0.3);border-collapse:separate;">
+      <tr><td style="color:#94a3b8;width:150px;">Invoice</td><td style="color:#fff;font-weight:600;">${invoiceData.invoiceNumber}</td></tr>
+      <tr><td style="color:#94a3b8;">Total</td><td style="color:#fff;">$${invoiceData.total.toFixed(2)} ${currencyLabel}</td></tr>
+    </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;border-collapse:collapse;">
+      <thead>
+        <tr>
+          <th align="left" style="padding:8px 0;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Service</th>
+          <th align="center" style="padding:8px 0;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Qty</th>
+          <th align="right" style="padding:8px 0;color:#94a3b8;font-size:12px;text-transform:uppercase;letter-spacing:0.08em;">Amount</th>
+        </tr>
+      </thead>
+      <tbody>${lineItems}</tbody>
+    </table>
+    ${dueText}
+    ${invoiceData.notes ? `<div style="margin-top:20px;padding:16px;border:1px solid rgba(139,92,246,0.2);border-radius:12px;background:rgba(255,255,255,0.02);"><p style="margin:0 0 8px;color:#94a3b8;font-size:13px;text-transform:uppercase;letter-spacing:0.08em;">Notes</p><p style="margin:0;color:#e2e8f0;white-space:pre-wrap;">${invoiceData.notes}</p></div>` : ""}
+    ${btn("View invoice", invoiceData.invoiceUrl)}
+  `);
+
+  return sendAutomatedEmail({
+    to: email,
+    subject: `Invoice ${invoiceData.invoiceNumber}`,
+    html,
+    type: "invoice",
   });
 }
 

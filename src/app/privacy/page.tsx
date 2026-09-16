@@ -41,7 +41,7 @@ export default function PrivacyPage() {
                 <ul className="space-y-2 list-disc list-inside">
                   <li>Name, email address, phone number</li>
                   <li>Organization name and role</li>
-                  <li>Payment information (processed securely via Stripe)</li>
+                  <li>Payment information (processed by Stripe)</li>
                   <li>Course enrollment and completion history</li>
                   <li>Certificate data and credentials</li>
                 </ul>
@@ -60,14 +60,14 @@ export default function PrivacyPage() {
                   <li>Deliver and improve our training courses</li>
                   <li>Process payments and issue certifications</li>
                   <li>Send course updates, completion reminders, and support communications</li>
-                  <li>Comply with legal and regulatory obligations (HIPAA, state law)</li>
+                  <li>Comply with applicable legal and regulatory obligations (including HIPAA and state law where relevant)</li>
                   <li>Analyze usage to enhance platform functionality</li>
                   <li>Prevent fraud and maintain platform security</li>
                 </ul>
               </section>
 
               <section>
-                <h2 className="text-2xl font-bold text-white mb-4">4. HIPAA Compliance</h2>
+                <h2 className="text-2xl font-bold text-white mb-4">4. HIPAA Readiness</h2>
                 <p>
                   NyxPulse is designed for healthcare training workflows. Current self-serve accounts store learner identity, enrollment, progress, and payment metadata — not clinical PHI by default. If you are a covered entity or business associate and need to process PHI through NyxPulse, contact us to review scope and execute a Business Associate Agreement (BAA) before doing so.
                 </p>
@@ -112,7 +112,7 @@ export default function PrivacyPage() {
               <section>
                 <h2 className="text-2xl font-bold text-white mb-4">8. Security</h2>
                 <p>
-                  We implement industry-standard security measures including encryption (TLS/SSL), regular security audits, and access controls. However, no system is completely secure. We cannot guarantee absolute security of transmitted data.
+                  We use security measures including encryption in transit and access controls. We also review the platform on an ongoing basis. However, no system is completely secure, and we cannot guarantee absolute security of transmitted data.
                 </p>
               </section>
 

@@ -46,7 +46,7 @@ export default function Hero() {
         <div className="lg:col-span-3">
           <MotionReveal delay={0.02} className="inline-flex items-center gap-2 badge badge-violet mb-8">
             <Siren className="w-3.5 h-3.5" />
-            <span>Luxury-Grade Readiness Platform</span>
+            <span>Readiness Platform</span>
           </MotionReveal>
 
           <MotionReveal delay={0.08}>
@@ -59,8 +59,8 @@ export default function Hero() {
 
           <MotionReveal delay={0.14}>
             <p className="text-slate-200 text-base sm:text-xl max-w-2xl leading-relaxed mb-8 sm:mb-10">
-            NyxPulse delivers a premium command experience for healthcare and community teams:
-            rigorous certification pathways, high-fidelity scenarios, and polished operational oversight.
+            NyxPulse delivers a structured experience for healthcare teams, community organizations, and operational groups:
+            clear certification pathways, scenario-based learning, and organized oversight for real-world readiness.
             </p>
           </MotionReveal>
 
@@ -81,9 +81,9 @@ export default function Hero() {
 
           <MotionReveal delay={0.26} className="flex flex-wrap items-center gap-4 sm:gap-6 mb-12">
             {[
-              { Icon: ShieldCheck, text: "Red Cross Certified Instructor" },
-              { Icon: Award, text: "FEMA ICS / HICS Programs" },
-              { Icon: Zap, text: "CMS + TJC Compliance Focused" },
+              { Icon: ShieldCheck, text: "Red Cross certified instructor" },
+              { Icon: Award, text: "FEMA ICS / HICS programs" },
+              { Icon: Zap, text: "Aligned to common healthcare standards" },
             ].map(({ Icon, text }) => (
               <div key={text} className="flex items-center gap-2 text-xs sm:text-sm text-slate-300">
                 <Icon className="w-4 h-4 text-amber-300" />

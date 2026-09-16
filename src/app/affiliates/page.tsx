@@ -129,7 +129,7 @@ export default function AffiliatePage() {
                   "Learning & development professionals",
                   "Safety training coordinators",
                   "Management consultants",
-                  "HR and compliance specialists",
+                  "HR, training, and operations specialists",
                   "Industry associations & networks",
                 ].map((item) => (
                   <li key={item} className="flex items-start gap-3">
